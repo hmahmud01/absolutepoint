@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="mb-4 mb-lg-5">
+
+    <!-- Form Elements -->
+    <div class="col-lg-12 mb-5">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-heading">Notice Creation</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'savenotice' %}" class="form-horizontal">{% csrf_token %}
+
+                    <div class="row">
+                        <label class="col-md-3 form-label">Notice Title</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="title" type="text" placeholder="Title">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Category</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="category" type="text" name="category" placeholder="Category">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Notice Content</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="description" type="text"
+                                placeholder="Subtitle"> </textarea>
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Notice Validity</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="validity" type="number" placeholder="Validity">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+
+                    <div class="row">
+                        <div class="col-md-9 ms-auto">
+                            <button class="btn btn-secondary" type="buttom">Cancel</button>
+                            <button class="btn btn-primary" type="submit">Create</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

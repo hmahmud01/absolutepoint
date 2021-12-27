@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="mb-4 mb-lg-5">
+
+    <!-- Form Elements -->
+    <div class="col-lg-12 mb-5">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <div class="card-heading">{{ service.title }}</div>
+                    {% if not service.accepted and request.user.is_superuser %}
+                    <a class="btn btn-sm btn-success" href="{% url 'acceptservice' service.id %}"><i class="fa fa-check"></i> Accept</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ service.service_type }}</h4>
+                <p>Service For : {{ service.site_name }}</p>
+                <p>Service URL : <a href="{{ service.site_url }}">{{ service.site_url }}</a></p>
+                <p>Service Qty : {{ service.counter }}</p>
+                <p>Value per Qty : {{ service.ratio }}</p>
+                <p>Total Valuation : {{ service.price }}</p>
+                <p>Status : {{ service.status }}</p>
+                <p>Payment Status : {{ service.payment_status }}</p>
+                <p>Date Created : {{ service.created_at }}</p>
+                <p>Service Connected Person : {{ service.user.username }} - {{ service.user.name }}</p>
+                <p>Paid Till Now : {{ paid }}</p>                
+                <p>Payment Due : {{ remaining|stringformat:".2f" }}</p>                
+                {% if service.accepted %}
+                <p>Accept Status : <span class="badge badge-success-light">Accepted</span> </p>
+                {% else %}
+                <p>Accept Status : <span class="badge badge-danger-light">Not Accepted Yet</span></p>
+                {% endif %}
+
+                {% if toPay %}
+                {%if service.payment_status == "Due" and service.accepted %}
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop">
+                    Add Payment
+                </button>                
+                {% endif %}
+                {% endif %}
+                
+
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Accept Service</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <form action="{% url 'addservicepayment' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                <div class="modal-body">                                                
+                                    <div class="row">
+                                        <input type="hidden" name="id" value="{{ service.id }}">
+                                        <label class="col-md-3 form-label">Amount</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" name="amount" type="number" step="0.01" placeholder="Amount">
+                                        </div>
+                                        <label class="col-md-3 form-label">Link</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" name="link" type="text" placeholder="Link">
+                                        </div>
+                                        <label class="col-md-3 form-label">Image</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control" name="image" type="file" placeholder="Image">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                </div>
+                            </form>                                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-table mb-4">
+            <div class="card-header">
+                <h5 class="card-heading">Payment Installment Status</h5>
+                <div class="card-header-more">
+                    <button class="btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                            class="fas fa-ellipsis-v"></i></button>
+                    <div class="dropdown-menu dropdown-menu-end text-sm">
+                        <a class="dropdown-item" href="{% url 'donepayment' service.id %}"><i class="fas fa-expand-arrows-alt me-2"></i>Payment Done</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>amount</th>
+                                <th>link</th>
+                                <th>image</th>
+                                <th>Payment Status</th>
+                                <th>Date</th>
+                                {% if request.user.is_superuser %}
+                                <th>Action</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment.amount }}</td>
+                                <td>{{ payment.link }}</td>
+                                <td><a href="/media/{{ payment.image }}">{{ payment.image }}</a></td>
+                                {% if payment.accepted %}
+                                <td><span class="badge badge-success-light">Payment Confirmed</span></td>
+                                {% else %}
+                                <td><span class="badge badge-danger-light"> Confirmation Pending</span></td>
+                                {% endif %}
+                                <td>{{ payment.created_at }}</td>
+                                {% if request.user.is_superuser %}                                                                
+                                {% if payment.accepted %}
+                                <th><a class="btn btn-sm btn-success disabled" href="{% url 'acceptpayment' payment.id %}"><i class="fa fa-check"></i> Accepted</a></th>
+                                {% else %}
+                                <th><a class="btn btn-sm btn-success" href="{% url 'acceptpayment' payment.id %}"><i class="fa fa-check"></i> Accept</a></th>
+                                {% endif %}
+                                
+                                {% endif %}
+                            </tr>
+                            {% endfor %}                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

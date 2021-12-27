@@ -1,0 +1,59 @@
+<div class="sidebar py-3" id="sidebar">
+  <h6 class="sidebar-heading">Home</h6>
+  <ul class="list-unstyled">
+    <li class="sidebar-list-item">
+      {% if request.user.is_superuser %}
+      <a class="sidebar-link text-muted active" href="{% url 'home' %}">
+        {% else %}
+        <a class="sidebar-link text-muted active" href="{% url 'salesdashboard' %}">
+          {% endif %}
+
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#real-estate-1"> </use>
+          </svg><span class="sidebar-link-title">Dashboard</span></a>
+    </li>
+
+    {% if request.user.is_superuser %}
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'noticecreate' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#text-message-1"> </use>
+        </svg><span class="sidebar-link-title">Create Notice</span></a>
+    </li>
+    {% endif %}
+
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'servicecreate' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#survey-1"> </use>
+        </svg><span class="sidebar-link-title">Create Service</span></a>
+    </li>
+
+    {% if request.user.is_superuser %}
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'addservice' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#reading-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Add Service</span>
+      </a>
+    </li>
+
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'addservicetype' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#share-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Add Service Type</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'adduser' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#quality-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Add User</span>
+      </a>
+    </li>
+    {% endif %}
+</div>
