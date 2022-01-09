@@ -18,7 +18,7 @@
                         <div class="col-md-9">
                             <input class="form-control" name="title" type="text" placeholder="Title">
                         </div>
-                    </div>                
+                    </div>
                     <hr class="bg-gray-400 my-4">
                     <div class="row">
                         <label class="col-md-3 form-label">Service Type</label>
@@ -27,7 +27,7 @@
                                 <option value="none">None</option>
                                 {% for type in servicetypes %}
                                 <option value="{{ type.id }}">{{ type.title }}</option>
-                                {% endfor %}                                
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -45,8 +45,11 @@
                             <select class="form-control" name="service" id="service">
                                 <option value="none">None</option>
                                 {% for service in servicelist %}
-                                <option value="{{ service.id }}">{{ service.title }} - {{ service.quantity }} - {{ service.price }}</option>
-                                {% endfor %}                                
+                                <option data-title="{{ service.title }}" data-quantity="{{ service.quantity }}"
+                                    data-price="{{ service.price }}" value="{{ service.id }}">
+                                    {{ service.title }} - {{ service.quantity }} - {{ service.price }}
+                                </option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -66,9 +69,10 @@
                     </div>
                     <hr class="bg-gray-400 my-4">
                     <div class="row">
-                        <label class="col-md-3 form-label">Ratio</label>
+                        <label class="col-md-3 form-label">Multiplier</label>
                         <div class="col-md-9">
-                            <input class="form-control" name="ratio" id="ratio" type="number" step="0.01" placeholder="Ratio">
+                            <input class="form-control" name="ratio" id="ratio" type="number" step="0.01"
+                                placeholder="Ratio">
                         </div>
                     </div>
                     <hr class="bg-gray-400 my-4">
@@ -96,31 +100,55 @@
 
 {% block scripts %}
 <script>
-    console.log("in service create page")
-    var base_qty = "{{service.quantity}}";
-    var base_price = "{{service.price}}";
+    console.log("in service create page");
+
+    var service = document.getElementById("service");
+
+    service.onchange = function (event) {
+        var title = event.target.options[event.target.selectedIndex].dataset.title;
+        var quantity = event.target.options[event.target.selectedIndex].dataset.quantity;
+        var price = event.target.options[event.target.selectedIndex].dataset.price;
+        console.log("title: " + title);
+        console.log("quantity: " + quantity);
+        console.log("price: " + price);
+
+        console.log(typeof(parseFloat(quantity)));
+        console.log(parseFloat(price));
+
+        document.getElementById("qty").setAttribute('value',100);
+        document.getElementById("qty").value = "My value";
+        document.getElementById("price").value = "My value";
+        document.getElementById("ratio").value = "My value";
+
+//         Client ID
+//             175410412956-p4nq1agtsfeqsnbcrbrp48j1jtou9gj3.apps.googleusercontent.com
+// Client secret
+//     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
+// Creation date
+//     January 5, 2022 at 9:09:58 PM GMT+6
+
+    };
 
 
-    
     // var input_qty = document.getElementById("qty");
 
-    var input_qty = document.querySelector('#qty');
-    
+    // var input_qty = document.querySelector('#qty');
 
-    input_qty.addEventListener('change', (e) => {
-        console.log(document.getElementById("#service").val)
-        console.log(base_qty, base_price, e.target.value);
-        console.log(typeof(base_qty), typeof(base_price), typeof(input_qty));   
-    });
 
-    
+    // input_qty.addEventListener('change', (e) => {
+    //     console.log(document.getElementById("#service").val)
+    //     console.log(base_qty, base_price, e.target.value);
+    //     console.log(typeof (base_qty), typeof (base_price), typeof (input_qty));
+    // });
+
+
 
 
     // input_qty.onchange(() => {
     //     console.log(base_qty, base_price, input_qty);
-    //     console.log(typeof(base_qty), typeof(base_price), typeof(input_qty));   
+    //     console.log(typeof(base_qty), typeof(base_price), typeof(input_qty));
     // });   
-    
+
 
 </script>
 {% endblock %}

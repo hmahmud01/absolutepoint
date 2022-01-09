@@ -93,10 +93,16 @@ def updateUser(request):
     post_data = request.POST
     dashuser = DashboardUser.objects.get(user_id = post_data['id'])
     dashuser.name = post_data['name']
+    dashuser.email = post_data['email']
+    dashuser.username=post_data['email']
     dashuser.phone = post_data['phone']
     dashuser.address = post_data['address']
     dashuser.status = True
     dashuser.save()
+    user = dashuser.user
+    user.username = post_data['email']
+    user.email = post_data['email']
+    user.save()
     return redirect('salesdashboard')
 
 
