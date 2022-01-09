@@ -233,6 +233,8 @@ def serviceDetail(request, sid):
 
     if paid >= service.price:
         toPay = False
+        service.payment_status = "Received"
+        service.status = "Completed"
 
     return render(request, 'service_detail.html', {"data": data, "service": service, "payments": payments, "paid": paid, "remaining": remaining, "toPay": toPay})
 
@@ -266,6 +268,21 @@ def acceptPayment(request, pid):
     payment.accepted = True
     payment.save()
 
+    toPay = True
+    paid = 0.0    
+    payments = ServicePayments.objects.filter(service__id=payment.service.id)
+    remaining = payment.service.price
+    for payment in payments:
+        if payment.accepted:
+            paid += payment.amount
+            remaining -= payment.amount
+
+    if paid >= payment.service.price:
+        toPay = False
+        payment.service.payment_status = "Received"
+        payment.service.status = "Completed"
+        
+    
     return redirect('servicedetail', payment.service.id)
 
 def donePayment(request, sid):
