@@ -267,7 +267,7 @@
                         <th>Created By</th>
                         <th>Date</th>
                         <th>Service Type</th>
-                        <th>Site Name</th>
+                        <th>Site Title</th>
                         <th>Accepted</th>
                         <th>Pyament Status</th>
                         <th>Status</th>
@@ -280,7 +280,7 @@
                         <td> <strong>{{ service.user.name }}</strong></td>
                         <td>{{ service.created_at }}</td>
                         <td>{{ service.service_type.title }}</td>
-                        <td>{{ service.site_name }}</td>
+                        <td>{{ service.title }}</td>
                         {% if service.accepted %}
                         <td>Accepted</td>
                         {% else %}

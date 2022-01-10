@@ -134,11 +134,11 @@
             <table class="table table-hover mb-0">
                 <thead>
                     <tr>
-                        <th>Service Id</th>
-                        <th>User</th>
+                        <th>Id</th>
+                        <th>Created By</th>
                         <th>Date</th>
-                        <th>Service Title</th>
-                        <th>Price</th>
+                        <th>Service Type</th>
+                        <th>Site Title</th>
                         <th>Accepted</th>
                         <th>Pyament Status</th>
                         <th>Status</th>
@@ -147,11 +147,11 @@
                 <tbody>
                     {% for service in services %}
                     <tr class="align-middle">
-                        <td><a href="{% url 'servicedetail' service.id %}">#{{service.id}}</a></td>
+                        <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
                         <td> <strong>{{ service.user.name }}</strong></td>
                         <td>{{ service.created_at }}</td>
+                        <td>{{ service.service_type.title }}</td>
                         <td>{{ service.title }}</td>
-                        <td>{{ service.price }}</td>
                         {% if service.accepted %}
                         <td>Accepted</td>
                         {% else %}
