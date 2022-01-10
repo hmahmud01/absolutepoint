@@ -137,8 +137,8 @@
                         <th>Id</th>
                         <th>Created By</th>
                         <th>Date</th>
-                        <th>Service Type</th>
-                        <th>Site Title</th>
+                        <th>Service Title</th>
+                        <th>Site Name</th>
                         <th>Accepted</th>
                         <th>Pyament Status</th>
                         <th>Status</th>
@@ -150,8 +150,8 @@
                         <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
                         <td> <strong>{{ service.user.name }}</strong></td>
                         <td>{{ service.created_at }}</td>
-                        <td>{{ service.service_type.title }}</td>
                         <td>{{ service.title }}</td>
+                        <td>{{ service.site_name }}</td>
                         {% if service.accepted %}
                         <td>Accepted</td>
                         {% else %}
