@@ -196,6 +196,12 @@ def addServiceList(request):
     service.save()
     return redirect('/')
 
+def removeServiceList(request, sid):
+    service = Service.objects.get(id=sid)
+    service.delete()
+
+    return redirect('/')
+
 def updateServiceList(request):
     post_data = request.POST
     service = Service.objects.get(id=post_data['service'])
@@ -217,6 +223,11 @@ def addServiceTypeList(request):
     servicetype.save()
     return redirect('/')
     
+def removeServiceTypeList(request, sid):
+    service_type = ServiceType.objects.get(id=sid)
+    service_type.delete()
+
+    return redirect('/')
 
 def serviceDetail(request, sid):
     data = ""    
@@ -248,7 +259,7 @@ def acceptService(requset, sid):
 
 def addServicePyament(request):
     post_data = request.POST
-    if request.FILES['image']:
+    if request.FILES:
         image = request.FILES['image']
     else:
         image = None
@@ -281,7 +292,8 @@ def acceptPayment(request, pid):
         toPay = False
         payment.service.payment_status = "Received"
         payment.service.status = "Completed"
-        
+        payment.service.save()
+        payment.save()
     
     return redirect('servicedetail', payment.service.id)
 

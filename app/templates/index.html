@@ -122,7 +122,12 @@
                             <div class="icon icon-lg shadow me-3 text-gray-700"><i class="fa fa-fire"></i></div>
                             <div class="text">
                                 <h6 class="mb-0 d-flex align-items-center"> <span>{{ service.title }}</span>
-                                    <span class="dot dot-sm ms-2 bg-indigo"></span></h6><small class="text-gray-500">per {{ service.quantity }}</small>
+                                    <span class="dot dot-sm ms-2 bg-indigo"></span></h6>
+                                    <small class="text-gray-500">
+                                        <div class="mt-2">
+                                            per {{ service.quantity }} <a class="btn btn-outline-danger btn-xs" href="{% url 'removeservicelist' service.id %}">REMOVE</a>
+                                        </div>                                        
+                                    </small>
                             </div>
                         </div>
                         <div class="right ms-5 ms-sm-0 ps-3 ps-sm-0">
@@ -148,6 +153,7 @@
                                 <div class="icon icon-lg shadow me-3 text-gray-700"><i class="fa fa-flask"></i></div>
                                 <div class="text">
                                     <h6 class="mb-0 d-flex align-items-center"> <span>{{ type.title }}</span></h6>
+                                    <a class="btn btn-outline-danger btn-xs" href="{% url 'removeservicetypelist' type.id %}">REMOVE</a>
                                 </div>
                             </div>
                         </div>
@@ -257,11 +263,11 @@
             <table class="table table-hover mb-0">
                 <thead>
                     <tr>
-                        <th>Service Id</th>
-                        <th>User</th>
+                        <th>Id</th>
+                        <th>Created By</th>
                         <th>Date</th>
-                        <th>Service Title</th>
-                        <th>Price</th>
+                        <th>Service Type</th>
+                        <th>Site Name</th>
                         <th>Accepted</th>
                         <th>Pyament Status</th>
                         <th>Status</th>
@@ -270,11 +276,11 @@
                 <tbody>
                     {% for service in services %}
                     <tr class="align-middle">
-                        <td><a href="{% url 'servicedetail' service.id %}">#{{service.id}}</a></td>
+                        <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
                         <td> <strong>{{ service.user.name }}</strong></td>
                         <td>{{ service.created_at }}</td>
-                        <td>{{ service.title }}</td>
-                        <td>{{ service.price }}</td>
+                        <td>{{ service.service_type.title }}</td>
+                        <td>{{ service.site_name }}</td>
                         {% if service.accepted %}
                         <td>Accepted</td>
                         {% else %}

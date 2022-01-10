@@ -1,1 +1,7 @@
 /* your styles go here */
+
+.btn-xs, .btn-group-xs > .btn{
+    padding: 0.05rem 0.5rem;
+    font-size: 0.6875rem;
+    border-radius: 0.13rem;
+}
