@@ -4,6 +4,7 @@ from django.db.models.fields import BinaryField
 
 class DashboardUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_type = models.CharField(max_length=64, default='sales', blank=True, null=True)
     username = models.CharField(max_length=128, null=True, blank=True)
     name = models.CharField(max_length=256, null=True, blank=True)
     email = models.CharField(max_length=256, null=True, blank=True)

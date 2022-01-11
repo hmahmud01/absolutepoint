@@ -25,12 +25,14 @@ def verifyLogin(request):
         )
         if user is None:
             return redirect('login')
-        elif user.is_superuser:
-            auth_login(request, user)
-            return redirect('/')
         else:
             auth_login(request, user)
-            return redirect('salesdashboard')
+            return redirect('/')
+        # else:
+        #     req_user = DashboardUser.objects.get(user=user.id)
+        #     if req_user.user_type == 'sales':
+        #         auth_login(request, user)
+        #         return redirect('salesdashboard')
 
     else:
         return redirect('login')
@@ -119,15 +121,28 @@ def salesDashboard(request):
 
 @login_required(login_url='/login/')
 def home(request):
-    data = ""
-    notices = Notices.objects.all()
-    services = Services.objects.all()
-    servicelist = Service.objects.all()
-    servicetypes = ServiceType.objects.all()
-    users = User.objects.all()
-    return render(request, 'index.html', 
-        {"data": data, "notices": notices, "services": services, "users": users, 
-            "servicelist": servicelist, "servicetypes": servicetypes})
+    user = request.user
+    if user.is_superuser:
+        data = ""
+        notices = Notices.objects.all()
+        services = Services.objects.all()
+        servicelist = Service.objects.all()
+        servicetypes = ServiceType.objects.all()
+        users = User.objects.all()
+        return render(request, 'index.html', 
+            {"data": data, "notices": notices, "services": services, "users": users, 
+                "servicelist": servicelist, "servicetypes": servicetypes})
+    else:
+        req_user = DashboardUser.objects.get(user=user.id)
+        if req_user.user_type == 'sales':
+            data = ""
+            notices = Notices.objects.all()
+            services = Services.objects.all()
+            servicelist = Service.objects.all()
+            info = DashboardUser.objects.get(user_id=request.user.id)
+            return render(request, 'sales_dashboard.html', 
+                {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist})
+
     # return render(request, 'index.html', {"data": data})
 
 def noticeCreate(request):
