@@ -28,7 +28,6 @@
           <use xlink:href="/static/icons/orion-svg-sprite.svg#survey-1"> </use>
         </svg><span class="sidebar-link-title">Create Service</span></a>
     </li>
-
     {% if request.user.is_superuser %}
     <li class="sidebar-list-item">
       <a class="sidebar-link text-muted" href="{% url 'addservice' %}">
@@ -54,7 +53,8 @@
         </svg>
         <span class="sidebar-link-title">Add User</span>
       </a>
-    </li>
+    </li>    
+    {% endif %}
     <li class="sidebar-list-item">
       <a class="sidebar-link text-muted" href="{% url 'servicelist' %}">
         <svg class="svg-icon svg-icon-md me-3">
@@ -79,5 +79,4 @@
         <span class="sidebar-link-title">Sales</span>
       </a>
     </li>
-    {% endif %}
 </div>

@@ -19,7 +19,9 @@
                                 <div class="icon icon-lg shadow me-3 text-gray-700"><i class="fa fa-flask"></i></div>
                                 <div class="text">
                                     <h6 class="mb-0 d-flex align-items-center"> <span>{{ type.title }}</span></h6>
+                                    {% if request.user.is_superuser %}
                                     <a class="btn btn-outline-danger btn-xs" href="{% url 'removeservicetypelist' type.id %}">REMOVE</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

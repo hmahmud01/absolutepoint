@@ -26,7 +26,15 @@
                     {% for service in services %}
                     {% if service.payment_status == "Received" %}
                     <tr class="align-middle">
+                        {% if request.user.is_superuser %}
                         <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                        {% else %}
+                            {% if service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                            {% else %}
+                            <td>#{{forloop.counter}}</td>
+                            {% endif %}
+                        {% endif %}                        
                         <td> <strong>{{ service.user.name }}</strong></td>
                         <td>{{ service.created_at }}</td>
                         <td>{{ service.title }}</td>
@@ -71,7 +79,15 @@
                     {% for service in services %}
                     {% if service.payment_status != "Received" %}
                     <tr class="align-middle">
+                        {% if request.user.is_superuser %}
                         <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                        {% else %}
+                            {% if service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                            {% else %}
+                            <td>#{{forloop.counter}}</td>
+                            {% endif %}
+                        {% endif %}       
                         <td> <strong>{{ service.user.name }}</strong></td>
                         <td>{{ service.created_at }}</td>
                         <td>{{ service.title }}</td>
