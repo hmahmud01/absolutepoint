@@ -99,36 +99,60 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
     console.log("in service create page");
 
     var service = document.getElementById("service");
 
-    service.onchange = function (event) {
-        var title = event.target.options[event.target.selectedIndex].dataset.title;
-        var quantity = event.target.options[event.target.selectedIndex].dataset.quantity;
-        var price = event.target.options[event.target.selectedIndex].dataset.price;
-        console.log("title: " + title);
-        console.log("quantity: " + quantity);
-        console.log("price: " + price);
+    // service.onchange = function (event) {
+    //     var title = event.target.options[event.target.selectedIndex].dataset.title;
+    //     var quantity = event.target.options[event.target.selectedIndex].dataset.quantity;
+    //     var price = event.target.options[event.target.selectedIndex].dataset.price;
+    //     console.log("title: " + title);
+    //     console.log("quantity: " + quantity);
+    //     console.log("price: " + price);
 
-        console.log(typeof(parseFloat(quantity)));
-        console.log(parseFloat(price));
+    //     console.log(typeof(parseFloat(quantity)));
+    //     console.log(parseFloat(price));
 
-        document.getElementById("qty").setAttribute('value',100);
-        document.getElementById("qty").value = "My value";
-        document.getElementById("price").value = "My value";
-        document.getElementById("ratio").value = "My value";
+    //     document.getElementById("qty").setAttribute('value',100);
+    //     document.getElementById('qty').value = "My value";
+    //     document.getElementById("price").value = "My value";
+    //     document.getElementById("ratio").value = "My value";
+    // };
 
-//         Client ID
-//             175410412956-p4nq1agtsfeqsnbcrbrp48j1jtou9gj3.apps.googleusercontent.com
-// Client secret
-//     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
-// Creation date
-//     January 5, 2022 at 9:09:58 PM GMT+6
+    // Client Token Name:
+    // Service Type: Upvote/post
+    // Service Name: Coin sniper Votes – 1000 - 35
+    // Voting token URL:
+    // Total Votes: 4500
+    // Unit (1k = 1unit): 4500/1000 = 4.5
+    // Price per unit: 42
+    // Total valuation:
 
-    };
+    $('#service').on('change', function(){
+        // $('#myinput').val($(this).val());        
+        var base_ratio = 1 
+        $('#qty').val($(this).find(':selected').data('quantity'));
+        $('#price').val($(this).find(':selected').data('price'));
+        $('#ratio').val(base_ratio);
+    })
 
+    // init
+    $('#service').change();
+
+    $('#qty').on('change', function(){
+        var val = $('#qty').val();
+        var base_qty = $('#service').find(':selected').data('quantity');
+        var base_price = $('#service').find(':selected').data('price');
+        var multiplier = val/base_qty;
+        var final_price = base_price * multiplier;
+        $('#ratio').val(multiplier);
+        $('#price').val(final_price);        
+    });
+
+    $('#qty').change();
 
     // var input_qty = document.getElementById("qty");
 

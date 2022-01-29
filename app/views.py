@@ -71,6 +71,17 @@ def registerUser(request):
         recipient_list = [dashboardUser.email, ]
         send_mail( subject, message, email_from, recipient_list )
         dashboardUser.save()
+
+        user_rank = UserRank(
+            user=dashboardUser,
+            title="NOOB",
+            tier=0,
+            sale_percent=5.0,
+            current_earn=0.0
+        )
+
+        user_rank.save()
+
         return redirect('/')
 
 def resetPassword(request):
@@ -105,9 +116,45 @@ def updateUser(request):
     user.username = post_data['email']
     user.email = post_data['email']
     user.save()
-    return redirect('salesdashboard')
 
+    try:
+        user_rank = UserRank.objects.get(user_id=dashuser.id)
+        print(user_rank)
+    except:
+        pass
+    return redirect('/')
 
+def reupdateUser(request):
+    post_data = request.POST
+    dashuser = DashboardUser.objects.get(id = post_data['id'])
+    dashuser.name = post_data['name']
+    dashuser.email = post_data['email']
+    dashuser.username=post_data['email']
+    dashuser.phone = post_data['phone']
+    dashuser.address = post_data['address']
+    dashuser.status = True
+    dashuser.save()
+    user = dashuser.user
+    user.username = post_data['email']
+    user.email = post_data['email']
+    user.save()
+
+    try:
+        user_rank = UserRank.objects.get(user_id=dashuser.id)
+        print(user_rank)
+    except:
+        pass
+    return redirect('/')
+
+def detailUser(request, uid):
+    info = DashboardUser.objects.get(user_id=uid)
+    try:
+        rank = UserRank.objects.get(user_id=info.id)
+        return render(request, 'user_detail.html', {"info": info, "rank": rank})
+    except:
+        return render(request, 'user_detail.html', {"info": info})
+
+    
 @login_required(login_url="/login/")
 def salesDashboard(request):
     data = ""
@@ -125,23 +172,35 @@ def home(request):
     if user.is_superuser:
         data = ""
         notices = Notices.objects.all()
-        services = Services.objects.all()
+        services = Services.objects.all().order_by('-created_at')
         servicelist = Service.objects.all()
         servicetypes = ServiceType.objects.all()
-        users = User.objects.all()
+        users = User.objects.all().exclude(is_superuser=True)
         return render(request, 'index.html', 
             {"data": data, "notices": notices, "services": services, "users": users, 
                 "servicelist": servicelist, "servicetypes": servicetypes})
     else:
         req_user = DashboardUser.objects.get(user=user.id)
         if req_user.user_type == 'sales':
-            data = ""
-            notices = Notices.objects.all()
-            services = Services.objects.all()
-            servicelist = Service.objects.all()
-            info = DashboardUser.objects.get(user_id=request.user.id)
-            return render(request, 'sales_dashboard.html', 
-                {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist})
+            try:
+                data = ""
+                notices = Notices.objects.all()
+                services = Services.objects.all().order_by('-created_at')
+                servicelist = Service.objects.all()            
+                info = DashboardUser.objects.get(user_id=request.user.id)
+                rank = UserRank.objects.get(user_id=info.id)
+                print(rank.title)
+                return render(request, 'sales_dashboard.html', 
+                    {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "rank": rank})
+            except:
+                data = ""
+                notices = Notices.objects.all()
+                services = Services.objects.all().order_by('-created_at')
+                servicelist = Service.objects.all()            
+                info = DashboardUser.objects.get(user_id=request.user.id)
+                return render(request, 'sales_dashboard.html', 
+                    {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist})
+            
 
     # return render(request, 'index.html', {"data": data})
 
@@ -170,7 +229,12 @@ def serviceCreate(request):
     data = ""
     servicelist = Service.objects.all()
     servicetypes = ServiceType.objects.all()
-    return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes})
+    try:
+        info = DashboardUser.objects.get(user_id=request.user.id)
+        rank = UserRank.objects.get(user_id=info.id)
+        return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank})
+    except:
+        return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes})
 
 def saveService(request):
     post_data = request.POST
@@ -187,14 +251,14 @@ def saveService(request):
         site_url=post_data['site_url'],
         counter=post_data['counter'],
         ratio=post_data['ratio'],
-        price=post_data['price']
+        price=int(post_data['price'])
     )
     service.save()
-    service.status = "Accept Pending"
+    service.status = "Pending"
     service.payment_status = "Due"
     service.save()
 
-    return redirect('salesdashboard')
+    return redirect('/')
 
 def addService(request):
     data = ""
@@ -260,14 +324,19 @@ def serviceDetail(request, sid):
     if paid >= service.price:
         toPay = False
         service.payment_status = "Received"
-        service.status = "Completed"
-
-    return render(request, 'service_detail.html', {"data": data, "service": service, "payments": payments, "paid": paid, "remaining": remaining, "toPay": toPay})
+        service.status = "Done"
+    
+    try:
+        info = DashboardUser.objects.get(user_id=request.user.id)
+        rank = UserRank.objects.get(user_id=info.id)
+        return render(request, 'service_detail.html', {"data": data, "service": service, "payments": payments, "paid": paid, "remaining": remaining, "toPay": toPay, "info": info, "rank": rank})
+    except:
+        return render(request, 'service_detail.html', {"data": data, "service": service, "payments": payments, "paid": paid, "remaining": remaining, "toPay": toPay})
 
 def acceptService(requset, sid):
     service = Services.objects.get(id=sid)
     service.accepted = True
-    service.status = "Started"
+    service.status = "Working"
     service.save()
 
     return redirect('servicedetail', sid)
@@ -290,9 +359,36 @@ def addServicePyament(request):
     return redirect('servicedetail', service.id)
 
 def acceptPayment(request, pid):
+    CAP_0 = 0
+    CAP_1 = 500
+    CAP_2 = 1000
+    CAP_3 = 1500
+    CAP_4 = 5000
+
+    TIER_0 = 0
+    TIER_0_TITLE = "NOOB"
+    TIER_0_PERCENT = 5.0
+    TIER_1 = 1
+    TIER_1_TITLE = "EXPERT"
+    TIER_1_PERCENT = 8.0
+    TIER_2 = 2
+    TIER_2_TITLE = "MASTER"
+    TIER_2_PERCENT = 10.0
+    TIER_3 = 3
+    TIER_3_TITLE = "LEGEND"
+    TIER_3_PERCENT = 12.0
+    TIER_4 = 4
+    TIER_4_TITLE = "BONUS"
+    TIER_4_PERCENT = 1.0
+
+
     payment = ServicePayments.objects.get(id=pid)
     payment.accepted = True
     payment.save()
+
+    se = payment.service.user
+    print(se.id)
+
 
     toPay = True
     paid = 0.0    
@@ -306,17 +402,96 @@ def acceptPayment(request, pid):
     if paid >= payment.service.price:
         toPay = False
         payment.service.payment_status = "Received"
-        payment.service.status = "Completed"
+        payment.service.status = "Done"
         payment.service.save()
         payment.save()
+
+    total_sales = 0.0
+    tier = 0
+    title = ""
+    sale_percent = 0.0
+    current_earn = 0.0
+    sales = ServicePayments.objects.filter(service__user__id=se.id).filter(accepted=True)
+    for sale in sales:
+        print(sale.amount)
+        total_sales += sale.amount
+    
+    if total_sales > CAP_0 and total_sales < CAP_1:
+        tier = TIER_0
+        title = TIER_0_TITLE
+        sale_percent = TIER_0_PERCENT
+        current_earn = total_sales / 100 * sale_percent 
+        print(TIER_0_TITLE)
+    elif total_sales > CAP_1 and total_sales < CAP_2:
+        tier = TIER_1
+        title = TIER_1_TITLE
+        sale_percent = TIER_1_PERCENT
+        current_earn = total_sales / 100 * sale_percent 
+        print(TIER_1_TITLE)
+    elif total_sales > CAP_2 and total_sales < CAP_3:
+        tier = TIER_2
+        title = TIER_2_TITLE
+        sale_percent = TIER_2_PERCENT
+        current_earn = total_sales / 100 * sale_percent 
+        print(TIER_2_TITLE)
+    elif total_sales > CAP_3 and total_sales < CAP_4:
+        tier = TIER_3
+        title = TIER_3_TITLE
+        sale_percent = TIER_3_PERCENT
+        current_earn = total_sales / 100 * sale_percent 
+        print(TIER_3_TITLE)
+    elif total_sales >= CAP_4:
+        tier = TIER_4
+        title = TIER_4_TITLE
+        sale_percent = TIER_4_PERCENT
+        current_earn = total_sales / 100 * sale_percent 
+        print(TIER_4_TITLE)
+
+    
+    try:
+        user_rank = UserRank.objects.get(user_id=se.id)
+        user_rank.title=title
+        user_rank.tier=tier
+        user_rank.sale_percent=sale_percent
+        user_rank.current_earn=current_earn
+
+        user_rank.save()
+    except:
+        user_rank = UserRank(
+            user=se,
+            title=title,
+            tier=tier,
+            sale_percent=sale_percent,
+            current_earn=current_earn
+        )
+        user_rank.save()
     
     return redirect('servicedetail', payment.service.id)
 
 def donePayment(request, sid):
     service = Services.objects.get(id=sid)
     service.payment_status = "Received"
-    service.status = "Completed"
+    service.status = "Done"
     service.save()
 
     return redirect('servicedetail', sid)
 
+def fraudPayment(request, sid):
+    service = Services.objects.get(id=sid)
+    service.payment_status = "Fraud"
+    service.status = "Failed"
+    service.save()
+
+    return redirect('servicedetail', sid)
+
+def serviceList(request):
+    servicelist = Service.objects.all()
+    return render(request, "service_list.html", {"servicelist": servicelist})
+
+def serviceTypeList(request):
+    servicetypes = ServiceType.objects.all()
+    return render(request, "service_type_list.html", {"servicetypes": servicetypes})
+
+def salesServices(request):
+    services = Services.objects.all().order_by('-created_at')
+    return render(request, "sales_services.html", {"services": services})

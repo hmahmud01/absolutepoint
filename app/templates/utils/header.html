@@ -1,7 +1,7 @@
 <header class="header">
   <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow"><a
       class="sidebar-toggler text-gray-500 me-4 me-lg-5 lead" href="#"><i class="fas fa-align-left"></i></a><a
-      class="navbar-brand fw-bold text-uppercase text-base" href="index.html"><span
+      class="navbar-brand fw-bold text-uppercase text-base" href="/"><span
         class="d-none d-brand-partial">Absolute </span><span class="d-none d-sm-inline">Point</span></a>
     <ul class="ms-auto d-flex align-items-center list-unstyled mb-0">
       <li class="nav-item dropdown">
@@ -132,6 +132,7 @@
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateprofile">
         Update Profile
       </button>
+      {% if rank %}
       <div class="card h-100 mt-5 mb-5">
         <div class="card-body d-flex">
           <div class="row w-100 align-items-center">
@@ -139,11 +140,15 @@
               <h2 class="mb-0 d-flex align-items-center"></h2>
               <span class="text-muted text-uppercase small">Profile Tier</span>
               <hr>
-              <small class="text-muted">Bronze</small>
+              <small class="text-muted">Tier: T{{ rank.tier }}</small> <br>
+              <small class="text-muted">Rank: {{ rank.title }}</small> <br>
+              <small class="text-muted">Percentage: {{ rank.sale_percent }}%</small> <br>
+              <small class="text-muted">Current earning: {{ rank.current_earn }}</small> <br>
             </div>
           </div>
         </div>
       </div>
+      {% endif %}      
       <div class="card h-100 mt-5 mb-5">
         <div class="card-body d-flex">
           <div class="row w-100 align-items-center">

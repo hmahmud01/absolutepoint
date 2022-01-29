@@ -21,6 +21,8 @@ class UserRank(models.Model):
     user = models.ForeignKey(DashboardUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=128, null=True, blank=True)
     tier = models.PositiveIntegerField(null=True, blank=True)
+    sale_percent = models.FloatField(null=True, blank=True)
+    current_earn = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.name}-{self.title}"
