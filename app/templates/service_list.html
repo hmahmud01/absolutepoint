@@ -20,9 +20,16 @@
                                 <h6 class="mb-0 d-flex align-items-center"> <span>{{ service.title }}</span>
                                     <span class="dot dot-sm ms-2 bg-indigo"></span></h6>
                                     <small class="text-gray-500">
+                                        {% if request.user.is_superuser %}
                                         <div class="mt-2">
                                             per {{ service.quantity }} <a class="btn btn-outline-danger btn-xs" href="{% url 'removeservicelist' service.id %}">REMOVE</a>
-                                        </div>                                        
+                                        </div>  
+                                        {% else %}
+                                        <div class="mt-2">
+                                            per {{ service.quantity }}
+                                        </div>  
+                                        {% endif %}
+                                                                              
                                     </small>
                             </div>
                         </div>
