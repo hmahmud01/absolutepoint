@@ -5,7 +5,7 @@
       {% if request.user.is_superuser %}
       <a class="sidebar-link text-muted active" href="{% url 'home' %}">
         {% else %}
-        <a class="sidebar-link text-muted active" href="{% url 'salesdashboard' %}">
+        <a class="sidebar-link text-muted active" href="/">
           {% endif %}
 
           <svg class="svg-icon svg-icon-md me-3">
@@ -53,6 +53,30 @@
           <use xlink:href="/static/icons/orion-svg-sprite.svg#quality-1"></use>
         </svg>
         <span class="sidebar-link-title">Add User</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'servicelist' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#bitcoin-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Service List</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'servicetypelist' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#scooter-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Service Type List</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'salesservices' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#strategy-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Sales</span>
       </a>
     </li>
     {% endif %}

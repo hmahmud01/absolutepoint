@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="mb-4 mb-lg-5">
+    <!-- Form Elements -->
+    <div class="col-lg-12 mb-5">
+        {% if rank %}
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reupdateprofile">
+            Update Profile
+        </button>
+        <div class="card h-100 mt-5 mb-5">
+            <div class="card-body d-flex">
+                <div class="row w-100 align-items-center">
+                    <div class="col-sm-12 mb-4 mb-sm-0">
+                        <h2 class="mb-0 d-flex align-items-center"></h2>
+                        <span class="text-muted text-uppercase small">Profile Tier</span>
+                        <hr>
+                        <small class="text-muted">Tier: T{{ rank.tier }}</small> <br>
+                        <small class="text-muted">Rank: {{ rank.title }}</small> <br>
+                        <small class="text-muted">Percentage: {{ rank.sale_percent }}%</small> <br>
+                        <small class="text-muted">Current earning: {{ rank.current_earn }}</small> <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="card h-100 mt-5 mb-5">
+            <div class="card-body d-flex">
+                <div class="row w-100 align-items-center">
+                    <div class="col-sm-12 mb-4 mb-sm-0">
+                        <h2 class="mb-0 d-flex align-items-center"></h2>
+                        <span class="text-muted text-uppercase small">User Information</span>
+                        <hr>
+                        <p>Username : {{ info.username }}</p>
+                        <p>Name : {{ info.name }}</p>
+                        <p>Email : {{ info.email }}</p>
+                        <p>Phone : {{ info.phone }}</p>
+                        <p>Address : {{ info.address }}</p>
+                        <p>Date Joined : {{ info.created_at }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="reupdateprofile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'reupdateuser' %}" method="post"> {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="{{ info.id }}">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Full Name</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="name" type="text" placeholder="Full Name"
+                                value="{{ info.name }}">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Email Address</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="email" type="text" placeholder="Email Address"
+                                value="{{ info.email }}">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Phone Number</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="phone" type="text" placeholder="Phone Number"
+                                value="{{ info.phone }}">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Address</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="address" type="text" placeholder="Address"
+                                value="{{ info.address }}">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
