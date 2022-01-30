@@ -251,7 +251,7 @@ def saveService(request):
         site_url=post_data['site_url'],
         counter=post_data['counter'],
         ratio=post_data['ratio'],
-        price=int(post_data['price'])
+        price=int(float(post_data['price']))
     )
     service.save()
     service.status = "Pending"
