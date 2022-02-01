@@ -47,7 +47,8 @@ def register(request):
 
 def addUser(request):
     data = ""
-    return render(request, "user_add.html", {"data": data})
+    add_user = True
+    return render(request, "user_add.html", {"data": data, "add_user": add_user})
 
 def registerUser(request):
     post_data = request.POST
@@ -169,8 +170,9 @@ def salesDashboard(request):
 @login_required(login_url='/login/')
 def home(request):
     user = request.user
+    home = True
     if user.is_superuser:
-        data = ""
+        data = ""        
         notices = Notices.objects.all()
         services = Services.objects.all().order_by('-created_at')
         servicelist = Service.objects.all()
@@ -178,7 +180,7 @@ def home(request):
         users = User.objects.all().exclude(is_superuser=True)
         return render(request, 'index.html', 
             {"data": data, "notices": notices, "services": services, "users": users, 
-                "servicelist": servicelist, "servicetypes": servicetypes})
+                "servicelist": servicelist, "servicetypes": servicetypes, "home": home})
     else:
         req_user = DashboardUser.objects.get(user=user.id)
         if req_user.user_type == 'sales':
@@ -191,7 +193,7 @@ def home(request):
                 rank = UserRank.objects.get(user_id=info.id)
                 print(rank.title)
                 return render(request, 'sales_dashboard.html', 
-                    {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "rank": rank})
+                    {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "rank": rank, "home": home})
             except:
                 data = ""
                 notices = Notices.objects.all()
@@ -199,14 +201,15 @@ def home(request):
                 servicelist = Service.objects.all()            
                 info = DashboardUser.objects.get(user_id=request.user.id)
                 return render(request, 'sales_dashboard.html', 
-                    {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist})
+                    {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "home": home})
             
 
     # return render(request, 'index.html', {"data": data})
 
 def noticeCreate(request):
     data = ""
-    return render(request, 'notice_create.html', {"data": data})
+    note_create = True
+    return render(request, 'notice_create.html', {"data": data, "note_create": note_create})
 
 def saveNotice(request):
     post_data = request.POST
@@ -229,12 +232,13 @@ def serviceCreate(request):
     data = ""
     servicelist = Service.objects.all()
     servicetypes = ServiceType.objects.all()
+    service_create = True
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
         rank = UserRank.objects.get(user_id=info.id)
-        return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank})
+        return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create})
     except:
-        return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes})
+        return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create})
 
 def saveService(request):
     post_data = request.POST
@@ -262,7 +266,8 @@ def saveService(request):
 
 def addService(request):
     data = ""
-    return render(request, 'service_add.html', {"data": data})
+    add_service = True
+    return render(request, 'service_add.html', {"data": data, "add_service": add_service})
 
 def addServiceList(request):
     post_data = request.POST
@@ -291,7 +296,8 @@ def updateServiceList(request):
 
 def addServiceType(request):
     data = ""
-    return render(request, 'service_add_type.html', {"data": data})
+    service_type = True
+    return render(request, 'service_add_type.html', {"data": data, "service_type": service_type})
 
 def addServiceTypeList(request):
     post_data = request.POST
@@ -486,12 +492,16 @@ def fraudPayment(request, sid):
 
 def serviceList(request):
     servicelist = Service.objects.all()
-    return render(request, "service_list.html", {"servicelist": servicelist})
+    service_list = True
+    return render(request, "service_list.html", {"servicelist": servicelist, "service_list": service_list})
 
 def serviceTypeList(request):
     servicetypes = ServiceType.objects.all()
-    return render(request, "service_type_list.html", {"servicetypes": servicetypes})
+    service_types = True
+    return render(request, "service_type_list.html", {"servicetypes": servicetypes, "service_types": service_types})
 
 def salesServices(request):
     services = Services.objects.all().order_by('-created_at')
-    return render(request, "sales_services.html", {"services": services})
+    sales = True
+    print(sales)
+    return render(request, "sales_services.html", {"services": services, "sales": sales})
