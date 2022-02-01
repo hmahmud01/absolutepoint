@@ -87,14 +87,17 @@
         <div class="card card-table mb-4">
             <div class="card-header">
                 <h5 class="card-heading">Payment Installment Status</h5>
+                {% if request.user.is_superuser %}
                 <div class="card-header-more">
                     <button class="btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
                             class="fas fa-ellipsis-v"></i></button>
                     <div class="dropdown-menu dropdown-menu-end text-sm">
                         <a class="dropdown-item" href="{% url 'donepayment' service.id %}"><i class="fas fa-smile me-2"></i>Payment Done</a>
                         <a class="dropdown-item" href="{% url 'fraudpayment' service.id %}"><i class="fas fa-angry me-2"></i>Payment Fraud</a>
+                        <a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#otherpay"><i class="fas fa-angry me-2"></i>Other</a>
                     </div>
                 </div>
+                {% endif %}                
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -135,6 +138,51 @@
                             {% endfor %}                            
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="otherpay" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Other Payment Status</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <form action="" method="post">{% csrf_token %}
+                        <div class="modal-body">                                                
+                            <div class="row">
+                                <label class="col-md-3 form-label">Payment Status</label>
+                                <div class="col-md-9 select mb-3">
+                                    <select class="form-control" name="payment" id="payment">
+                                        <option value="due">Due</option>
+                                        <option value="received">Recieved</option>
+                                        <option value="fraud">Fraud</option>
+                                        <option value="na">N/A</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-md-3 form-label">Service Status</label>
+                                <div class="col-md-9 select mb-3">
+                                    <select class="form-control" name="service" id="service">
+                                        <option value="pending">Pending</option>
+                                        <option value="working">Working</option>
+                                        <option value="done">Done</option>
+                                        <option value="failed">Failed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>                                            
                 </div>
             </div>
         </div>

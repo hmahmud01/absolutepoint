@@ -14,9 +14,9 @@
                 <form method="post" action="{% url 'saveservice' %}" class="form-horizontal">{% csrf_token %}
 
                     <div class="row">
-                        <label class="col-md-3 form-label">Title</label>
+                        <label class="col-md-3 form-label">Token Name</label>
                         <div class="col-md-9">
-                            <input class="form-control" name="title" type="text" placeholder="Title">
+                            <input class="form-control" name="title" type="text" placeholder="Token Name">
                         </div>
                     </div>
                     <hr class="bg-gray-400 my-4">
