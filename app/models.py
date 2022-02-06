@@ -59,6 +59,13 @@ class Services(models.Model):
     def __str__(self):
         return f"{self.user.username}-{self.title}"
 
+    def dateStamp(self):
+        dd = self.created_at.strftime('%d')
+        mm = self.created_at.strftime('%B')
+        yy = self.created_at.strftime('%Y')
+        date = yy
+        return date
+
 class ServicePayments(models.Model):
     service = models.ForeignKey(Services, on_delete=models.CASCADE)            
     amount = models.FloatField(null=True, blank=True)

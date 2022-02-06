@@ -72,7 +72,19 @@
         </svg>
         <span class="sidebar-link-title">Add User</span>
       </a>
-    </li>    
+    </li>   
+    <li class="sidebar-list-item">
+      {% if accounts %}
+      <a class="sidebar-link text-muted active" href="{% url 'accounts' %}">
+      {% else %}
+      <a class="sidebar-link text-muted" href="{% url 'accounts' %}">
+      {% endif %}      
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#numbers-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Accounts</span>
+      </a>
+    </li>  
     {% endif %}
     <li class="sidebar-list-item">
       {% if service_list %}
