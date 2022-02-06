@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
+import json
 
 from .models import *
 
@@ -490,6 +491,23 @@ def fraudPayment(request, sid):
 
     return redirect('servicedetail', sid)
 
+def otherPayment(request, sid):
+    service = Services.objects.get(id=sid)    
+    post_data = request.POST
+    if post_data['payment'] == "Received":
+        payment = ServicePayments(
+            service=service,
+            amount=service.price,
+            link="Auto Received",
+            accepted=True            
+        )
+        payment.save()
+    service.payment_status = post_data['payment']
+    service.status = post_data['service']
+    service.save()
+    return redirect('servicedetail', sid)
+    
+
 def serviceList(request):
     servicelist = Service.objects.all()
     service_list = True
@@ -505,3 +523,61 @@ def salesServices(request):
     sales = True
     print(sales)
     return render(request, "sales_services.html", {"services": services, "sales": sales})
+
+def accountsIndex(request):
+    accounts = True
+    users = DashboardUser.objects.all()
+    total_service_price = 0
+    total_payment_accepted = 0
+    total_due = 0
+    services = Services.objects.all()
+
+    timeline = []
+    sales = []
+    for service in services:
+        print(service.created_at)
+        print(service.dateStamp())
+        timeline.append(service.dateStamp())
+        sales.append(service.price)
+        total_service_price += service.price
+        payments = ServicePayments.objects.filter(service__id=service.id)
+        for payment in payments:
+            if payment.accepted == True:
+                total_payment_accepted += payment.amount
+    total_due = total_service_price - total_payment_accepted
+    return render(request, "accounts/index.html", 
+                {"accounts": accounts,                 
+                "users": users,
+                "timeline" : json.dumps(timeline),
+                "sales" : sales,
+                "total_service_price": total_service_price,
+                "total_payment_accepted": total_payment_accepted,
+                "total_due": total_due})
+
+def accountsDetail(request, aid):
+    accounts = True
+    user = DashboardUser.objects.get(id=aid)
+    
+    try:
+        rank = UserRank.objects.get(user_id=aid)
+    except:
+        rank = False
+    total_service_price = 0
+    total_payment_accepted = 0
+    total_due = 0
+    services = Services.objects.filter(user__id=user.id)
+    for service in services:
+        total_service_price += service.price
+        payments = ServicePayments.objects.filter(service__id=service.id)
+        for payment in payments:
+            if payment.accepted == True:
+                total_payment_accepted += payment.amount
+    total_due = total_service_price - total_payment_accepted
+    return render(request, "accounts/detail.html", 
+                {"accounts": accounts, 
+                "user": user,
+                "rank": rank,
+                "services": services,
+                "total_service_price": total_service_price,
+                "total_payment_accepted": total_payment_accepted,
+                "total_due": total_due})

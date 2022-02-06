@@ -38,9 +38,12 @@ urlpatterns = [
     path('acceptpayment/<int:pid>/', views.acceptPayment, name="acceptpayment"),
     path('donepayment/<int:sid>/', views.donePayment, name="donepayment"),
     path('fraudpayment/<int:sid>/', views.fraudPayment, name="fraudpayment"),
+    path('otherpayment/<int:sid>/', views.otherPayment, name="otherpayment"),
     path('servicelist/', views.serviceList, name="servicelist"),
     path('servicetypelist/', views.serviceTypeList, name="servicetypelist"),
     path('salesservices/', views.salesServices, name="salesservices"),
+    path('accounts/', views.accountsIndex, name="accounts"),
+    path('accountsdetail/<int:aid>/', views.accountsDetail, name="accountsdetail"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
