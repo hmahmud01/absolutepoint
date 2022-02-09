@@ -7,7 +7,7 @@
       <li class="nav-item dropdown">
         <form class="ms-auto me-4 d-none d-lg-block" id="searchForm" method="post" action="{% url 'searchresult' %}">{% csrf_token %}
           <div class="input-group input-group-sm input-group-navbar">
-            <input class="form-control" id="searchInput" name="search_key" type="search" placeholder="Search">
+            <input class="form-control" id="searchInput" name="search_key" type="search" placeholder="Search Service Title">
             <button class="btn" type="submit"> <i class="fas fa-search"></i></button>
           </div>
         </form>
