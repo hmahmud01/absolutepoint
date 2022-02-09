@@ -20,6 +20,7 @@ urlpatterns = [
     path('reupdateuser/', views.reupdateUser, name="reupdateuser"),
     path('', views.home, name="home"),    
     path('salesdashboard/', views.salesDashboard, name="salesdashboard"),
+    path('searchresult', views.searchResult, name="searchresult"),
     path('noticecreate/', views.noticeCreate, name="noticecreate"),
     path('savenotice/', views.saveNotice, name="savenotice"),
     path('noticedetail/<int:nid>/', views.noticeDetail, name="noticedetail"),
@@ -43,7 +44,7 @@ urlpatterns = [
     path('servicetypelist/', views.serviceTypeList, name="servicetypelist"),
     path('salesservices/', views.salesServices, name="salesservices"),
     path('accounts/', views.accountsIndex, name="accounts"),
-    path('accountsdetail/<int:aid>/', views.accountsDetail, name="accountsdetail"),
+    path('accountsdetail/<int:aid>/', views.accountsDetail, name="accountsdetail"),    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

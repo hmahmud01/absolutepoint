@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="card card-table mb-4">
+    <div class="card-header">
+        <h5 class="card-heading"> Service List </h5>
+        <small>List Created from the search of {{ data }}</small>    
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Created By</th>
+                        <th>Date</th>
+                        <th>Service Title</th>
+                        <th>Site Name</th>
+                        <th>Accepted</th>
+                        <th>Pyament Status</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in results %}
+                    <tr class="align-middle">
+                        {% if request.user.is_superuser %}
+                        <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                        {% else %}
+                            {% if service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                            {% else %}
+                            <td>#{{forloop.counter}}</td>
+                            {% endif %}
+                        {% endif %}       
+                        <td> <strong>{{ service.user.name }}</strong></td>
+                        <td>{{ service.created_at }}</td>
+                        <td>{{ service.title }}</td>
+                        <td>{{ service.site_name }}</td>
+                        {% if service.accepted %}
+                        <td>Accepted</td>
+                        {% else %}
+                        <td>Not Accepted Yet.</td>
+                        {% endif %}
+                        <td>{{ service.payment_status }}</td>
+                        <td><span class="badge badge-info-light">{{ service.status }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

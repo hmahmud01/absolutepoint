@@ -494,7 +494,7 @@ def fraudPayment(request, sid):
 def otherPayment(request, sid):
     service = Services.objects.get(id=sid)    
     post_data = request.POST
-    if post_data['payment'] == "Received":
+    if post_data['payment'] == "Received" or "NA":
         payment = ServicePayments(
             service=service,
             amount=service.price,
@@ -502,9 +502,16 @@ def otherPayment(request, sid):
             accepted=True            
         )
         payment.save()
+
+    print(post_data['payment'])
+    print(post_data['service'])
+    print(service.status)
     service.payment_status = post_data['payment']
     service.status = post_data['service']
     service.save()
+    print(service.payment_status)
+    print(service.status)
+
     return redirect('servicedetail', sid)
     
 
@@ -581,3 +588,9 @@ def accountsDetail(request, aid):
                 "total_service_price": total_service_price,
                 "total_payment_accepted": total_payment_accepted,
                 "total_due": total_due})
+
+
+def searchResult(request):
+    data = request.POST['search_key']
+    results = Services.objects.filter(title__icontains=data)
+    return render(request, "search_result.html", {"data": data, "results": results})
