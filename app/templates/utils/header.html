@@ -5,10 +5,10 @@
         class="d-none d-brand-partial">Absolute </span><span class="d-none d-sm-inline">Point</span></a>
     <ul class="ms-auto d-flex align-items-center list-unstyled mb-0">
       <li class="nav-item dropdown">
-        <form class="ms-auto me-4 d-none d-lg-block" id="searchForm">
+        <form class="ms-auto me-4 d-none d-lg-block" id="searchForm" method="post" action="{% url 'searchresult' %}">{% csrf_token %}
           <div class="input-group input-group-sm input-group-navbar">
-            <input class="form-control" id="searchInput" type="search" placeholder="Search">
-            <button class="btn" type="button"> <i class="fas fa-search"></i></button>
+            <input class="form-control" id="searchInput" name="search_key" type="search" placeholder="Search">
+            <button class="btn" type="submit"> <i class="fas fa-search"></i></button>
           </div>
         </form>
         <div class="dropdown-menu dropdown-menu-animated text-sm" id="searchDropdownMenu">
