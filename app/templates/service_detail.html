@@ -88,8 +88,6 @@
             <div class="card-header">
                 <h5 class="card-heading">Payment Installment Status</h5>
                 {% if request.user.is_superuser %}
-
-                {% if toPay %}
                 <div class="card-header-more">
                     <button class="btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
                             class="fas fa-ellipsis-v"></i></button>
@@ -100,7 +98,6 @@
                         
                     </div>
                 </div>
-                {% endif %}
                 {% endif %}                
             </div>
             <div class="card-body">
