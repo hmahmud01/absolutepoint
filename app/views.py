@@ -325,6 +325,8 @@ def serviceDetail(request, sid):
     toPay = True
     paid = 0.0    
     service = Services.objects.get(id=sid)
+    print(service.status)
+    print(service.payment_status)
     payments = ServicePayments.objects.filter(service__id=sid)
     remaining = service.price
     for payment in payments:
@@ -335,13 +337,14 @@ def serviceDetail(request, sid):
 
     if paid >= service.price:
         toPay = False
-        service.payment_status = "Received"
-        service.status = "Done"
+        # service.payment_status = "Received"
+        # service.status = "Done"
     
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
         rank = UserRank.objects.get(user_id=info.id)
-        return render(request, 'service_detail.html', {"data": data, "service": service, "payments": payments, "paid": paid, "remaining": remaining, "toPay": toPay, "info": info, "rank": rank})
+        return render(request, 'service_detail.html', 
+                {"data": data, "service": service, "payments": payments, "paid": paid, "remaining": remaining, "toPay": toPay, "info": info, "rank": rank})        
     except:
         return render(request, 'service_detail.html', {"data": data, "service": service, "payments": payments, "paid": paid, "remaining": remaining, "toPay": toPay})
 
@@ -500,13 +503,14 @@ def otherPayment(request, sid):
     service = Services.objects.get(id=sid)    
     post_data = request.POST
     if post_data['payment'] == "Received" or "NA":
-        payment = ServicePayments(
-            service=service,
-            amount=service.price,
-            link="Auto Received",
-            accepted=True            
-        )
-        payment.save()
+        print(post_data['payment'])
+        # payment = ServicePayments(
+        #     service=service,
+        #     amount=service.price,
+        #     link="Auto Received",
+        #     accepted=True            
+        # )
+        # payment.save()
 
     print(post_data['payment'])
     print(post_data['service'])
