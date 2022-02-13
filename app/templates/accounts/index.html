@@ -78,8 +78,13 @@
     document.addEventListener("DOMContentLoaded", function () {
         var timeline = '{{ timeline|safe }}';
         var sales = '{{ sales }}';
-        console.log(timeline);
-        console.log(sales);
+        console.log(timeline, typeof(timeline));
+        console.log(JSON.parse(timeline));
+        console.log(sales, typeof(timeline));
+        console.log(JSON.parse(sales));
+        timeline = JSON.parse(timeline);
+        sales = JSON.parse(sales);
+
         var lineChart1 = new Chart(document.getElementById("lineChart3"), {
             type: "line",
             options: {
@@ -108,7 +113,7 @@
                     yAxes: [
                         {
                             ticks: {
-                                max: 30,
+                                max: 30000,
                                 min: 0,
                             },
                             gridLines: {

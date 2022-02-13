@@ -1,3 +1,4 @@
+from time import strftime
 from django.db.models.fields import PositiveBigIntegerField
 from django.http.response import ResponseHeaders
 from django.shortcuts import render, redirect
@@ -7,6 +8,10 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
 import json
+
+from datetime import datetime
+from django.db.models import Count, Sum
+from django.db.models.functions import TruncMonth
 
 from .models import *
 
@@ -537,15 +542,27 @@ def accountsIndex(request):
     total_service_price = 0
     total_payment_accepted = 0
     total_due = 0
-    services = Services.objects.all()
-
     timeline = []
     sales = []
+    services = Services.objects.all()
+
+    print(services)
+
+    monthly_data = Services.objects.annotate(month = TruncMonth('created_at')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
+
+    for month in monthly_data:
+        timeline.append(month['month'].strftime('%B'))
+        sales.append(month['total'])
+        print(month['month'].strftime('%B'), month['total'])
+
+    print(monthly_data)
+
+
     for service in services:
         print(service.created_at)
         print(service.dateStamp())
-        timeline.append(service.dateStamp())
-        sales.append(service.price)
+        # timeline.append(service.dateStamp())
+        # sales.append(service.price)
         total_service_price += service.price
         payments = ServicePayments.objects.filter(service__id=service.id)
         for payment in payments:
