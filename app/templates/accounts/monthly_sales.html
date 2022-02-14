@@ -7,31 +7,28 @@
         <div class="col-lg-12 col-xl-12 mb-5 mb-lg-0">
             <div class="card h-100">
                 <div class="card-header">
-                    <h4 class="card-heading">Sales Executives List</h4>
+                    <h4 class="card-heading">Sales Info</h4>
+                    <p class="mb-0">Sales Information Devided into Months.</p>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Username</th>                      
-                                    <th>Status</th>                      
-                                    <th>Joined Date</th>                      
-                                    <th></th>
+                                    <th>Month</th>
+                                    <th>Year</th>
+                                    <th>Total Sale</th>                      
+                                    <th>Services Ran</th>                                                          
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for user in users %}
-                                <tr class="align-middle">
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.username }}</td>
-                                    <td>{{ user.status }}</td>
-                                    <td>{{ user.created_at }}</td>
-                                    <td><a href="{% url 'accountsdetail' user.id %}">Link</a></td>
-                                </tr>
+                                {% for data in monthly_data %}
+                                <tr>                                    
+                                    <td><a href="{% url 'monthlysalesdetail' data.mm data.year %}">{{ data.month }}</a></td>
+                                    <td>{{ data.year }}</td>
+                                    <td>{{ data.total }}</td>
+                                    <td>{{ data.services }}</td>
+                                </tr>                                
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -46,6 +43,7 @@
             <div class="card h-100">
                 <div class="card-header">
                     <h4 class="card-heading">Sales Info</h4>
+                    <p class="mb-0">Overall Sales Info</p>
                 </div>
                 <div class="card-body">
                     <p class="mb-5"><span>Total Service Estimated Income: </span> <strong>{{ total_service_price }}</strong> $</p>
@@ -60,11 +58,11 @@
         <div class="col-lg-12 mb-4 mb-lg-0">
             <div class="card h-100">
                 <div class="card-header">
-                    <h4 class="card-heading">Accounts Graph</h4>
+                    <h4 class="card-heading">Monthly Sale Graph</h4>
                 </div>
                 <div class="card-body">
                     <div class="chart-holder w-100">
-                        <canvas id="lineChart3"></canvas>
+                        <canvas id="salechart"></canvas>
                     </div>
                 </div>
             </div>
@@ -85,7 +83,7 @@
         timeline = JSON.parse(timeline);
         sales = JSON.parse(sales);
 
-        var lineChart1 = new Chart(document.getElementById("lineChart3"), {
+        var lineChart1 = new Chart(document.getElementById("salechart"), {
             type: "line",
             options: {
                 tooltips: {
