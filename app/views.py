@@ -9,7 +9,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 import json
 
-from datetime import datetime
+from datetime import datetime, date
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth
 
@@ -550,7 +550,6 @@ def accountsIndex(request):
     sales = []
     services = Services.objects.all()
 
-    print(services)
 
     monthly_data = Services.objects.annotate(month = TruncMonth('created_at')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
 
@@ -577,7 +576,7 @@ def accountsIndex(request):
                 {"accounts": accounts,                 
                 "users": users,
                 "timeline" : json.dumps(timeline),
-                "sales" : sales,
+                "sale" : sales,
                 "total_service_price": total_service_price,
                 "total_payment_accepted": total_payment_accepted,
                 "total_due": total_due})
@@ -615,3 +614,77 @@ def searchResult(request):
     data = request.POST['search_key']
     results = Services.objects.filter(title__icontains=data)
     return render(request, "search_result.html", {"data": data, "results": results})
+
+def monthlySales(request):
+    sales_info = True
+    total_service_price = 0
+    total_payment_accepted = 0
+    total_due = 0
+    timeline = []
+    sales = []
+    services = Services.objects.all()
+
+    data = []
+
+    monthly_data = Services.objects.annotate(month = TruncMonth('created_at')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
+
+    for month in monthly_data:
+        timeline.append(month['month'].strftime('%B'))
+        sales.append(month['total'])
+        sale_data = {
+            "month": month['month'].strftime('%B'),
+            "year": month['month'].strftime('%Y'),
+            "mm": month['month'].strftime('%m'),
+            "total": month['total'],
+            "services": month['services']
+            }
+        data.append(sale_data)
+
+    for service in services:
+        total_service_price += service.price
+        payments = ServicePayments.objects.filter(service__id=service.id)
+        for payment in payments:
+            if payment.accepted == True:
+                total_payment_accepted += payment.amount
+    total_due = total_service_price - total_payment_accepted
+    return render(request, "accounts/monthly_sales.html",
+                    {"sales_info": sales_info, 
+                    "timeline": json.dumps(timeline), 
+                    "sale": sales, 
+                    "total_service_price": total_service_price,
+                    "total_payment_accepted": total_payment_accepted,
+                    "total_due": total_due,
+                    "monthly_data": data})
+
+
+def monthlySaleDetail(request, mm, yy):
+    sales_info = True
+    month = date(1900, mm, 1).strftime('%B')
+
+    services = Services.objects.filter(created_at__year=yy,
+                                        created_at__month=mm)
+
+    result = (services
+            .values('user')
+            .annotate(services=Count('user'), total=Sum('price'))
+        )
+
+    monthly_filtered = []
+
+    for data in result:
+        user_id = data['user']
+        user = DashboardUser.objects.get(id=user_id)
+        filtered_row = {
+                "user": user,
+                "service_count": data['services'],
+                "total": data['total']
+            }
+        monthly_filtered.append(filtered_row)
+
+    print(monthly_filtered)
+
+    return render(request, "accounts/monthly_sale_detail.html", 
+                        {"sales_info": sales_info,
+                        "month": month,
+                        "year": yy,
+                        "sale_data": monthly_filtered})

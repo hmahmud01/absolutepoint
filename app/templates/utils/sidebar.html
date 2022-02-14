@@ -4,9 +4,9 @@
     <li class="sidebar-list-item">
       {% if home %}
       <a class="sidebar-link text-muted active" href="/">
-      {% else %}
-      <a class="sidebar-link text-muted" href="/">
-      {% endif %}
+        {% else %}
+        <a class="sidebar-link text-muted" href="/">
+          {% endif %}
           <svg class="svg-icon svg-icon-md me-3">
             <use xlink:href="/static/icons/orion-svg-sprite.svg#real-estate-1"> </use>
           </svg><span class="sidebar-link-title">Dashboard</span></a>
@@ -16,110 +16,127 @@
     <li class="sidebar-list-item">
       {% if note_create %}
       <a class="sidebar-link text-muted active" href="{% url 'noticecreate' %}">
-      {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'noticecreate' %}">
-      {% endif %}      
-        <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#text-message-1"> </use>
-        </svg><span class="sidebar-link-title">Create Notice</span></a>
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'noticecreate' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#text-message-1"> </use>
+          </svg><span class="sidebar-link-title">Create Notice</span></a>
     </li>
     {% endif %}
 
     <li class="sidebar-list-item">
       {% if service_create %}
       <a class="sidebar-link text-muted active" href="{% url 'servicecreate' %}">
-      {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'servicecreate' %}">
-      {% endif %}
-        <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#survey-1"> </use>
-        </svg><span class="sidebar-link-title">Create Service</span></a>
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'servicecreate' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#survey-1"> </use>
+          </svg><span class="sidebar-link-title">Create Service</span></a>
     </li>
     {% if request.user.is_superuser %}
     <li class="sidebar-list-item">
       {% if add_service %}
       <a class="sidebar-link text-muted active" href="{% url 'addservice' %}">
-      {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'addservice' %}">
-      {% endif %}      
-        <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#reading-1"></use>
-        </svg>
-        <span class="sidebar-link-title">Add Service</span>
-      </a>
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'addservice' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#reading-1"></use>
+          </svg>
+          <span class="sidebar-link-title">Add Service</span>
+        </a>
     </li>
 
     <li class="sidebar-list-item">
       {% if service_type %}
       <a class="sidebar-link text-muted active" href="{% url 'addservicetype' %}">
-      {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'addservicetype' %}">
-      {% endif %}      
-        <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#share-1"></use>
-        </svg>
-        <span class="sidebar-link-title">Add Service Type</span>
-      </a>
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'addservicetype' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#share-1"></use>
+          </svg>
+          <span class="sidebar-link-title">Add Service Type</span>
+        </a>
     </li>
     <li class="sidebar-list-item">
       {% if add_user %}
       <a class="sidebar-link text-muted active" href="{% url 'adduser' %}">
-      {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'adduser' %}">
-      {% endif %}      
-        <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#quality-1"></use>
-        </svg>
-        <span class="sidebar-link-title">Add User</span>
-      </a>
-    </li>   
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'adduser' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#quality-1"></use>
+          </svg>
+          <span class="sidebar-link-title">Add User</span>
+        </a>
+    </li>
     <li class="sidebar-list-item">
       {% if accounts %}
       <a class="sidebar-link text-muted active" href="{% url 'accounts' %}">
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'accounts' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#numbers-1"></use>
+          </svg>
+          <span class="sidebar-link-title">Accounts</span>
+        </a>
+    </li>
+
+    <li class="sidebar-list-item">
+      {% if sales_info %}
+      <a class="sidebar-link text-muted active" href="#" data-bs-target="#e-commerceDropdown"
+        role="button" aria-expanded="false" data-bs-toggle="collapse">
       {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'accounts' %}">
+      <a class="sidebar-link text-muted " href="#" data-bs-target="#e-commerceDropdown"
+        role="button" aria-expanded="false" data-bs-toggle="collapse">
       {% endif %}      
         <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#numbers-1"></use>
-        </svg>
-        <span class="sidebar-link-title">Accounts</span>
-      </a>
-    </li>  
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#money-box-1"> </use>
+        </svg><span class="sidebar-link-title">Sales Info</span></a>
+      <ul class="sidebar-menu list-unstyled collapse " id="e-commerceDropdown">
+        <li class="sidebar-list-item"><a class="sidebar-link text-muted" href="{% url 'monthlysales' %}">Monthly</a>
+        </li>
+      </ul>
+    </li>
     {% endif %}
     <li class="sidebar-list-item">
       {% if service_list %}
       <a class="sidebar-link text-muted active" href="{% url 'servicelist' %}">
-      {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'servicelist' %}">
-      {% endif %}      
-        <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#bitcoin-1"></use>
-        </svg>
-        <span class="sidebar-link-title">Service List</span>
-      </a>
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'servicelist' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#bitcoin-1"></use>
+          </svg>
+          <span class="sidebar-link-title">Service List</span>
+        </a>
     </li>
     <li class="sidebar-list-item">
       {% if service_types %}
       <a class="sidebar-link text-muted active" href="{% url 'servicetypelist' %}">
-      {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'servicetypelist' %}">
-      {% endif %}      
-        <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#scooter-1"></use>
-        </svg>
-        <span class="sidebar-link-title">Service Type List</span>
-      </a>
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'servicetypelist' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#scooter-1"></use>
+          </svg>
+          <span class="sidebar-link-title">Service Type List</span>
+        </a>
     </li>
     <li class="sidebar-list-item">
       {% if sales %}
       <a class="sidebar-link text-muted active" href="{% url 'salesservices' %}">
-      {% else %}
-      <a class="sidebar-link text-muted" href="{% url 'salesservices' %}">
-      {% endif %}      
-        <svg class="svg-icon svg-icon-md me-3">
-          <use xlink:href="/static/icons/orion-svg-sprite.svg#strategy-1"></use>
-        </svg>
-        <span class="sidebar-link-title">Sales</span>
-      </a>
+        {% else %}
+        <a class="sidebar-link text-muted" href="{% url 'salesservices' %}">
+          {% endif %}
+          <svg class="svg-icon svg-icon-md me-3">
+            <use xlink:href="/static/icons/orion-svg-sprite.svg#strategy-1"></use>
+          </svg>
+          <span class="sidebar-link-title">Sales</span>
+        </a>
     </li>
 </div>
