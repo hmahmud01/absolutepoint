@@ -11,7 +11,7 @@ import json
 
 from datetime import datetime, date
 from django.db.models import Count, Sum
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth, TruncWeek
 
 from .models import *
 
@@ -681,10 +681,20 @@ def monthlySaleDetail(request, mm, yy):
             }
         monthly_filtered.append(filtered_row)
 
-    print(monthly_filtered)
+    weekly_data = services.annotate(week = TruncWeek('created_at')).values('week')
+
+    print(weekly_data)
 
     return render(request, "accounts/monthly_sale_detail.html", 
                         {"sales_info": sales_info,
                         "month": month,
                         "year": yy,
                         "sale_data": monthly_filtered})
+
+def clientIndex(request):
+    data = ""
+    return render(request, "client/index.html", {"data": data})
+
+def clientServiceDetail(request):
+    data = ""
+    return render(request, "client/detail.html", {"data": data})

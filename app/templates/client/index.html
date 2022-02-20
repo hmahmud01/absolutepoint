@@ -1,0 +1,67 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>    
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Crypto Services</h1>
+            <p>Provided Absolute Point</p>
+          </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Service title</h5>
+                    <h6 class="card-subtitle text-muted">Service Type</h6>
+                </div>
+                <img class="img-fluid service-img"
+                    src="https://media.istockphoto.com/photos/colorful-background-picture-id1280385511?b=1&k=20&m=1280385511&s=170667a&w=0&h=4-KMkIqgyw2gTBMTBbYZVZoidwRsWZzr3q0xyUDYhas="
+                    alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit at nostrum, alias corrupti similique molestiae incidunt officiis rerum, quae illo quis dolores laborum impedit, ipsa debitis cupiditate ullam perspiciatis sed?</p>
+                    <a class="card-link" href="{% url 'clientservicedetail' %}">Detail</a>
+                    <a class="card-link" href="#">Another link</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Service title</h5>
+                    <h6 class="card-subtitle text-muted">Service Type</h6>
+                </div>
+                <img class="img-fluid service-img"
+                    src="https://c4.wallpaperflare.com/wallpaper/764/505/66/baby-groot-4k-hd-superheroes-wallpaper-preview.jpg"
+                    alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit at nostrum, alias corrupti similique molestiae incidunt officiis rerum, quae illo quis dolores laborum impedit, ipsa debitis cupiditate ullam perspiciatis sed?</p>
+                    <a class="card-link" href="{% url 'clientservicedetail' %}">Detail</a>
+                    <a class="card-link" href="#">Another link</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Service title</h5>
+                    <h6 class="card-subtitle text-muted">Service Type</h6>
+                </div>
+                <img class="img-fluid service-img"
+                    src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                    alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit at nostrum, alias corrupti similique molestiae incidunt officiis rerum, quae illo quis dolores laborum impedit, ipsa debitis cupiditate ullam perspiciatis sed?</p>
+                    <a class="card-link" href="{% url 'clientservicedetail' %}">Detail</a>
+                    <a class="card-link" href="#">Another link</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+{% endblock %}
