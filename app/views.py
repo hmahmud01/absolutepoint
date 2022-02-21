@@ -698,3 +698,15 @@ def clientIndex(request):
 def clientServiceDetail(request):
     data = ""
     return render(request, "client/detail.html", {"data": data})
+
+def clientOrders(request):
+    data = ""
+    return render(request, "client/orders.html", {"data": data})
+
+def allOrders(request):
+    data = ""
+    return render(request, "orders.html", {"data": data})
+
+def orderDetail(request):
+    data = ""
+    return render(request, "client/order_detail.html", {"data": data})
