@@ -157,7 +157,7 @@
                         <div class="modal-body">                                                
                             <div class="row">
                                 <label class="col-md-3 form-label">Payment Status</label>
-                                <div class="col-md-9 select mb-3">
+                                <div class="col-md-9 select mb-3 payment-select">
                                     <select class="form-control" name="payment" id="payment">
                                         <option value="Due">Due</option>
                                         <option value="Received">Recieved</option>
@@ -168,7 +168,7 @@
                             </div>
                             <div class="row">
                                 <label class="col-md-3 form-label">Service Status</label>
-                                <div class="col-md-9 select mb-3">
+                                <div class="col-md-9 select mb-3 service-select">
                                     <select class="form-control" name="service" id="service">
                                         <option value="Pending">Pending</option>
                                         <option value="Working">Working</option>
@@ -189,4 +189,18 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var payment_status = '{{ service.payment_status|safe }}';
+    var status = '{{ service.status }}';
+
+    $(function() {
+        $("div.payment-select select").val(payment_status);
+        $("div.service-select select").val(status);
+    });
+
+</script>
 {% endblock %}

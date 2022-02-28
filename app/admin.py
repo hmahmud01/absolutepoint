@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+admin.site.register([DashboardUser, UserRank, Service, ServiceType, Services, ServicePayments, Notices])
