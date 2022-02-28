@@ -5,7 +5,7 @@
 <div class="card card-table mb-4">
     <div class="card-header">
         <h5 class="card-heading"> Status of Services</h5>
-        <small>Sorted by Payment which are not received yet</small>    
+        <small>Sorted by <strong>Due Payment and Others</strong></small>    
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -24,7 +24,7 @@
                 </thead>
                 <tbody>
                     {% for service in services %}
-                    {% if service.payment_status != "Received" %}
+                    {% if service.payment_status != "Received" and service.payment_status != "Fraud" and service.status != "Failed" and services.status != "Done"  %}
                     <tr class="align-middle">
                         {% if request.user.is_superuser %}
                         <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
@@ -58,7 +58,7 @@
 <div class="card card-table mb-4">
     <div class="card-header">
         <h5 class="card-heading">Status of services</h5>
-        <small>Sorted by Received Payment</small>    
+        <small>Sorted by <strong>Failed Jobs</strong></small>    
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -77,7 +77,113 @@
                 </thead>
                 <tbody>
                     {% for service in services %}
-                    {% if service.payment_status == "Received" %}
+                    {% if service.status == "Failed" %}
+                    <tr class="align-middle">
+                        {% if request.user.is_superuser %}
+                        <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                        {% else %}
+                            {% if service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                            {% else %}
+                            <td>#{{forloop.counter}}</td>
+                            {% endif %}
+                        {% endif %}                        
+                        <td> <strong>{{ service.user.name }}</strong></td>
+                        <td>{{ service.created_at }}</td>
+                        <td>{{ service.title }}</td>
+                        <td>{{ service.site_name }}</td>
+                        {% if service.accepted %}
+                        <td>Accepted</td>
+                        {% else %}
+                        <td>Not Accepted Yet.</td>
+                        {% endif %}
+                        <td>{{ service.payment_status }}</td>
+                        <td><span class="badge badge-info-light">{{ service.status }}</span></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="card card-table mb-4">
+    <div class="card-header">
+        <h5 class="card-heading">Status of services</h5>
+        <small>Sorted by <strong>Fraud Payment Status</strong></small>    
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Created By</th>
+                        <th>Date</th>
+                        <th>Service Title</th>
+                        <th>Site Name</th>
+                        <th>Accepted</th>
+                        <th>Pyament Status</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                    {% if service.payment_status == "Fraud" %}
+                    <tr class="align-middle">
+                        {% if request.user.is_superuser %}
+                        <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                        {% else %}
+                            {% if service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                            {% else %}
+                            <td>#{{forloop.counter}}</td>
+                            {% endif %}
+                        {% endif %}                        
+                        <td> <strong>{{ service.user.name }}</strong></td>
+                        <td>{{ service.created_at }}</td>
+                        <td>{{ service.title }}</td>
+                        <td>{{ service.site_name }}</td>
+                        {% if service.accepted %}
+                        <td>Accepted</td>
+                        {% else %}
+                        <td>Not Accepted Yet.</td>
+                        {% endif %}
+                        <td>{{ service.payment_status }}</td>
+                        <td><span class="badge badge-info-light">{{ service.status }}</span></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="card card-table mb-4">
+    <div class="card-header">
+        <h5 class="card-heading">Status of services</h5>
+        <small>Sorted by <strong>Received Payment and Job Done</strong></small>    
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Created By</th>
+                        <th>Date</th>
+                        <th>Service Title</th>
+                        <th>Site Name</th>
+                        <th>Accepted</th>
+                        <th>Pyament Status</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                    {% if service.payment_status == "Received" and service.status == "Done" %}
                     <tr class="align-middle">
                         {% if request.user.is_superuser %}
                         <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>

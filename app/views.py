@@ -1,3 +1,4 @@
+from pdb import post_mortem
 from time import strftime
 from django.db.models.fields import PositiveBigIntegerField
 from django.http.response import ResponseHeaders
@@ -181,7 +182,7 @@ def home(request):
         data = ""        
         notices = Notices.objects.all()
         services = Services.objects.all().order_by('-created_at')
-        servicelist = Service.objects.all()
+        servicelist = Service.objects.order_by('title')
         servicetypes = ServiceType.objects.all()
         users = User.objects.all().exclude(is_superuser=True)
         return render(request, 'index.html', 
@@ -194,7 +195,7 @@ def home(request):
                 data = ""
                 notices = Notices.objects.all()
                 services = Services.objects.all().order_by('-created_at')
-                servicelist = Service.objects.all()            
+                servicelist = Service.objects.order_by('title')      
                 info = DashboardUser.objects.get(user_id=request.user.id)
                 rank = UserRank.objects.get(user_id=info.id)
                 print(rank.title)
@@ -204,7 +205,7 @@ def home(request):
                 data = ""
                 notices = Notices.objects.all()
                 services = Services.objects.all().order_by('-created_at')
-                servicelist = Service.objects.all()            
+                servicelist = Service.objects.order_by('title')         
                 info = DashboardUser.objects.get(user_id=request.user.id)
                 return render(request, 'sales_dashboard.html', 
                     {"data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "home": home})
@@ -239,15 +240,22 @@ def serviceCreate(request):
     servicelist = Service.objects.all()
     servicetypes = ServiceType.objects.all()
     service_create = True
+    users = DashboardUser.objects.all()
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
         rank = UserRank.objects.get(user_id=info.id)
-        return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create})
+        return render(request, 'service_create.html', {"data": data, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create})
     except:
-        return render(request, 'service_create.html', {"data": data, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create})
+        return render(request, 'service_create.html', {"data": data, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create})
 
 def saveService(request):
     post_data = request.POST
+    if request.user.is_superuser:
+        dashboarduser = DashboardUser.objects.get(id=post_data['dashboarduser'])
+        date = post_data['date']
+    else:
+        user = request.user
+        dashboarduser = DashboardUser.objects.filter(user_id=user.id).last()
     user = request.user
     dashboarduser = DashboardUser.objects.filter(user_id=user.id).last()
     service_title = Service.objects.get(id=post_data['service'])
@@ -511,15 +519,10 @@ def otherPayment(request, sid):
         #     accepted=True            
         # )
         # payment.save()
-
-    print(post_data['payment'])
-    print(post_data['service'])
-    print(service.status)
     service.payment_status = post_data['payment']
     service.status = post_data['service']
     service.save()
-    print(service.payment_status)
-    print(service.status)
+
 
     return redirect('servicedetail', sid)
     

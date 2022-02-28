@@ -13,3 +13,11 @@
 .navbar-brand-client{
 
 }
+
+
+.scrollbar {
+    height: 400px !important;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: indigo lightsalmon;
+}

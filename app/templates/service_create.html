@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block styles %}
+<link rel="stylesheet" href="/static/vendor/vanillajs-datepicker/css/datepicker-bs4.min.css">
+{% endblock %}
+
 {% block content %}
 <section class="mb-4 mb-lg-5">
 
@@ -83,7 +87,29 @@
                         </div>
                     </div>
                     <hr class="bg-gray-400 my-4">
+                    {% if request.user.is_superuser %}
+                    <div class="row">
+                        <label class="col-md-3 form-label">Service Taken Date</label>
+                        <div class="col-md-9 mb-3">
+                            <div class="">                                
+                                <input class="form-control input-datepicker-autoclose" name="date" type="text" value="">
+                            </div>
+                        </div>                        
+                    </div>
 
+                    <div class="row">
+                        <label class="col-md-3 form-label">Service Taken User</label>
+                        <div class="col-md-9 select mb-3">
+                            <select class="form-control" name="dashboarduser">
+                                <option value="none">None</option>
+                                {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.name }} ({{ user.username }}) </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    {% endif %}
 
                     <div class="row">
                         <div class="col-md-9 ms-auto">
@@ -100,36 +126,12 @@
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="/static/vendor/vanillajs-datepicker/js/datepicker-full.min.js"></script>
 <script>
     console.log("in service create page");
 
     var service = document.getElementById("service");
 
-    // service.onchange = function (event) {
-    //     var title = event.target.options[event.target.selectedIndex].dataset.title;
-    //     var quantity = event.target.options[event.target.selectedIndex].dataset.quantity;
-    //     var price = event.target.options[event.target.selectedIndex].dataset.price;
-    //     console.log("title: " + title);
-    //     console.log("quantity: " + quantity);
-    //     console.log("price: " + price);
-
-    //     console.log(typeof(parseFloat(quantity)));
-    //     console.log(parseFloat(price));
-
-    //     document.getElementById("qty").setAttribute('value',100);
-    //     document.getElementById('qty').value = "My value";
-    //     document.getElementById("price").value = "My value";
-    //     document.getElementById("ratio").value = "My value";
-    // };
-
-    // Client Token Name:
-    // Service Type: Upvote/post
-    // Service Name: Coin sniper Votes – 1000 - 35
-    // Voting token URL:
-    // Total Votes: 4500
-    // Unit (1k = 1unit): 4500/1000 = 4.5
-    // Price per unit: 42
-    // Total valuation:
 
     $('#service').on('change', function(){
         // $('#myinput').val($(this).val());        
@@ -154,25 +156,9 @@
 
     $('#qty').change();
 
-    // var input_qty = document.getElementById("qty");
-
-    // var input_qty = document.querySelector('#qty');
-
-
-    // input_qty.addEventListener('change', (e) => {
-    //     console.log(document.getElementById("#service").val)
-    //     console.log(base_qty, base_price, e.target.value);
-    //     console.log(typeof (base_qty), typeof (base_price), typeof (input_qty));
-    // });
-
-
-
-
-    // input_qty.onchange(() => {
-    //     console.log(base_qty, base_price, input_qty);
-    //     console.log(typeof(base_qty), typeof(base_price), typeof(input_qty));
-    // });   
-
-
+    const datepickerAutoClose = new Datepicker(document.querySelector(".input-datepicker-autoclose"), {
+        buttonClass: "btn",
+        autohide: true,
+    });
 </script>
 {% endblock %}
