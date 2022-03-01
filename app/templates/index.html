@@ -269,6 +269,9 @@
                         <th>Service Title</th>
                         <th>Site Name</th>
                         <th>Accepted</th>
+                        {% if request.user.is_superuser %}
+                        <th>Price</th>
+                        {% endif %}
                         <th>Pyament Status</th>
                         <th>Status</th>
                     </tr>
@@ -285,6 +288,9 @@
                         <td>Accepted</td>
                         {% else %}
                         <td>Not Accepted Yet.</td>
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                        <td> <strong> {{ service.price }} $ </strong></td>
                         {% endif %}
                         <td>{{ service.payment_status }}</td>
                         <td><span class="badge badge-info-light">{{ service.status }}</span></td>

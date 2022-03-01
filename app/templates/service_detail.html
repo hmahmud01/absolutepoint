@@ -9,9 +9,15 @@
         <div class="card mb-4">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
-                    <div class="card-heading">{{ service.title }}</div>
+                    <div>
+                        <div class="card-heading">{{ service.title }}</div>
+                    </div>                    
                     {% if not service.accepted and request.user.is_superuser %}
-                    <a class="btn btn-sm btn-success" href="{% url 'acceptservice' service.id %}"><i class="fa fa-check"></i> Accept</a>
+                    <div>
+                        <a class="btn btn-sm btn-success" href="{% url 'acceptservice' service.id %}"><i class="fa fa-check"></i> Accept</a>
+                        <a class="btn btn-sm btn-danger" href=""><i class="fa fa-times"></i> Decline</a>
+                        <a class="btn btn-sm btn-warning" href=""><i class="fa fa-pen"></i> Edit</a>
+                    </div>                    
                     {% endif %}
                 </div>
             </div>
@@ -132,6 +138,7 @@
                                 <th><a class="btn btn-sm btn-success disabled" href="{% url 'acceptpayment' payment.id %}"><i class="fa fa-check"></i> Accepted</a></th>
                                 {% else %}
                                 <th><a class="btn btn-sm btn-success" href="{% url 'acceptpayment' payment.id %}"><i class="fa fa-check"></i> Accept</a></th>
+                                <th><a class="btn btn-sm btn-danger" href=""><i class="fa fa-times"></i> Decline</a></th>
                                 {% endif %}
                                 
                                 {% endif %}

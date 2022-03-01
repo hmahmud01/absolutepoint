@@ -194,7 +194,7 @@ def home(request):
             try:
                 data = ""
                 notices = Notices.objects.all()
-                services = Services.objects.all().order_by('-created_at')
+                services = Services.objects.filter(user__id=req_user.id).order_by('-created_at')
                 servicelist = Service.objects.order_by('title')      
                 info = DashboardUser.objects.get(user_id=request.user.id)
                 rank = UserRank.objects.get(user_id=info.id)
@@ -204,7 +204,7 @@ def home(request):
             except:
                 data = ""
                 notices = Notices.objects.all()
-                services = Services.objects.all().order_by('-created_at')
+                services = Services.objects.filter(user__id=req_user.id).order_by('-created_at')
                 servicelist = Service.objects.order_by('title')         
                 info = DashboardUser.objects.get(user_id=request.user.id)
                 return render(request, 'sales_dashboard.html', 
@@ -538,7 +538,12 @@ def serviceTypeList(request):
     return render(request, "service_type_list.html", {"servicetypes": servicetypes, "service_types": service_types})
 
 def salesServices(request):
-    services = Services.objects.all().order_by('-created_at')
+    if request.user.is_superuser:
+        services = Services.objects.all().order_by('-created_at')
+    else:
+        user = request.user
+        dash_user = DashboardUser.objects.get(user=user.id)
+        services = Services.objects.filter(user__id=dash_user.id).order_by('-created_at')
     sales = True
     print(sales)
     return render(request, "sales_services.html", {"services": services, "sales": sales})
