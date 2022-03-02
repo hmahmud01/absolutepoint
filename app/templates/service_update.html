@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="/static/vendor/vanillajs-datepicker/css/datepicker-bs4.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="mb-4 mb-lg-5">
+
+    <!-- Form Elements -->
+    <div class="col-lg-12 mb-5">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-heading">Service Update</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'udpateservicevalue' service.id %}" class="form-horizontal">{% csrf_token %}
+
+                    <div class="row">
+                        <label class="col-md-3 form-label">Token Name</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="title" type="text" value="{{ service.title }}" placeholder="Token Name">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Service Type</label>
+                        <div class="col-md-9 select mb-3 service_type">
+                            <select class="form-control" name="service_type" id="service_type">
+                                <option value="none">None</option>
+                                {% for type in servicetypes %}
+                                <option value="{{ type.id }}">{{ type.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Site Name</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="site_name" type="text"  value="{{ service.site_name }}" placeholder="Site Name">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Service</label>
+                        <div class="col-md-9 select mb-3 service">
+                            <select class="form-control" name="service" id="service">
+                                <option value="none">None</option>
+                                {% for service in servicelist %}
+                                <option data-title="{{ service.title }}" data-quantity="{{ service.quantity }}"
+                                    data-price="{{ service.price }}" value="{{ service.id }}">
+                                    {{ service.title }} - {{ service.quantity }} - {{ service.price }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Site Url</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="site_url" type="text" value="{{ service.site_url }}" placeholder="Site Url">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Quantity</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="counter" id="qty" type="number" value="{{ service.counter }}" placeholder="Quantity">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Multiplier</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="ratio" id="ratio" type="number" step="0.01"
+                                placeholder="Ratio" value="{{ service.ratio }}">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    <div class="row">
+                        <label class="col-md-3 form-label">Price</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="price" id="price" type="number" value="{{ service.price }}" placeholder="Price">
+                        </div>
+                    </div>
+                    <hr class="bg-gray-400 my-4">
+                    {% if request.user.is_superuser %}
+                    <div class="row">
+                        <label class="col-md-3 form-label">Service Taken Date</label>
+                        <div class="col-md-9 mb-3">
+                            <div class="">                                
+                                <input class="form-control input-datepicker-autoclose" name="date" type="text" value="">
+                            </div>
+                        </div>                        
+                    </div>
+
+                    <div class="row">
+                        <label class="col-md-3 form-label">Service Taken User</label>
+                        <div class="col-md-9 select mb-3">
+                            <select class="form-control" name="dashboarduser">
+                                <option value="none">None</option>
+                                {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.name }} ({{ user.username }}) </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-9 ms-auto">
+                            <button class="btn btn-secondary" type="button">Cancel</button>
+                            <button class="btn btn-primary" type="submit">Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="/static/vendor/vanillajs-datepicker/js/datepicker-full.min.js"></script>
+<script>
+    console.log("in service create page");
+
+    var service = document.getElementById("service");
+
+
+    // $('#service').on('change', function(){ 
+    //     var base_ratio = 1 
+    //     $('#qty').val($(this).find(':selected').data('quantity'));
+    //     $('#price').val($(this).find(':selected').data('price'));
+    //     $('#ratio').val(base_ratio);
+    // })
+
+    // $('#service').change();
+
+    // $('#qty').on('change', function(){
+    //     var val = $('#qty').val();
+    //     var base_qty = $('#service').find(':selected').data('quantity');
+    //     var base_price = $('#service').find(':selected').data('price');
+    //     var multiplier = val/base_qty;
+    //     var final_price = base_price * multiplier;
+    //     $('#ratio').val(multiplier);
+    //     $('#price').val(final_price);        
+    // });
+
+    // $('#qty').change();
+
+    const datepickerAutoClose = new Datepicker(document.querySelector(".input-datepicker-autoclose"), {
+        buttonClass: "btn",
+        autohide: true,
+    });
+
+    var service_type = '{{ service.service_type.id }}';
+    var service = '{{ service.service.id }}';
+
+    console.log(service_type);
+    console.log(service);
+
+    $(function() {
+        $("div.service_type select").val(service_type);
+        $("div.service select").val(service);
+    });
+</script>
+{% endblock %}
