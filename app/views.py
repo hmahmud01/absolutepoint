@@ -391,6 +391,12 @@ def acceptService(requset, sid):
 
     return redirect('servicedetail', sid)
 
+def declineService(requset, sid):
+    service = Services.objects.get(id=sid)
+    service.delete()
+
+    return redirect('salesservices')
+
 def addServicePyament(request):
     post_data = request.POST
     if request.FILES:
@@ -517,6 +523,14 @@ def acceptPayment(request, pid):
         user_rank.save()
     
     return redirect('servicedetail', payment.service.id)
+
+def declinePayment(request, pid):
+    payment = ServicePayments.objects.get(id=pid)
+    service = payment.service
+    payment.delete()
+
+    return redirect('servicedetail', service.id)
+
 
 def donePayment(request, sid):
     service = Services.objects.get(id=sid)
