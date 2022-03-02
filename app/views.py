@@ -278,6 +278,33 @@ def saveService(request):
 
     return redirect('/')
 
+def serviceUpdate(request, sid):
+    data = ""
+    servicelist = Service.objects.all()
+    servicetypes = ServiceType.objects.all()
+    # service_create = True
+    users = DashboardUser.objects.all()
+    service = Services.objects.get(id=sid)
+    try:
+        info = DashboardUser.objects.get(user_id=request.user.id)
+        rank = UserRank.objects.get(user_id=info.id)
+        return render(request, 'service_update.html', {"data": data, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank})
+    except:
+        return render(request, 'service_update.html', {"data": data, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes})
+
+def updateServiceValue(request,sid):
+    post_data = request.POST
+    service_obj = Services.objects.get(id=sid)
+    service_obj.title=post_data['title']
+    service_obj.site_name=post_data['site_name']
+    service_obj.site_url=post_data['site_url']
+    service_obj.counter=post_data['counter']
+    service_obj.ratio=post_data['ratio']
+    service_obj.price=int(float(post_data['price']))
+
+    service_obj.save()
+    return redirect('servicedetail', sid)
+
 def addService(request):
     data = ""
     add_service = True
