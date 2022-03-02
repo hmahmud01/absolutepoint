@@ -16,7 +16,7 @@
                     <div>
                         {% if not service.accepted %}
                         <a class="btn btn-sm btn-success" href="{% url 'acceptservice' service.id %}"><i class="fa fa-check"></i> Accept</a>
-                        <a class="btn btn-sm btn-danger" href=""><i class="fa fa-times"></i> Decline</a>
+                        <a class="btn btn-sm btn-danger" href="{% url 'declineservice' service.id %}"><i class="fa fa-times"></i> Decline</a>
                         {% endif %}                                                
                         <a class="btn btn-sm btn-warning" href="{% url 'serviceupdate' service.id %}"><i class="fa fa-pen"></i> Edit</a>
                     </div>                    
@@ -138,9 +138,11 @@
                                 {% if request.user.is_superuser %}                                                                
                                 {% if payment.accepted %}
                                 <th><a class="btn btn-sm btn-success disabled" href="{% url 'acceptpayment' payment.id %}"><i class="fa fa-check"></i> Accepted</a></th>
-                                {% else %}
-                                <th><a class="btn btn-sm btn-success" href="{% url 'acceptpayment' payment.id %}"><i class="fa fa-check"></i> Accept</a></th>
-                                <th><a class="btn btn-sm btn-danger" href=""><i class="fa fa-times"></i> Decline</a></th>
+                                {% else %}                                
+                                <th>
+                                    <a class="btn btn-sm btn-success" href="{% url 'acceptpayment' payment.id %}"><i class="fa fa-check"></i> Accept</a>
+                                    <a class="btn btn-sm btn-danger" href="{% url 'declinepayment' payment.id %}"><i class="fa fa-times"></i> Decline</a>
+                                </th>
                                 {% endif %}
                                 
                                 {% endif %}
