@@ -1,3 +1,4 @@
+from itertools import product
 from pdb import post_mortem
 from time import strftime
 from django.db.models.fields import PositiveBigIntegerField
@@ -252,29 +253,44 @@ def saveService(request):
     post_data = request.POST
     if request.user.is_superuser:
         dashboarduser = DashboardUser.objects.get(id=post_data['dashboarduser'])
+        service_title = Service.objects.get(id=post_data['service'])
+        service_type = ServiceType.objects.get(id=post_data['service_type'])
         date = post_data['date']
-    else:
+        service = Services(
+            user=dashboarduser,
+            title=post_data['title'],
+            service_type=service_type,
+            service=service_title,
+            site_name=post_data['site_name'],
+            site_url=post_data['site_url'],
+            counter=post_data['counter'],
+            ratio=post_data['ratio'],
+            price=int(float(post_data['price']))
+        )
+        service.save()
+        service.status = "Pending"
+        service.payment_status = "Due"
+        service.save()
+    else:        
         user = request.user
         dashboarduser = DashboardUser.objects.filter(user_id=user.id).last()
-    user = request.user
-    dashboarduser = DashboardUser.objects.filter(user_id=user.id).last()
-    service_title = Service.objects.get(id=post_data['service'])
-    service_type = ServiceType.objects.get(id=post_data['service_type'])
-    service = Services(
-        user=dashboarduser,
-        title=post_data['title'],
-        service_type=service_type,
-        service=service_title,
-        site_name=post_data['site_name'],
-        site_url=post_data['site_url'],
-        counter=post_data['counter'],
-        ratio=post_data['ratio'],
-        price=int(float(post_data['price']))
-    )
-    service.save()
-    service.status = "Pending"
-    service.payment_status = "Due"
-    service.save()
+        service_title = Service.objects.get(id=post_data['service'])
+        service_type = ServiceType.objects.get(id=post_data['service_type'])
+        service = Services(
+            user=dashboarduser,
+            title=post_data['title'],
+            service_type=service_type,
+            service=service_title,
+            site_name=post_data['site_name'],
+            site_url=post_data['site_url'],
+            counter=post_data['counter'],
+            ratio=post_data['ratio'],
+            price=int(float(post_data['price']))
+        )
+        service.save()
+        service.status = "Pending"
+        service.payment_status = "Due"
+        service.save()
 
     return redirect('/')
 
@@ -742,7 +758,8 @@ def monthlySaleDetail(request, mm, yy):
 
 def clientIndex(request):
     data = ""
-    return render(request, "client/index.html", {"data": data})
+    products = serviceProduct.objects.all()
+    return render(request, "client/index.html", {"data": data, "products": products})
 
 def clientServiceDetail(request):
     data = ""
@@ -759,3 +776,63 @@ def allOrders(request):
 def orderDetail(request):
     data = ""
     return render(request, "client/order_detail.html", {"data": data})
+
+def createProduct(request):
+    data = ""
+    categories = productCategory.objects.all()
+    return render(request, "clientdash/create_product.html", {"data": data, "categories": categories})
+
+def saveProduct(request):
+    data = ""
+    post_data = request.POST
+    cat_id = post_data['category']
+    category = productCategory.objects.get(id=cat_id)
+
+    product = serviceProduct(
+        name = post_data['name'],
+        ptype = post_data['type'],
+        category = category,
+        description = post_data['description'],
+        measurement = post_data['measurement'],
+        price = post_data['price']
+    )
+
+    product.save()
+    return redirect('productlist')
+
+def saveCategory(request):
+    post_data = request.POST
+
+    category = productCategory(
+        name = post_data['name']
+    )
+
+    category.save()
+
+    return redirect('createproduct')
+
+def productList(request):
+    data = ""
+    products = serviceProduct.objects.all()
+    inactive = "inactive"
+    active = "active"
+    return render(request, "clientdash/product_list.html", {"data": data, "products": products, "inactive": inactive, "active": active})
+
+def productAct(request, pid, act):
+    product = serviceProduct.objects.get(id=pid)
+    if act == "active":
+        product.status = True
+        product.save()
+    elif act == "inactive":
+        product.status = False
+        product.save()
+
+    return redirect('productlist')
+
+def clientList(request):
+    data = ""
+    return render(request, "clientdash/client_list.html", {"data": data})
+
+def orderList(request):
+    data = ""
+    return render(request, "clientdash/order_list.html", {"data": data})

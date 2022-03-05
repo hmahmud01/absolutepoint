@@ -86,15 +86,6 @@
         </a>
     </li>
     <li class="sidebar-list-item">
-        <a class="sidebar-link text-muted" href="{% url 'clientindex' %}">
-          <svg class="svg-icon svg-icon-md me-3">
-            <use xlink:href="/static/icons/orion-svg-sprite.svg#dollar-sign-1"></use>
-          </svg>
-          <span class="sidebar-link-title">Simulator</span>
-        </a>
-    </li>
-
-    <li class="sidebar-list-item">
       {% if sales_info %}
       <a class="sidebar-link text-muted active" href="#" data-bs-target="#e-commerceDropdown"
         role="button" aria-expanded="false" data-bs-toggle="collapse">
@@ -147,4 +138,52 @@
           <span class="sidebar-link-title">Sales</span>
         </a>
     </li>
+  </ul> 
+  {% if request.user.is_superuser %}
+  <hr class="g-0 m-0">
+  <h6 class="sidebar-heading">Client Side</h6>
+  <ul class="list-unstyled">
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'clientindex' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#dollar-sign-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Simulator</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'createproduct' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#new-window-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Create Product</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'productlist' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#multiple-windows-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Product List</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'clientlist' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#man-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Client List</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'orderlist' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#bookmark-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Order List</span>
+      </a>
+    </li>
+  </ul>
+  {% endif %}
+  
 </div>
