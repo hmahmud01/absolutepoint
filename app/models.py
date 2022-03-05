@@ -1,3 +1,6 @@
+from os import stat
+from pyexpat import model
+from statistics import mode
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.fields import BinaryField
@@ -87,3 +90,32 @@ class Notices(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# CLIENT AREA MODELS
+
+class productCategory(models.Model):
+    name = models.CharField(max_length=128, null=True, blank=True)
+    created_at = models.DateField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class serviceProduct(models.Model):
+    name = models.CharField(max_length=128, null=True, blank=True)
+    ptype = models.CharField(max_length=128, null=True, blank=True)
+    category = models.ForeignKey(productCategory, on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
+    measurement = models.IntegerField(null=True, blank=True)
+    price = models.FloatField(null=True, blank=True)
+    status = models.BooleanField(default=True)
+    created_at = models.DateField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class serviceOrder(models.Model):
+    pass
+
+class Client(models.Model):
+    pass

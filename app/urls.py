@@ -56,6 +56,13 @@ urlpatterns = [
     path('client/orders', views.clientOrders, name="clientorders"),
     path('client/order/detail', views.orderDetail, name="orderdetail"),
     path('allorders/', views.allOrders, name="allorders"),
+    path('createproduct/', views.createProduct, name="createproduct"),
+    path('saveproduct/', views.saveProduct, name="saveproduct"),
+    path('productact/<int:pid>/<str:act>/', views.productAct, name ="productact"),
+    path('savecat/', views.saveCategory, name="savecat"),
+    path('productlist/', views.productList, name="productlist"),
+    path('orderlist/', views.orderList, name="orderlist"),
+    path('clientlist/', views.clientList, name="clientlist"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

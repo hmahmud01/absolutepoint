@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Orders</h1>
+            <p>Crypto Service Orders</p>
+        </div>
+        <div class="col-md-12">
+            <div class="card card-table mb-4">
+            <div class="card-body">
+              <div class="preload-wrapper">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0" id="ordersDatatable">
+                    <thead>
+                      <tr>                        
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Measurement</th>
+                        <th>Client</th>                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="align-middle">
+                        <td> Product name </td>
+                        <td> Product Cat </td>
+                        <td> $$$$$ </td>
+                        <td> 5000 </td>
+                        <td> Client Name </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div><span class="me-2" id="categoryBulkAction">
+                  <select class="form-select form-select-sm d-inline w-auto" name="categoryBulkAction">
+                    <option>Bulk Actions</option>
+                    <option>Delete</option>
+                  </select>
+                  <button class="btn btn-sm btn-outline-primary align-top">Apply</button></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Data Tables-->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script src="/static/js/e-commerce-orders.js"></script>
+{% endblock %}
