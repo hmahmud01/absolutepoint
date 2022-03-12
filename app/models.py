@@ -47,6 +47,7 @@ class ServiceType(models.Model):
 class Services(models.Model):
     user = models.ForeignKey(DashboardUser, on_delete=models.CASCADE)
     created_at = models.DateField(auto_now_add=True, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
     title = models.CharField(max_length=128, null=True, blank=True)
     service_type = models.ForeignKey(ServiceType, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
@@ -60,8 +61,8 @@ class Services(models.Model):
     payment_status = models.CharField(max_length=128, null=True, blank=True)
 
     def __str__(self):
-        # return f"{self.user.username}-{self.title}"
-        return str(self.title)
+        return f"{self.title}-{self.date}-{self.user.username} - {self.price}"
+        # return str(self.title)
 
     def dateStamp(self):
         dd = self.created_at.strftime('%d')
