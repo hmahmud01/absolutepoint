@@ -238,26 +238,41 @@ def noticeDetail(request, nid):
 
 def serviceCreate(request):
     data = ""
+    date_stat = "disabled"
     servicelist = Service.objects.all()
     servicetypes = ServiceType.objects.all()
     service_create = True
     users = DashboardUser.objects.all()
+    today = date.today()
+    today_date = today.strftime("%m/%d/%Y")
+
+    if request.user.is_superuser:
+        date_stat = ""
+    
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
         rank = UserRank.objects.get(user_id=info.id)
-        return render(request, 'service_create.html', {"data": data, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create})
+        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create})
     except:
-        return render(request, 'service_create.html', {"data": data, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create})
+        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create})
 
 def saveService(request):
     post_data = request.POST
+    print(post_data)
     if request.user.is_superuser:
         dashboarduser = DashboardUser.objects.get(id=post_data['dashboarduser'])
         service_title = Service.objects.get(id=post_data['service'])
         service_type = ServiceType.objects.get(id=post_data['service_type'])
         date = post_data['date']
+        print(date)
+        print(type(date))
+        date_obj = datetime.strptime(date, '%m/%d/%Y')
+        print(date_obj.date())
+        print(type(date_obj.date()))
+        # print(isinstance(date, datetime.date))
         service = Services(
             user=dashboarduser,
+            date=date_obj,
             title=post_data['title'],
             service_type=service_type,
             service=service_title,
@@ -276,8 +291,15 @@ def saveService(request):
         dashboarduser = DashboardUser.objects.filter(user_id=user.id).last()
         service_title = Service.objects.get(id=post_data['service'])
         service_type = ServiceType.objects.get(id=post_data['service_type'])
+        date = post_data['date']
+        print(date)
+        print(type(date))
+        date_obj = datetime.strptime(date, '%m/%d/%Y')
+        print(date_obj.date())
+        print(type(date_obj.date()))
         service = Services(
             user=dashboarduser,
+            date=date_obj,
             title=post_data['title'],
             service_type=service_type,
             service=service_title,

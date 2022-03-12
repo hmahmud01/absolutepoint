@@ -91,11 +91,11 @@
                         <label class="col-md-3 form-label">Service Taken Date</label>
                         <div class="col-md-9 mb-3">
                             <div class="">                                
-                                <input class="form-control input-datepicker-autoclose" name="date" type="text" value="">
+                                <input class="form-control input-datepicker-autoclose" name="date" type="text" value="{{ date }}">
                             </div>
                         </div>                        
                     </div>
-
+                    
                     <div class="row">
                         <label class="col-md-3 form-label">Service Taken User</label>
                         <div class="col-md-9 select mb-3">
@@ -108,6 +108,14 @@
                         </div>
                     </div>
                     <hr>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-md-9 mb-3">
+                            <div class="">                                
+                                <input class="form-control input-datepicker-autoclose" name="date" type="text" value="{{ date }}" hidden>
+                            </div>
+                        </div>                        
+                    </div>
                     {% endif %}
 
                     <div class="row">
@@ -131,16 +139,13 @@
 
     var service = document.getElementById("service");
 
-
     $('#service').on('change', function(){
-        // $('#myinput').val($(this).val());        
         var base_ratio = 1 
         $('#qty').val($(this).find(':selected').data('quantity'));
         $('#price').val($(this).find(':selected').data('price'));
         $('#ratio').val(base_ratio);
     })
 
-    // init
     $('#service').change();
 
     $('#qty').on('change', function(){
