@@ -17,6 +17,28 @@ from django.db.models.functions import TruncMonth, TruncWeek
 
 from .models import *
 
+CAP_0 = 0
+CAP_1 = 500
+CAP_2 = 1000
+CAP_3 = 1500
+CAP_4 = 5000
+
+TIER_0 = 0
+TIER_0_TITLE = "NOOB"
+TIER_0_PERCENT = 5.0
+TIER_1 = 1
+TIER_1_TITLE = "EXPERT"
+TIER_1_PERCENT = 8.0
+TIER_2 = 2
+TIER_2_TITLE = "MASTER"
+TIER_2_PERCENT = 10.0
+TIER_3 = 3
+TIER_3_TITLE = "LEGEND"
+TIER_3_PERCENT = 12.0
+TIER_4 = 4
+TIER_4_TITLE = "BONUS"
+TIER_4_PERCENT = 1.0
+
 
 def login(request):
     data = ""
@@ -182,7 +204,7 @@ def home(request):
     if user.is_superuser:
         data = ""        
         notices = Notices.objects.all()
-        services = Services.objects.all().order_by('-created_at')
+        services = Services.objects.all().order_by('-date')
         servicelist = Service.objects.order_by('title')
         servicetypes = ServiceType.objects.all()
         users = User.objects.all().exclude(is_superuser=True)
@@ -195,7 +217,7 @@ def home(request):
             try:
                 data = ""
                 notices = Notices.objects.all()
-                services = Services.objects.filter(user__id=req_user.id).order_by('-created_at')
+                services = Services.objects.filter(user__id=req_user.id).order_by('-date')
                 servicelist = Service.objects.order_by('title')      
                 info = DashboardUser.objects.get(user_id=request.user.id)
                 rank = UserRank.objects.get(user_id=info.id)
@@ -205,7 +227,7 @@ def home(request):
             except:
                 data = ""
                 notices = Notices.objects.all()
-                services = Services.objects.filter(user__id=req_user.id).order_by('-created_at')
+                services = Services.objects.filter(user__id=req_user.id).order_by('-date')
                 servicelist = Service.objects.order_by('title')         
                 info = DashboardUser.objects.get(user_id=request.user.id)
                 return render(request, 'sales_dashboard.html', 
@@ -239,7 +261,7 @@ def noticeDetail(request, nid):
 def serviceCreate(request):
     data = ""
     date_stat = "disabled"
-    servicelist = Service.objects.all()
+    servicelist = Service.objects.order_by('title')
     servicetypes = ServiceType.objects.all()
     service_create = True
     users = DashboardUser.objects.all()
@@ -318,20 +340,28 @@ def saveService(request):
 
 def serviceUpdate(request, sid):
     data = ""
-    servicelist = Service.objects.all()
+    servicelist = Service.objects.order_by("title")
     servicetypes = ServiceType.objects.all()
     # service_create = True
     users = DashboardUser.objects.all()
     service = Services.objects.get(id=sid)
+    today = date.today()
+    today_date = today.strftime("%m/%d/%Y")
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
         rank = UserRank.objects.get(user_id=info.id)
-        return render(request, 'service_update.html', {"data": data, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank})
+        return render(request, 'service_update.html', {"data": data, "date": today_date, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank})
     except:
-        return render(request, 'service_update.html', {"data": data, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes})
+        return render(request, 'service_update.html', {"data": data, "date": today_date, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes})
 
 def updateServiceValue(request,sid):
     post_data = request.POST
+    date = post_data['date']
+    print(date)
+    print(type(date))
+    date_obj = datetime.strptime(date, '%m/%d/%Y')
+    print(date_obj.date())
+    print(type(date_obj.date()))
     service_obj = Services.objects.get(id=sid)
     service_obj.title=post_data['title']
     service_obj.site_name=post_data['site_name']
@@ -339,6 +369,7 @@ def updateServiceValue(request,sid):
     service_obj.counter=post_data['counter']
     service_obj.ratio=post_data['ratio']
     service_obj.price=int(float(post_data['price']))
+    service_obj.date = date_obj
 
     service_obj.save()
     return redirect('servicedetail', sid)
@@ -575,8 +606,45 @@ def donePayment(request, sid):
     service.payment_status = "Received"
     service.status = "Done"
     service.save()
+    payments = ServicePayments.objects.filter(service__id=sid)
+    if payments.exists():
+        for pay in payments:
+            pay.accepted = True
+            pay.save()
+        return redirect('servicedetail', sid)
+    else:
+        payment = ServicePayments(
+            service = service,
+            amount = service.price,
+            link = "Auto Received",
+            accepted=True,
+        )
+        payment.save()
+        return redirect('servicedetail', sid)
 
-    return redirect('servicedetail', sid)
+
+    # try:
+    #     print("inside try")
+
+        
+    #     print(payments)
+    #     for pay in payments:
+    #         pay.accepted = True
+    #         pay.save()
+    #     return redirect('servicedetail', sid)
+    # except:
+    #     print("inside exxcept")
+    #     payment = ServicePayments(
+    #         service = service,
+    #         amount = service.price,
+    #         link = "Auto Received",
+    #         accepted=True,
+    #     )
+    #     payment.save()
+    #     print(payment)
+    #     return redirect('servicedetail', sid)
+
+    
 
 def fraudPayment(request, sid):
     service = Services.objects.get(id=sid)
@@ -590,18 +658,22 @@ def otherPayment(request, sid):
     service = Services.objects.get(id=sid)    
     post_data = request.POST
     if post_data['payment'] == "Received" or "NA":
-        print(post_data['payment'])
-        # payment = ServicePayments(
-        #     service=service,
-        #     amount=service.price,
-        #     link="Auto Received",
-        #     accepted=True            
-        # )
-        # payment.save()
+        payments = ServicePayments.objects.filter(service__id=sid)
+        if payments.exists():
+            for pay in payments:
+                pay.accepted = True
+                pay.save()
+        else:
+            payment = ServicePayments(
+                service = service,
+                amount = service.price,
+                link = "Auto Received",
+                accepted=True,
+            )
+            payment.save()
     service.payment_status = post_data['payment']
     service.status = post_data['service']
     service.save()
-
 
     return redirect('servicedetail', sid)
     
@@ -618,11 +690,11 @@ def serviceTypeList(request):
 
 def salesServices(request):
     if request.user.is_superuser:
-        services = Services.objects.all().order_by('-created_at')
+        services = Services.objects.all().order_by('-date')
     else:
         user = request.user
         dash_user = DashboardUser.objects.get(user=user.id)
-        services = Services.objects.filter(user__id=dash_user.id).order_by('-created_at')
+        services = Services.objects.filter(user__id=dash_user.id).order_by('-date')
     sales = True
     print(sales)
     return render(request, "sales_services.html", {"services": services, "sales": sales})
@@ -638,7 +710,7 @@ def accountsIndex(request):
     services = Services.objects.all()
 
 
-    monthly_data = Services.objects.annotate(month = TruncMonth('created_at')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
+    monthly_data = Services.objects.annotate(month = TruncMonth('date')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
 
     for month in monthly_data:
         timeline.append(month['month'].strftime('%B'))
@@ -649,7 +721,7 @@ def accountsIndex(request):
 
 
     for service in services:
-        print(service.created_at)
+        print(service.date)
         print(service.dateStamp())
         # timeline.append(service.dateStamp())
         # sales.append(service.price)
@@ -713,7 +785,7 @@ def monthlySales(request):
 
     data = []
 
-    monthly_data = Services.objects.annotate(month = TruncMonth('created_at')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
+    monthly_data = Services.objects.annotate(month = TruncMonth('date')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
 
     for month in monthly_data:
         timeline.append(month['month'].strftime('%B'))
@@ -748,8 +820,8 @@ def monthlySaleDetail(request, mm, yy):
     sales_info = True
     month = date(1900, mm, 1).strftime('%B')
 
-    services = Services.objects.filter(created_at__year=yy,
-                                        created_at__month=mm)
+    services = Services.objects.filter(date__year=yy,
+                                        date__month=mm)
 
     result = (services
             .values('user')
@@ -761,19 +833,52 @@ def monthlySaleDetail(request, mm, yy):
     for data in result:
         user_id = data['user']
         user = DashboardUser.objects.get(id=user_id)
+        user_services = services.filter(user_id=user_id)
+        weekly_calc = user_services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
+        # print(weekly_calc)
+        weekly_data = []
+        total_earned = 0
+        earned = 0
+        for data in weekly_calc:
+            if data['total'] > CAP_0 and data['total'] <CAP_1:
+                earned = data['total'] * TIER_0_PERCENT / 100
+            elif data['total'] > CAP_1 and data['total'] <CAP_2:
+                earned = data['total'] * TIER_1_PERCENT / 100
+            elif data['total'] > CAP_2 and data['total'] <CAP_3:
+                earned = data['total'] * TIER_2_PERCENT / 100
+            elif data['total'] > CAP_3 and data['total'] <CAP_4:
+                earned = data['total'] * TIER_3_PERCENT / 100
+            elif data['total'] >= CAP_4:
+                earned = data['total'] * TIER_4_PERCENT / 100
+            total_earned += earned
+            weeks = {
+                "services": data['services'],
+                "total": data['total'],
+                "earned": earned
+            }
+            weekly_data.append(weeks)
+        for x in range(0, 4-len(weekly_calc)):
+            weeks = {
+                "services": 0,
+                "total": 0,
+                "earned": 0
+            }
+            weekly_data.append(weeks)
+
         filtered_row = {
                 "user": user,
                 "service_count": data['services'],
-                "total": data['total']
+                "total": data['total'],
+                "total_earned": total_earned,
+                "week": weekly_data
             }
         monthly_filtered.append(filtered_row)
+    print(monthly_filtered)
+    weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
 
-    weekly_data = services.annotate(week = TruncWeek('created_at')).values('week')
-
-    print(weekly_data)
 
     return render(request, "accounts/monthly_sale_detail.html", 
-                        {"sales_info": sales_info,
+                    {"sales_info": sales_info,
                         "month": month,
                         "year": yy,
                         "sale_data": monthly_filtered})

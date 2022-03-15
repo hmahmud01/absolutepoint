@@ -281,7 +281,7 @@
                     <tr class="align-middle">
                         <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
                         <td> <strong>{{ service.user.name }}</strong></td>
-                        <td>{{ service.created_at }}</td>
+                        <td>{{ service.date }}</td>
                         <td>{{ service.title }}</td>
                         <td>{{ service.site_name }}</td>
                         {% if service.accepted %}
