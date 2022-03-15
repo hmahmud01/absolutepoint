@@ -17,7 +17,6 @@ from django.db.models.functions import TruncMonth, TruncWeek
 
 from .models import *
 
-
 CAP_0 = 0
 CAP_1 = 500
 CAP_2 = 1000
@@ -262,7 +261,7 @@ def noticeDetail(request, nid):
 def serviceCreate(request):
     data = ""
     date_stat = "disabled"
-    servicelist = Service.objects.all()
+    servicelist = Service.objects.order_by('title')
     servicetypes = ServiceType.objects.all()
     service_create = True
     users = DashboardUser.objects.all()
@@ -341,20 +340,28 @@ def saveService(request):
 
 def serviceUpdate(request, sid):
     data = ""
-    servicelist = Service.objects.all()
+    servicelist = Service.objects.order_by("title")
     servicetypes = ServiceType.objects.all()
     # service_create = True
     users = DashboardUser.objects.all()
     service = Services.objects.get(id=sid)
+    today = date.today()
+    today_date = today.strftime("%m/%d/%Y")
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
         rank = UserRank.objects.get(user_id=info.id)
-        return render(request, 'service_update.html', {"data": data, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank})
+        return render(request, 'service_update.html', {"data": data, "date": today_date, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank})
     except:
-        return render(request, 'service_update.html', {"data": data, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes})
+        return render(request, 'service_update.html', {"data": data, "date": today_date, "service":service, "users":users, "servicelist": servicelist, "servicetypes": servicetypes})
 
 def updateServiceValue(request,sid):
     post_data = request.POST
+    date = post_data['date']
+    print(date)
+    print(type(date))
+    date_obj = datetime.strptime(date, '%m/%d/%Y')
+    print(date_obj.date())
+    print(type(date_obj.date()))
     service_obj = Services.objects.get(id=sid)
     service_obj.title=post_data['title']
     service_obj.site_name=post_data['site_name']
@@ -362,6 +369,7 @@ def updateServiceValue(request,sid):
     service_obj.counter=post_data['counter']
     service_obj.ratio=post_data['ratio']
     service_obj.price=int(float(post_data['price']))
+    service_obj.date = date_obj
 
     service_obj.save()
     return redirect('servicedetail', sid)
@@ -598,8 +606,45 @@ def donePayment(request, sid):
     service.payment_status = "Received"
     service.status = "Done"
     service.save()
+    payments = ServicePayments.objects.filter(service__id=sid)
+    if payments.exists():
+        for pay in payments:
+            pay.accepted = True
+            pay.save()
+        return redirect('servicedetail', sid)
+    else:
+        payment = ServicePayments(
+            service = service,
+            amount = service.price,
+            link = "Auto Received",
+            accepted=True,
+        )
+        payment.save()
+        return redirect('servicedetail', sid)
 
-    return redirect('servicedetail', sid)
+
+    # try:
+    #     print("inside try")
+
+        
+    #     print(payments)
+    #     for pay in payments:
+    #         pay.accepted = True
+    #         pay.save()
+    #     return redirect('servicedetail', sid)
+    # except:
+    #     print("inside exxcept")
+    #     payment = ServicePayments(
+    #         service = service,
+    #         amount = service.price,
+    #         link = "Auto Received",
+    #         accepted=True,
+    #     )
+    #     payment.save()
+    #     print(payment)
+    #     return redirect('servicedetail', sid)
+
+    
 
 def fraudPayment(request, sid):
     service = Services.objects.get(id=sid)
@@ -613,18 +658,22 @@ def otherPayment(request, sid):
     service = Services.objects.get(id=sid)    
     post_data = request.POST
     if post_data['payment'] == "Received" or "NA":
-        print(post_data['payment'])
-        # payment = ServicePayments(
-        #     service=service,
-        #     amount=service.price,
-        #     link="Auto Received",
-        #     accepted=True            
-        # )
-        # payment.save()
+        payments = ServicePayments.objects.filter(service__id=sid)
+        if payments.exists():
+            for pay in payments:
+                pay.accepted = True
+                pay.save()
+        else:
+            payment = ServicePayments(
+                service = service,
+                amount = service.price,
+                link = "Auto Received",
+                accepted=True,
+            )
+            payment.save()
     service.payment_status = post_data['payment']
     service.status = post_data['service']
     service.save()
-
 
     return redirect('servicedetail', sid)
     
@@ -789,6 +838,7 @@ def monthlySaleDetail(request, mm, yy):
         # print(weekly_calc)
         weekly_data = []
         total_earned = 0
+        earned = 0
         for data in weekly_calc:
             if data['total'] > CAP_0 and data['total'] <CAP_1:
                 earned = data['total'] * TIER_0_PERCENT / 100
