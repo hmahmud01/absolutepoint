@@ -55,7 +55,7 @@ class Services(models.Model):
     site_url = models.CharField(max_length=512, null=True, blank=True)
     counter = models.PositiveIntegerField(null=True, blank=True)
     ratio = models.FloatField(null=True, blank=True)
-    price = models.PositiveIntegerField(null=True, blank=True)
+    price = models.FloatField(null=True, blank=True)
     status = models.CharField(max_length=128, null=True, blank=True)    
     accepted = models.BooleanField(default=False)
     payment_status = models.CharField(max_length=128, null=True, blank=True)
