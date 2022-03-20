@@ -75,7 +75,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for service in services|slice:":10" %}
+                            {% for service in services %}
                             <tr class="align-middle">
                                 <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
                                 <td>{{ service.date }}</td>
