@@ -38,6 +38,7 @@ TIER_3_PERCENT = 12.0
 TIER_4 = 4
 TIER_4_TITLE = "BONUS"
 TIER_4_PERCENT = 1.0
+BDT_CONVERTER = 80.0
 
 
 def login(request):
@@ -838,30 +839,40 @@ def monthlySaleDetail(request, mm, yy):
         # print(weekly_calc)
         weekly_data = []
         total_earned = 0
+        total_earned_bdt = 0
         earned = 0
+        earned_bdt = 0
         for data in weekly_calc:
             if data['total'] > CAP_0 and data['total'] <CAP_1:
                 earned = data['total'] * TIER_0_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
             elif data['total'] > CAP_1 and data['total'] <CAP_2:
                 earned = data['total'] * TIER_1_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
             elif data['total'] > CAP_2 and data['total'] <CAP_3:
                 earned = data['total'] * TIER_2_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
             elif data['total'] > CAP_3 and data['total'] <CAP_4:
                 earned = data['total'] * TIER_3_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
             elif data['total'] >= CAP_4:
                 earned = data['total'] * TIER_4_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
             total_earned += earned
+            total_earned_bdt += earned_bdt
             weeks = {
                 "services": data['services'],
                 "total": data['total'],
-                "earned": earned
+                "earned": earned,
+                "earned_bdt": earned_bdt
             }
             weekly_data.append(weeks)
         for x in range(0, 4-len(weekly_calc)):
             weeks = {
                 "services": 0,
                 "total": 0,
-                "earned": 0
+                "earned": 0,
+                "earned_bdt": 0
             }
             weekly_data.append(weeks)
 
@@ -870,6 +881,7 @@ def monthlySaleDetail(request, mm, yy):
                 "service_count": data['services'],
                 "total": data['total'],
                 "total_earned": total_earned,
+                "total_earned_bdt": total_earned_bdt,
                 "week": weekly_data
             }
         monthly_filtered.append(filtered_row)
