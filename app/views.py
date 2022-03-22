@@ -925,7 +925,7 @@ def monthlySaleDetail(request, mm, yy):
                 "total_earned_bdt": total_earned_bdt,
                 "week": weekly_data,                
             }
-    monthly_filtered.append(filtered_row)
+        monthly_filtered.append(filtered_row)
     # print(monthly_filtered)
     # weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
 
