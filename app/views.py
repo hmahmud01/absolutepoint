@@ -831,7 +831,7 @@ def monthlySaleDetail(request, mm, yy):
     # print(services1)
     # print(services)
 
-    result = (services
+    result = (services1
             .values('user')
             .annotate(services=Count('user'), total=Sum('price'))
         )
