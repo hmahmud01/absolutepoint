@@ -20,7 +20,7 @@
                             <thead>
                                 <tr>
                                     <th>Username</th>
-                                    <th>Total Service Created</th>
+                                    <!-- <th>Total Service Created</th> -->
                                     <th>Total Sale</th>   
                                     <th>WK1</th>
                                     <th>WK2</th>
@@ -32,7 +32,7 @@
                                 {% for data in sale_data %}
                                 <tr>                                    
                                     <td><a href="{% url 'accountsdetail' data.user.id %}">{{ data.user }}</a></td>
-                                    <td>{{ data.service_count }}</td>
+                                    <!-- <td>{{ data.service_count }}</td> -->
                                     <td>{{ data.total }}</td>
                                     {% for week in data.week %}
                                     <td>{{ week.total }} </td>

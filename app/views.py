@@ -14,6 +14,7 @@ import json
 from datetime import datetime, date
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth, TruncWeek
+from pip import main
 
 from .models import *
 
@@ -752,7 +753,7 @@ def accountsDetail(request, aid):
     total_service_price = 0
     total_payment_accepted = 0
     total_due = 0
-    services = Services.objects.filter(user__id=user.id)
+    services = Services.objects.filter(user__id=user.id).order_by('-date')
     for service in services:
         total_service_price += service.price
         payments = ServicePayments.objects.filter(service__id=service.id)
@@ -821,13 +822,20 @@ def monthlySaleDetail(request, mm, yy):
     sales_info = True
     month = date(1900, mm, 1).strftime('%B')
 
-    services = Services.objects.filter(date__year=yy,
+    services1 = Services.objects.filter(date__year=yy,
                                         date__month=mm)
+
+    services = Services.objects.filter(date__year=yy,
+                                        date__month=mm).order_by('date')
+
+    # print(services1)
+    # print(services)
 
     result = (services
             .values('user')
             .annotate(services=Count('user'), total=Sum('price'))
         )
+    # print(result)
 
     monthly_filtered = []
 
@@ -836,28 +844,42 @@ def monthlySaleDetail(request, mm, yy):
         user = DashboardUser.objects.get(id=user_id)
         user_services = services.filter(user_id=user_id)
         weekly_calc = user_services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
+        # print("weekly calculator")
         # print(weekly_calc)
         weekly_data = []
+        total = 0
         total_earned = 0
         total_earned_bdt = 0
         earned = 0
         earned_bdt = 0
+        # print(len(weekly_calc))
         for data in weekly_calc:
+            total += data['total']
             if data['total'] > CAP_0 and data['total'] <CAP_1:
                 earned = data['total'] * TIER_0_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
+                # total_earned += earned
+                # total_earned_bdt += earned_bdt
             elif data['total'] > CAP_1 and data['total'] <CAP_2:
                 earned = data['total'] * TIER_1_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
+                # total_earned += earned
+                # total_earned_bdt += earned_bdt
             elif data['total'] > CAP_2 and data['total'] <CAP_3:
                 earned = data['total'] * TIER_2_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
+                # total_earned += earned
+                # total_earned_bdt += earned_bdt
             elif data['total'] > CAP_3 and data['total'] <CAP_4:
                 earned = data['total'] * TIER_3_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
+                # total_earned += earned
+                # total_earned_bdt += earned_bdt
             elif data['total'] >= CAP_4:
                 earned = data['total'] * TIER_4_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
+                # total_earned += earned
+                # total_earned_bdt += earned_bdt
             total_earned += earned
             total_earned_bdt += earned_bdt
             weeks = {
@@ -867,26 +889,45 @@ def monthlySaleDetail(request, mm, yy):
                 "earned_bdt": earned_bdt
             }
             weekly_data.append(weeks)
-        for x in range(0, 4-len(weekly_calc)):
-            weeks = {
-                "services": 0,
-                "total": 0,
-                "earned": 0,
-                "earned_bdt": 0
-            }
-            weekly_data.append(weeks)
+        
+        if len(weekly_calc) > 4:
+            idx = 4
+            main_data = weekly_data[:idx]
+            remaining_data = weekly_data[idx:]
+
+            for data in remaining_data:
+                obj = main_data[idx-1]
+                obj['services'] += data['services']
+                obj['total'] += data['total']
+                obj['earned'] += data['earned']
+                obj['earned_bdt'] += data['earned_bdt']
+
+            weekly_data = main_data
+
+        elif len(weekly_calc) < 4:
+            for x in range(0, 4-len(weekly_calc)):
+                weeks = {
+                    "services": 0,
+                    "total": 0,
+                    "earned": 0,
+                    "earned_bdt": 0
+                }
+                weekly_data.append(weeks)
+            
+
+        
 
         filtered_row = {
                 "user": user,
                 "service_count": data['services'],
-                "total": data['total'],
+                "total": total,
                 "total_earned": total_earned,
                 "total_earned_bdt": total_earned_bdt,
-                "week": weekly_data
+                "week": weekly_data,                
             }
-        monthly_filtered.append(filtered_row)
-    print(monthly_filtered)
-    weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
+    monthly_filtered.append(filtered_row)
+    # print(monthly_filtered)
+    # weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
 
 
     return render(request, "accounts/monthly_sale_detail.html", 
