@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <div class="card card-table h-100 mt-5 mb-5">
+        <!-- <div class="card card-table h-100 mt-5 mb-5">
             <div class="card-header">
                 <h5 class="card-heading"> Status of Services</h5>
             </div>
@@ -90,7 +90,51 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <section>
+            <div class="row">
+                <div class="">
+                    <h3 class="page-heading bg-gray-200 m-2 p-2">Sales Status</h3>
+                </div>
+                <div class="col-md-12">
+                    <div class="card card-table mb-4">
+                        <div class="card-body">
+                            <div class="preload-wrapper">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0" id="ordersDatatable">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Date</th>
+                                                <th>Service Title</th>
+                                                <th>Site Name</th>
+                                                <th>Price</th>
+                                                <th>Pyament Status</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for service in services %}
+                                            <tr class="align-middle">
+                                                <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                                                <td>{{ service.date }}</td>
+                                                <td>{{ service.title }}</td>
+                                                <td>{{ service.site_name }}</td>
+                                                <th>{{ service.price }} $</th>
+                                                <td>{{ service.payment_status }}</td>
+                                                <td><span class="badge badge-info-light">{{ service.status }}</span></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </section>
 
