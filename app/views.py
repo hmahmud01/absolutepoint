@@ -787,9 +787,11 @@ def monthlySales(request):
     sales = []
     services = Services.objects.all()
 
+    service_data = services.filter(Q(payment_status="Received") | Q(payment_status="NA"))
+
     data = []
 
-    monthly_data = Services.objects.annotate(month = TruncMonth('date')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
+    monthly_data = service_data.annotate(month = TruncMonth('date')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
 
     for month in monthly_data:
         timeline.append(month['month'].strftime('%B'))
@@ -803,7 +805,7 @@ def monthlySales(request):
             }
         data.append(sale_data)
 
-    for service in services:
+    for service in service_data:
         total_service_price += service.price
         payments = ServicePayments.objects.filter(service__id=service.id)
         for payment in payments:
