@@ -828,24 +828,26 @@ def monthlySaleDetail(request, mm, yy):
     services = Services.objects.filter(date__year=yy,
                                         date__month=mm).order_by('date')
 
-    # print(services1)
-    # print(services)
+        
 
-    result = (services1
+    print(services1)
+    print(services)
+
+    user_list = (services1
             .values('user')
             .annotate(services=Count('user'), total=Sum('price'))
         )
-    # print(result)
+    print(user_list)
 
     monthly_filtered = []
 
-    for data in result:
+    for data in user_list:
         user_id = data['user']
         user = DashboardUser.objects.get(id=user_id)
         user_services = services.filter(user_id=user_id)
         weekly_calc = user_services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
-        # print("weekly calculator")
-        # print(weekly_calc)
+        print("weekly calculator")
+        print(weekly_calc)
         weekly_data = []
         total = 0
         total_earned = 0
