@@ -221,14 +221,14 @@ def home(request):
         month = current_day.month
         services_user = Services.objects.filter(user__id=req_user.id)
         service_data = services_user.filter(Q(payment_status="Received") | Q(payment_status="NA"))
-        services = service_data.filter(date__month=2)
+        services = service_data.filter(date__month=month)
         weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price')).order_by('week')
         timeline = [1, 2, 3, 4]
         sale = []
 
         for data in weekly_data:
             sale.append(data['total'])
-            
+
         length = len(weekly_data)
 
         if length > 4 :
