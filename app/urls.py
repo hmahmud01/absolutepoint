@@ -51,6 +51,7 @@ urlpatterns = [
     path('accountsdetail/<int:aid>/', views.accountsDetail, name="accountsdetail"),    
     path('monthlysales/', views.monthlySales, name='monthlysales'),
     path('monthlysales/detail/<int:mm>/<int:yy>', views.monthlySaleDetail, name='monthlysalesdetail'),
+    path('salesexecutivesalary/', views.salesExecutiveSalary, name="salesexecutivesalary"),
     path('client/index/', views.clientIndex, name="clientindex"),
     path('client/service/detail', views.clientServiceDetail, name="clientservicedetail"),
     path('client/orders', views.clientOrders, name="clientorders"),
