@@ -13,7 +13,7 @@
                 </div>
                 <div class="card-body">
                     <div class="chart-holder w-100">
-                        <canvas id="lineChart1"></canvas>
+                        <canvas id="saleChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -171,4 +171,96 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var timeline = '{{ timeline|safe }}';
+        var sales = '{{ sale }}';
+        console.log(timeline, typeof(timeline));
+        console.log(JSON.parse(timeline));
+        console.log(sales, typeof(timeline));
+        console.log(JSON.parse(sales));
+        timeline = JSON.parse(timeline);
+        sales = JSON.parse(sales);
+
+        var lineChart1 = new Chart(document.getElementById("saleChart"), {
+            type: "line",
+            options: {
+                tooltips: {
+                    mode: "index",
+                    intersect: false,
+                    callbacks: {
+                        label: function (tooltipItems, data) {
+                            return "$" + tooltipItems.yLabel.toString();
+                        },
+                    },
+                },
+                hover: {
+                    mode: "nearest",
+                    intersect: true,
+                },
+                scales: {
+                    xAxes: [
+                        {
+                            gridLines: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                        },
+                    ],
+                    yAxes: [
+                        {
+                            ticks: {
+                                max: 8000,
+                                min: 0,
+                            },
+                            gridLines: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                        },
+                    ],
+                },
+
+                legend: {
+                    display: false,
+                },
+            },
+            data: {
+                // labels: ' {{ timeline }}',
+
+                // labels: ["January", "February", "March", "April", "May", "June", "July"],
+                labels: timeline,
+                datasets: [
+                    {
+                        label: "Your Account Balance",
+                        fill: true,
+                        lineTension: 0.4,
+                        backgroundColor: "transparent",
+                        borderColor: window.colors.blue,
+                        pointBorderColor: window.colors.blue,
+                        pointHoverBackgroundColor: window.colors.blue,
+                        borderCapStyle: "butt",
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: "miter",
+                        borderWidth: 3,
+                        pointBackgroundColor: "blue",
+                        pointBorderWidth: 5,
+                        pointHoverRadius: 5,
+                        pointHoverBorderColor: "#fff",
+                        pointHoverBorderWidth: 1,
+                        pointRadius: 0,
+                        pointHitRadius: 1,
+                        // data: [20, 14, 21, 15, 22, 8, 18],
+                        data: sales,
+                        spanGaps: false,
+                    },
+                ],
+            },
+        });
+    });
+</script>
 {% endblock %}

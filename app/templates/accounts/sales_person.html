@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="mb-4 mb-lg-5">    
+    <div class="row mb-lg-5">
+        <div class="col-lg-12 col-xl-12 mb-5 mb-lg-0">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4 class="card-heading">Sales Information for Services You sold</h4>
+                    <p class="mb-0">Sales Information Devided into Months.</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <!-- <th>Total Service Created</th> -->
+                                    <th>Total Sale</th>   
+                                    <th>WK1</th>
+                                    <th>WK2</th>
+                                    <th>WK3</th>
+                                    <th>WK4</th>                                                          
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in salary_row %}
+                                <tr>                                    
+                                    <td>{{ data.month }}</a></td>
+                                    <!-- <td>{{ data.service_count }}</td> -->
+                                    <td>{{ data.total }}</td>
+                                    {% for week in data.week %}
+                                    <td>{{ week.total }} </td>
+                                    {% endfor %}
+                                </tr>                                
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-lg-5">
+        <div class="col-lg-12 col-xl-12 mb-5 mb-lg-0">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4 class="card-heading">Sales Informantion for the weekly income in USD</h4>
+                    <p class="mb-0">Sales Information Devided into Months.</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <!-- <th>Total Service Created</th> -->
+                                    <th>Total Sale</th>   
+                                    <th>WK1</th>
+                                    <th>WK2</th>
+                                    <th>WK3</th>
+                                    <th>WK4</th>                                                          
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in salary_row %}
+                                <tr>                                    
+                                    <td>{{ data.month }}</a></td>
+                                    <!-- <td>{{ data.service_count }}</td> -->
+                                    <td>{{ data.total_earned|stringformat:".2f" }}</td>
+                                    {% for week in data.week %}
+                                    <td>{{ week.earned|stringformat:".2f" }} </td>
+                                    {% endfor %}
+                                </tr>                                
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-lg-5">
+        <div class="col-lg-12 col-xl-12 mb-5 mb-lg-0">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4 class="card-heading">Sales Info in for weekly income in BDT</h4>
+                    <p class="mb-0">Sales Information Devided into Months.</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <!-- <th>Total Service Created</th> -->
+                                    <th>Total Sale</th>   
+                                    <th>WK1</th>
+                                    <th>WK2</th>
+                                    <th>WK3</th>
+                                    <th>WK4</th>                                                          
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in salary_row %}
+                                <tr>                                    
+                                    <td>{{ data.month }}</a></td>
+                                    <!-- <td>{{ data.service_count }}</td> -->
+                                    <td>{{ data.total_earned_bdt|stringformat:".2f" }}</td>
+                                    {% for week in data.week %}
+                                    <td>{{ week.earned_bdt|stringformat:".2f" }} </td>
+                                    {% endfor %}
+                                </tr>                                
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var timeline = '{{ timeline|safe }}';
+        var sales = '{{ sale }}';
+        console.log(timeline, typeof(timeline));
+        console.log(JSON.parse(timeline));
+        console.log(sales, typeof(timeline));
+        console.log(JSON.parse(sales));
+        timeline = JSON.parse(timeline);
+        sales = JSON.parse(sales);
+
+        var lineChart1 = new Chart(document.getElementById("salechart"), {
+            type: "line",
+            options: {
+                tooltips: {
+                    mode: "index",
+                    intersect: false,
+                    callbacks: {
+                        label: function (tooltipItems, data) {
+                            return "$" + tooltipItems.yLabel.toString();
+                        },
+                    },
+                },
+                hover: {
+                    mode: "nearest",
+                    intersect: true,
+                },
+                scales: {
+                    xAxes: [
+                        {
+                            gridLines: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                        },
+                    ],
+                    yAxes: [
+                        {
+                            ticks: {
+                                max: 30000,
+                                min: 0,
+                            },
+                            gridLines: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                        },
+                    ],
+                },
+
+                legend: {
+                    display: false,
+                },
+            },
+            data: {
+                // labels: ' {{ timeline }}',
+
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                labels: timeline,
+                datasets: [
+                    {
+                        label: "Your Account Balance",
+                        fill: true,
+                        lineTension: 0.4,
+                        backgroundColor: "transparent",
+                        borderColor: window.colors.blue,
+                        pointBorderColor: window.colors.blue,
+                        pointHoverBackgroundColor: window.colors.blue,
+                        borderCapStyle: "butt",
+                        borderDash: [],
+                        borderDashOffset: 0.0,
+                        borderJoinStyle: "miter",
+                        borderWidth: 3,
+                        pointBackgroundColor: "blue",
+                        pointBorderWidth: 5,
+                        pointHoverRadius: 5,
+                        pointHoverBorderColor: "#fff",
+                        pointHoverBorderWidth: 1,
+                        pointRadius: 0,
+                        pointHitRadius: 1,
+                        // data: [20, 14, 21, 15, 22, 8, 18],
+                        data: sales,
+                        spanGaps: false,
+                    },
+                ],
+            },
+        });
+    });
+</script>
+{% endblock %}
