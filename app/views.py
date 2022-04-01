@@ -369,6 +369,11 @@ def saveService(request):
 
     return redirect('/')
 
+# TODO 
+# DO an update function for service to create commision limit based on limited sales of the
+# connected service only and calculate that on the salary and accounts sheet for payment to 
+# sales executive.
+
 def serviceUpdate(request, sid):
     data = ""
     servicelist = Service.objects.order_by("title")
@@ -433,6 +438,13 @@ def updateServiceList(request):
     service.quantity = post_data['quantity']
     service.price = post_data['price']
     service.save()
+    return redirect('/')
+
+def updateServiceType(request):
+    post_data = request.POST
+    serviceType = ServiceType.objects.get(id=post_data['type'])
+    serviceType.title = post_data['title']
+    serviceType.save()
     return redirect('/')
 
 def addServiceType(request):

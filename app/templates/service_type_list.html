@@ -20,7 +20,7 @@
                                 <div class="text">
                                     <h6 class="mb-0 d-flex align-items-center"> <span>{{ type.title }}</span></h6>
                                     {% if request.user.is_superuser %}
-                                    <a class="btn btn-outline-danger btn-xs" href="{% url 'removeservicetypelist' type.id %}">REMOVE</a>
+                                    <a class="btn btn-outline-danger btn-xs" href="{% url 'removeservicetypelist' type.id %}">REMOVE</a>                 
                                     {% endif %}
                                 </div>
                             </div>

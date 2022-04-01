@@ -32,6 +32,7 @@ urlpatterns = [
     path('addservicelist/', views.addServiceList, name="addservicelist"),
     path('removeservicelist/<int:sid>/', views.removeServiceList, name="removeservicelist"),
     path('updateservicelist/', views.updateServiceList, name="updateservicelist"),
+    path('updateservicetype/', views.updateServiceType, name="updateservicetype"),
     path('addservicetype/', views.addServiceType, name="addservicetype"),
     path('addservicetypelist/', views.addServiceTypeList, name="addservicetypelist"),
     path('removeservicetypelist/<int:sid>/', views.removeServiceTypeList, name="removeservicetypelist"),
