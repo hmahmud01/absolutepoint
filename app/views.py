@@ -42,6 +42,20 @@ TIER_4_TITLE = "BONUS"
 TIER_4_PERCENT = 1.0
 BDT_CONVERTER = 80.0
 
+JAN = 31
+FEB = 28
+MAR = 31
+APR = 30
+MAY = 31
+JUN = 30
+JUL = 31
+AUG = 31
+SEP = 30
+OCT = 31
+NOV = 30
+DEC = 31
+
+
 
 def login(request):
     data = ""
@@ -875,7 +889,7 @@ def monthlySaleDetail(request, mm, yy):
 
     # service_data = services.filter(payment_status="Received")
     service_data = services.filter(Q(payment_status="Received") | Q(payment_status="NA"))
-    print(service_data.count())
+    # print(service_data.count())
 
     # print(services1)
     # print(services)
@@ -887,14 +901,103 @@ def monthlySaleDetail(request, mm, yy):
     # print(user_list)
 
     monthly_filtered = []
-
+    monthly_custom = []
     for data in user_list:
         user_id = data['user']  
         user = DashboardUser.objects.get(id=user_id)
         user_services = service_data.filter(user_id=user_id)
         weekly_calc = user_services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price')).order_by('week')
-        # print("weekly calculator")
-        # print(weekly_calc)
+        # TRYING NEW WAY TO CALCULATE WEEKS
+
+        week_1 = 0
+        week_2 = 0
+        week_3 = 0
+        week_4 = 0
+        week_1_data = user_services.filter(date__day__gte=1, date__day__lte=7)
+        week_2_data = user_services.filter(date__day__gte=8, date__day__lte=14)
+        week_3_data = user_services.filter(date__day__gte=15, date__day__lte=21)
+        week_4_data = user_services.filter(date__day__gte=22, date__day__lte=31)
+
+
+        for data in week_1_data:
+            week_1 += data.price
+
+        for data in week_2_data:
+            week_2 += data.price
+        
+        for data in week_3_data:
+            week_3 += data.price
+
+        for data in week_4_data:
+            week_4 += data.price
+
+
+        weekly_total = []
+        weekly_total.append(week_1)
+        weekly_total.append(week_2)
+        weekly_total.append(week_3)
+        weekly_total.append(week_4)
+
+        # print(weekly_total)
+        weekly_data = []
+        total = 0
+        total_earned = 0
+        total_earned_bdt = 0
+        earned = 0
+        earned_bdt = 0
+        for data in weekly_total:
+            total += data
+            if data == 0:
+                earned = 0
+                earned_bdt = 0
+                total_earned = 0
+                total_earned_bdt = 0
+            elif data > CAP_0 and data <CAP_1:
+                earned = data * TIER_0_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
+                total_earned += earned
+                total_earned_bdt += earned_bdt
+            elif data > CAP_1 and data <CAP_2:
+                earned = data * TIER_1_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
+                total_earned += earned
+                total_earned_bdt += earned_bdt
+            elif data > CAP_2 and data <CAP_3:
+                earned = data * TIER_2_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
+                total_earned += earned
+                total_earned_bdt += earned_bdt
+            elif data > CAP_3 and data <CAP_4:
+                earned = data * TIER_3_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
+                total_earned += earned
+                total_earned_bdt += earned_bdt
+            elif data >= CAP_4:
+                earned = data * TIER_4_PERCENT / 100
+                earned_bdt = earned * BDT_CONVERTER
+                total_earned += earned
+                total_earned_bdt += earned_bdt
+            
+            weeks = {
+                "total": data,
+                "earned": earned,
+                "earned_bdt": earned_bdt
+            }
+            weekly_data.append(weeks)
+        
+        filtered_row = {
+                "user": user,
+                "total": total,
+                "total_earned": total_earned,
+                "total_earned_bdt": total_earned_bdt,
+                "week": weekly_data,                
+            }
+        monthly_custom.append(filtered_row)
+        print("printing custom week data")
+        print(monthly_custom)
+            
+
+        # TRYING DONE
         weekly_data = []
         total = 0
         total_earned = 0
@@ -968,14 +1071,15 @@ def monthlySaleDetail(request, mm, yy):
 
         filtered_row = {
                 "user": user,
-                "service_count": data['services'],
+                # "service_count": data['services'],
                 "total": total,
                 "total_earned": total_earned,
                 "total_earned_bdt": total_earned_bdt,
                 "week": weekly_data,                
             }
         monthly_filtered.append(filtered_row)
-    # print(monthly_filtered)
+    print("printing truncate data")
+    print(monthly_filtered)
     # weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
 
 
@@ -983,7 +1087,7 @@ def monthlySaleDetail(request, mm, yy):
                     {"sales_info": sales_info,
                         "month": month,
                         "year": yy,
-                        "sale_data": monthly_filtered})
+                        "sale_data": monthly_custom})
 
 def salesExecutiveSalary(request):
     user_id = request.user.id
