@@ -885,14 +885,9 @@ def monthlySaleDetail(request, mm, yy):
     services = Services.objects.filter(date__year=yy,
                                         date__month=mm).order_by('date')
 
-    # print(services.count())
 
-    # service_data = services.filter(payment_status="Received")
     service_data = services.filter(Q(payment_status="Received") | Q(payment_status="NA"))
-    # print(service_data.count())
 
-    # print(services1)
-    # print(services)
 
     user_list = (services1
             .values('user')
@@ -955,28 +950,23 @@ def monthlySaleDetail(request, mm, yy):
             elif data > CAP_0 and data <CAP_1:
                 earned = data * TIER_0_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-                total_earned += earned
-                total_earned_bdt += earned_bdt
             elif data > CAP_1 and data <CAP_2:
                 earned = data * TIER_1_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-                total_earned += earned
-                total_earned_bdt += earned_bdt
             elif data > CAP_2 and data <CAP_3:
                 earned = data * TIER_2_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-                total_earned += earned
-                total_earned_bdt += earned_bdt
             elif data > CAP_3 and data <CAP_4:
                 earned = data * TIER_3_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-                total_earned += earned
-                total_earned_bdt += earned_bdt
             elif data >= CAP_4:
-                earned = data * TIER_4_PERCENT / 100
+                full_sale = 0
+                for data2 in service_data:
+                    full_sale += data2.price
+                full_sale_earned = full_sale * TIER_4_PERCENT / 100
+                own_earned = data * TIER_3_PERCENT / 100
+                earned = full_sale_earned + own_earned
                 earned_bdt = earned * BDT_CONVERTER
-                total_earned += earned
-                total_earned_bdt += earned_bdt
             
             weeks = {
                 "total": data,
@@ -985,6 +975,10 @@ def monthlySaleDetail(request, mm, yy):
             }
             weekly_data.append(weeks)
         
+        for data in weekly_data:
+            total_earned += data['earned']
+            total_earned_bdt += data['earned_bdt']
+
         filtered_row = {
                 "user": user,
                 "total": total,
@@ -1093,92 +1087,90 @@ def salesExecutiveSalary(request):
     user_id = request.user.id
     dash_user = DashboardUser.objects.get(user_id=user_id)
 
-    print(user_id)
-    print(dash_user.id)
     services = Services.objects.filter(user_id=dash_user.id)
     service_data = services.filter(Q(payment_status="Received") | Q(payment_status="NA"))
-    print(service_data)
 
     salary_row = []
+    salary_custom = []
     monthly_services = service_data.annotate(month = TruncMonth('date')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
-    print(monthly_services)
-
+    
     for data in monthly_services:
-        month = data['month']
-        # print(month.month)
-        month_data = date(2022, month.month, 1).strftime('%B')
-        print("printing month")
-        print(month_data)
-        main_services = service_data.filter(date__month=month.month)
-        print(main_services)
-        weekly_calc = main_services.annotate(week = TruncWeek('date')).values('week').annotate(total=Sum('price')).order_by('week')
+        print(data['month'].month)
+        mm = data['month'].month
+        month_data = date(2022, mm, 1).strftime('%B')
+        service_month = service_data.filter(date__month=mm)
+
+        week_1 = 0
+        week_2 = 0
+        week_3 = 0
+        week_4 = 0
+        week_1_data = service_month.filter(date__day__gte=1, date__day__lte=7)
+        week_2_data = service_month.filter(date__day__gte=8, date__day__lte=14)
+        week_3_data = service_month.filter(date__day__gte=15, date__day__lte=21)
+        week_4_data = service_month.filter(date__day__gte=22, date__day__lte=31)
+
+        for data in week_1_data:
+            week_1 += data.price
+
+        for data in week_2_data:
+            week_2 += data.price
+        
+        for data in week_3_data:
+            week_3 += data.price
+
+        for data in week_4_data:
+            week_4 += data.price
+
+        weekly_total = []
+        weekly_total.append(week_1)
+        weekly_total.append(week_2)
+        weekly_total.append(week_3)
+        weekly_total.append(week_4)
+
         weekly_data = []
         total = 0
         total_earned = 0
         total_earned_bdt = 0
         earned = 0
         earned_bdt = 0
-
-        for data in weekly_calc:
-            total += data['total']
-            if data['total'] > CAP_0 and data['total'] <CAP_1:
-                earned = data['total'] * TIER_0_PERCENT / 100
+        for data in weekly_total:
+            total += data
+            if data == 0:
+                earned = 0
+                earned_bdt = 0
+                total_earned = 0
+                total_earned_bdt = 0
+            elif data > CAP_0 and data <CAP_1:
+                earned = data * TIER_0_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-                # total_earned += earned
-                # total_earned_bdt += earned_bdt
-            elif data['total'] > CAP_1 and data['total'] <CAP_2:
-                earned = data['total'] * TIER_1_PERCENT / 100
+            elif data > CAP_1 and data <CAP_2:
+                earned = data * TIER_1_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-                # total_earned += earned
-                # total_earned_bdt += earned_bdt
-            elif data['total'] > CAP_2 and data['total'] <CAP_3:
-                earned = data['total'] * TIER_2_PERCENT / 100
+            elif data > CAP_2 and data <CAP_3:
+                earned = data * TIER_2_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-                # total_earned += earned
-                # total_earned_bdt += earned_bdt
-            elif data['total'] > CAP_3 and data['total'] <CAP_4:
-                earned = data['total'] * TIER_3_PERCENT / 100
+            elif data > CAP_3 and data <CAP_4:
+                earned = data * TIER_3_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-                # total_earned += earned
-                # total_earned_bdt += earned_bdt
-            elif data['total'] >= CAP_4:
-                earned = data['total'] * TIER_4_PERCENT / 100
+            elif data >= CAP_4:
+                full_sale = 0
+                for data2 in service_data:
+                    full_sale += data2.price
+                full_sale_earned = full_sale * TIER_4_PERCENT / 100
+                own_earned = data * TIER_3_PERCENT / 100
+                earned = full_sale_earned + own_earned
                 earned_bdt = earned * BDT_CONVERTER
-                # total_earned += earned
-                # total_earned_bdt += earned_bdt
-
-            total_earned += earned
-            total_earned_bdt += earned_bdt
+            
             weeks = {
-                "total": data['total'],
+                "total": data,
                 "earned": earned,
                 "earned_bdt": earned_bdt
             }
             weekly_data.append(weeks)
-
-        if len(weekly_calc) > 4:
-            idx = 4
-            main_data = weekly_data[:idx]
-            remaining_data = weekly_data[idx:]
-
-            for data in remaining_data:
-                obj = main_data[idx-1]
-                obj['services'] += data['services']
-                obj['total'] += data['total']
-                obj['earned'] += data['earned']
-                obj['earned_bdt'] += data['earned_bdt']
-
-            weekly_data = main_data
-
-        elif len(weekly_calc) < 4:
-            for x in range(0, 4-len(weekly_calc)):
-                weeks = {
-                    "services": 0,
-                    "total": 0,
-                    "earned": 0,
-                    "earned_bdt": 0
-                }
-                weekly_data.append(weeks)
+        
+        for data in weekly_data:
+            total_earned += data['earned']
+            total_earned_bdt += data['earned_bdt']
 
         filtered_row = {
                 "month": month_data,
@@ -1189,8 +1181,86 @@ def salesExecutiveSalary(request):
             }
         salary_row.append(filtered_row)
 
-    print("printing salary")
-    print(salary_row)
+    # for data in monthly_services:
+    #     month_data = date(2022, month.month, 1).strftime('%B')
+
+    #     main_services = service_data.filter(date__month=month.month)
+
+    #     weekly_calc = main_services.annotate(week = TruncWeek('date')).values('week').annotate(total=Sum('price')).order_by('week')
+    #     weekly_data = []
+    #     total = 0
+    #     total_earned = 0
+    #     total_earned_bdt = 0
+    #     earned = 0
+    #     earned_bdt = 0
+
+    #     for data in weekly_calc:
+    #         total += data['total']
+    #         if data['total'] > CAP_0 and data['total'] <CAP_1:
+    #             earned = data['total'] * TIER_0_PERCENT / 100
+    #             earned_bdt = earned * BDT_CONVERTER
+
+    #         elif data['total'] > CAP_1 and data['total'] <CAP_2:
+    #             earned = data['total'] * TIER_1_PERCENT / 100
+    #             earned_bdt = earned * BDT_CONVERTER
+
+    #         elif data['total'] > CAP_2 and data['total'] <CAP_3:
+    #             earned = data['total'] * TIER_2_PERCENT / 100
+    #             earned_bdt = earned * BDT_CONVERTER
+
+    #         elif data['total'] > CAP_3 and data['total'] <CAP_4:
+    #             earned = data['total'] * TIER_3_PERCENT / 100
+    #             earned_bdt = earned * BDT_CONVERTER
+
+    #         elif data['total'] >= CAP_4:
+    #             earned = data['total'] * TIER_4_PERCENT / 100
+    #             earned_bdt = earned * BDT_CONVERTER
+
+
+    #         total_earned += earned
+    #         total_earned_bdt += earned_bdt
+    #         weeks = {
+    #             "total": data['total'],
+    #             "earned": earned,
+    #             "earned_bdt": earned_bdt
+    #         }
+    #         weekly_data.append(weeks)
+
+    #     if len(weekly_calc) > 4:
+    #         idx = 4
+    #         main_data = weekly_data[:idx]
+    #         remaining_data = weekly_data[idx:]
+
+    #         for data in remaining_data:
+    #             obj = main_data[idx-1]
+    #             obj['services'] += data['services']
+    #             obj['total'] += data['total']
+    #             obj['earned'] += data['earned']
+    #             obj['earned_bdt'] += data['earned_bdt']
+
+    #         weekly_data = main_data
+
+    #     elif len(weekly_calc) < 4:
+    #         for x in range(0, 4-len(weekly_calc)):
+    #             weeks = {
+    #                 "services": 0,
+    #                 "total": 0,
+    #                 "earned": 0,
+    #                 "earned_bdt": 0
+    #             }
+    #             weekly_data.append(weeks)
+
+    #     filtered_row = {
+    #             "month": month_data,
+    #             "total": total,
+    #             "total_earned": total_earned,
+    #             "total_earned_bdt": total_earned_bdt,
+    #             "week": weekly_data,                
+    #         }
+    #     salary_row.append(filtered_row)
+
+    # print("printing salary")
+    # print(salary_row)
     return render(request, "accounts/sales_person.html", {"salary_row": salary_row})
 
 def clientIndex(request):
