@@ -961,7 +961,8 @@ def monthlySaleDetail(request, mm, yy):
                 earned_bdt = earned * BDT_CONVERTER
             elif data >= CAP_4:
                 full_sale = 0
-                for data2 in service_data:
+                # services_month = user_services
+                for data2 in user_services:
                     full_sale += data2.price
                 full_sale_earned = full_sale * TIER_4_PERCENT / 100
                 own_earned = data * TIER_3_PERCENT / 100
@@ -1154,7 +1155,7 @@ def salesExecutiveSalary(request):
                 earned_bdt = earned * BDT_CONVERTER
             elif data >= CAP_4:
                 full_sale = 0
-                for data2 in service_data:
+                for data2 in service_month:
                     full_sale += data2.price
                 full_sale_earned = full_sale * TIER_4_PERCENT / 100
                 own_earned = data * TIER_3_PERCENT / 100
