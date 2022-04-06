@@ -34,13 +34,16 @@ class Service(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
     quantity = models.PositiveBigIntegerField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
+    comm_status = models.BooleanField(default=False)
+    cap = models.FloatField(null=True, blank=True)
+    commission = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.title
 
 class ServiceType(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
-
+    
     def __str__(self):
         return self.title
 
@@ -59,9 +62,7 @@ class Services(models.Model):
     status = models.CharField(max_length=128, null=True, blank=True)    
     accepted = models.BooleanField(default=False)
     payment_status = models.CharField(max_length=128, null=True, blank=True)
-    extra_comm = models.BooleanField(default=False)
-    limit = models.FloatField(null=True, blank=True)
-    commission = models.FloatField(null=True, blank=True)
+
 
     def __str__(self):
         return f"{self.title}-{self.date}-{self.user.username} - {self.price}"
