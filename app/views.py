@@ -388,6 +388,15 @@ def saveService(request):
 # connected service only and calculate that on the salary and accounts sheet for payment to 
 # sales executive.
 
+def updateServiceBonus(request):
+    post_data = request.POST
+    service = Service.objects.get(id=post_data['service'])
+    service.comm_status = True
+    service.cap = post_data['cap']
+    service.commission = post_data['commission']
+    service.save()
+    return redirect('servicelist')
+
 def serviceUpdate(request, sid):
     data = ""
     servicelist = Service.objects.order_by("title")
@@ -738,7 +747,8 @@ def otherPayment(request, sid):
 def serviceList(request):
     servicelist = Service.objects.all()
     service_list = True
-    return render(request, "service_list.html", {"servicelist": servicelist, "service_list": service_list})
+    bonuslist = servicelist.filter(comm_status=True)
+    return render(request, "service_list.html", {"servicelist": servicelist, "service_list": service_list, 'bonuslist': bonuslist})
 
 def serviceTypeList(request):
     servicetypes = ServiceType.objects.all()
@@ -904,6 +914,43 @@ def monthlySaleDetail(request, mm, yy):
         weekly_calc = user_services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price')).order_by('week')
         # TRYING NEW WAY TO CALCULATE WEEKS
 
+        service_bonus = 0
+        service_bonus_bdt = 0
+        cap = 0
+        commission = 0
+        total = 0
+        services_bonus_data = user_services.filter(service__comm_status=True)
+        bonus_data = services_bonus_data.values('service').annotate(pieces=Count('service'), total=Sum('price')).order_by()
+        print("service bonus")
+        print(services_bonus_data)
+        print(bonus_data)
+
+        for bonus_service in bonus_data:
+            service_id = bonus_service['service']
+            total = bonus_service['total']
+            service = Service.objects.get(id=service_id)
+            cap = service.cap
+            commission = service.commission
+
+            if total >= cap:
+                earned = total * commission / 100
+                service_bonus += earned
+                service_bonus_bdt += earned * BDT_CONVERTER
+
+        print(service_bonus)
+        print(service_bonus_bdt)
+
+            
+
+        tier_bonus = 0
+        tier_bonus_bdt = 0
+        bonus_cap = 0
+        for serv in user_services:
+            bonus_cap += serv.price
+        if bonus_cap >= CAP_4:
+            tier_bonus = bonus_cap * TIER_4_PERCENT / 100
+            tier_bonus_bdt = tier_bonus * BDT_CONVERTER
+
         week_1 = 0
         week_2 = 0
         week_3 = 0
@@ -956,18 +1003,19 @@ def monthlySaleDetail(request, mm, yy):
             elif data > CAP_2 and data <CAP_3:
                 earned = data * TIER_2_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-            elif data > CAP_3 and data <CAP_4:
+            elif data > CAP_3:
                 earned = data * TIER_3_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-            elif data >= CAP_4:
-                full_sale = 0
-                # services_month = user_services
-                for data2 in user_services:
-                    full_sale += data2.price
-                full_sale_earned = full_sale * TIER_4_PERCENT / 100
-                own_earned = data * TIER_3_PERCENT / 100
-                earned = full_sale_earned + own_earned
-                earned_bdt = earned * BDT_CONVERTER
+            # elif data >= CAP_4:
+                # full_sale = 0
+                # for data2 in user_services:
+                #     full_sale += data2.price
+                # full_sale_earned = full_sale * TIER_4_PERCENT / 100
+                # own_earned = data * TIER_3_PERCENT / 100
+                # earned = full_sale_earned + own_earned
+                # earned_bdt = earned * BDT_CONVERTER
+                # earned = data * TIER_3_PERCENT / 100
+                # earned_bdt = earned * BDT_CONVERTER
             
             weeks = {
                 "total": data,
@@ -980,16 +1028,23 @@ def monthlySaleDetail(request, mm, yy):
             total_earned += data['earned']
             total_earned_bdt += data['earned_bdt']
 
+        total_earned += tier_bonus
+        total_earned_bdt += tier_bonus_bdt
+
         filtered_row = {
                 "user": user,
                 "total": total,
                 "total_earned": total_earned,
                 "total_earned_bdt": total_earned_bdt,
-                "week": weekly_data,                
+                "week": weekly_data,        
+                "tier_bonus": tier_bonus,
+                "tier_bonus_bdt": tier_bonus_bdt,
+                "service_bonus": service_bonus,
+                "service_bonus_bdt": service_bonus_bdt       
             }
         monthly_custom.append(filtered_row)
-        print("printing custom week data")
-        print(monthly_custom)
+        # print("printing custom week data")
+        # print(monthly_custom)
             
 
         # TRYING DONE
@@ -1073,8 +1128,8 @@ def monthlySaleDetail(request, mm, yy):
                 "week": weekly_data,                
             }
         monthly_filtered.append(filtered_row)
-    print("printing truncate data")
-    print(monthly_filtered)
+    # print("printing truncate data")
+    # print(monthly_filtered)
     # weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price'))
 
 
@@ -1100,6 +1155,41 @@ def salesExecutiveSalary(request):
         mm = data['month'].month
         month_data = date(2022, mm, 1).strftime('%B')
         service_month = service_data.filter(date__month=mm)
+
+        service_bonus = 0
+        service_bonus_bdt = 0
+        cap = 0
+        commission = 0
+        total = 0
+        services_bonus_data = service_month.filter(service__comm_status=True)
+        bonus_data = services_bonus_data.values('service').annotate(pieces=Count('service'), total=Sum('price')).order_by()
+        print("service bonus")
+        print(services_bonus_data)
+        print(bonus_data)
+
+        for bonus_service in bonus_data:
+            service_id = bonus_service['service']
+            total = bonus_service['total']
+            service = Service.objects.get(id=service_id)
+            cap = service.cap
+            commission = service.commission
+
+            if total >= cap:
+                earned = total * commission / 100
+                service_bonus += earned
+                service_bonus_bdt += earned * BDT_CONVERTER
+
+        print(service_bonus)
+        print(service_bonus_bdt)
+
+        tier_bonus = 0
+        tier_bonus_bdt = 0
+        bonus_cap = 0
+        for serv in service_month:
+            bonus_cap += serv.price
+        if bonus_cap >= CAP_4:
+            tier_bonus = bonus_cap * TIER_4_PERCENT / 100
+            tier_bonus_bdt = tier_bonus * BDT_CONVERTER
 
         week_1 = 0
         week_2 = 0
@@ -1150,17 +1240,13 @@ def salesExecutiveSalary(request):
             elif data > CAP_2 and data <CAP_3:
                 earned = data * TIER_2_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-            elif data > CAP_3 and data <CAP_4:
+            elif data > CAP_3:
                 earned = data * TIER_3_PERCENT / 100
                 earned_bdt = earned * BDT_CONVERTER
-            elif data >= CAP_4:
-                full_sale = 0
-                for data2 in service_month:
-                    full_sale += data2.price
-                full_sale_earned = full_sale * TIER_4_PERCENT / 100
-                own_earned = data * TIER_3_PERCENT / 100
-                earned = full_sale_earned + own_earned
-                earned_bdt = earned * BDT_CONVERTER
+            # elif data >= CAP_4:
+
+            #     earned = data * TIER_3_PERCENT / 100
+            #     earned_bdt = earned * BDT_CONVERTER
             
             weeks = {
                 "total": data,
@@ -1172,13 +1258,20 @@ def salesExecutiveSalary(request):
         for data in weekly_data:
             total_earned += data['earned']
             total_earned_bdt += data['earned_bdt']
+        
+        total_earned += tier_bonus
+        total_earned_bdt += tier_bonus_bdt
 
         filtered_row = {
                 "month": month_data,
                 "total": total,
                 "total_earned": total_earned,
                 "total_earned_bdt": total_earned_bdt,
-                "week": weekly_data,                
+                "week": weekly_data,    
+                "tier_bonus": tier_bonus,
+                "tier_bonus_bdt": tier_bonus_bdt,
+                "service_bonus": service_bonus,
+                "service_bonus_bdt": service_bonus_bdt           
             }
         salary_row.append(filtered_row)
 

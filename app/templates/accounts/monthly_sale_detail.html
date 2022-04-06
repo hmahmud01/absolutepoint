@@ -64,7 +64,9 @@
                                     <th>WK1</th>
                                     <th>WK2</th>
                                     <th>WK3</th>
-                                    <th>WK4</th>                                                          
+                                    <th>WK4</th>  
+                                    <th>TIER BONUS</th>  
+                                    <th>SERVICE BONUS</th>                                                       
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +77,8 @@
                                     {% for week in data.week %}
                                     <td>{{ week.earned|stringformat:".2f" }} </td>
                                     {% endfor %}
+                                    <td>{{ data.tier_bonus }}</td>
+                                    <td>{{ data.service_bonus }}</td>
                                 </tr>                                
                                 {% endfor %}
                             </tbody>
@@ -102,7 +106,9 @@
                                     <th>WK1</th>
                                     <th>WK2</th>
                                     <th>WK3</th>
-                                    <th>WK4</th>                                                          
+                                    <th>WK4</th>    
+                                    <th>TIER BONUS</th>    
+                                    <th>SERVICE BONUS</th>                                      
                                 </tr>
                             </thead>
                             <tbody>
@@ -113,6 +119,8 @@
                                     {% for week in data.week %}
                                     <td>{{ week.earned_bdt|stringformat:".2f" }} </td>
                                     {% endfor %}
+                                    <td>{{ data.tier_bonus_bdt }}</td>
+                                    <td>{{ data.service_bonus_bdt }}</td>
                                 </tr>                                
                                 {% endfor %}
                             </tbody>
