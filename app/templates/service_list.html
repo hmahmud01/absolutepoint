@@ -15,50 +15,50 @@
     </div> 
 
     <div class="modal fade" id="udpateServiceBonus" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="udpateServiceLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Update Service Bonus</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <form action="{% url 'updateservicebonus' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-                        <div class="modal-body">                                                
-                            <div class="row">
-                                <label class="col-md-3 form-label">Service</label>
-                                <div class="col-md-9 select mb-3">
-                                    <select class="form-control" name="service">
-                                        <option value="none">None</option>
-                                        {% for service in servicelist %}
-                                        <option value="{{ service.id }}">{{ service.title }} - {{ service.quantity }} - {{ service.price }}</option>
-                                        {% endfor %}                                
-                                    </select>
-                                </div>
-                            </div>
-                            <hr class="bg-gray-400 my-4">
-                            <div class="row">
-                                <label class="col-md-3 form-label">Max Cap</label>
-                                <div class="col-md-9">
-                                    <input class="form-control" name="cap" type="number" placeholder="Cap" step="0.01">
-                                </div>
-                            </div>
-                            <hr class="bg-gray-400 my-4">
-                            <div class="row">
-                                <label class="col-md-3 form-label">Commission Percentage %</label>
-                                <div class="col-md-9">
-                                    <input class="form-control" name="commission" type="number" placeholder="Commission Percentage %" step="0.01">
-                                </div>
-                            </div>
-                        </div>                    
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </div>
-                    </form>                                            
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Update Service Bonus</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
+                <form action="{% url 'updateservicebonus' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="modal-body">                                                
+                        <div class="row">
+                            <label class="col-md-3 form-label">Service</label>
+                            <div class="col-md-9 select mb-3">
+                                <select class="form-control" name="service">
+                                    <option value="none">None</option>
+                                    {% for service in servicelist %}
+                                    <option value="{{ service.id }}">{{ service.title }} - {{ service.quantity }} - {{ service.price }}</option>
+                                    {% endfor %}                                
+                                </select>
+                            </div>
+                        </div>
+                        <hr class="bg-gray-400 my-4">
+                        <div class="row">
+                            <label class="col-md-3 form-label">Max Cap</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="cap" type="number" placeholder="Cap" step="0.01">
+                            </div>
+                        </div>
+                        <hr class="bg-gray-400 my-4">
+                        <div class="row">
+                            <label class="col-md-3 form-label">Commission Percentage %</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="commission" type="number" placeholder="Commission Percentage %" step="0.01">
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>                                            
             </div>
         </div>
+    </div>
 
 
     <div class="row">
