@@ -397,6 +397,45 @@ def updateServiceBonus(request):
     service.save()
     return redirect('servicelist')
 
+def serviceBonus(request, sid):
+    service = Services.objects.get(id=sid)
+    post_data = request.POST
+    service.comm_status = True
+    service.commission = post_data['commission']
+    rate = post_data['commission']
+    service.save()
+    service.comm_amount = float(service.price) * float(rate) / 100
+    service.save()
+    print(service.comm_amount)
+    return redirect('servicedetail', sid)
+
+def seasonBonus(request):
+    data= SalesBonus.objects.all()
+
+    return render(request, 'accounts/season_bonus.html', {"datas": data})
+
+def addSeasonBonus(request):
+    users = DashboardUser.objects.all()
+    today = date.today()
+    today_date = today.strftime("%m/%d/%Y")
+
+    return render(request, 'accounts/season_bonus_add.html', {"date": today_date, "users": users})
+
+def submitseasonbonus(request):
+    post_data = request.POST
+    user = DashboardUser.objects.get(id=post_data['user'])
+    date = post_data['date']
+    date_obj = datetime.strptime(date, '%m/%d/%Y')
+    salebonus = SalesBonus(
+        emp = user,
+        amount = post_data['bonus'],
+        detail = post_data['remarks'],
+        date = date_obj
+    )
+
+    salebonus.save()
+    return redirect('seasonbonus')
+
 def serviceUpdate(request, sid):
     data = ""
     servicelist = Service.objects.order_by("title")
@@ -911,36 +950,44 @@ def monthlySaleDetail(request, mm, yy):
         user_id = data['user']  
         user = DashboardUser.objects.get(id=user_id)
         user_services = service_data.filter(user_id=user_id)
+        dummy_services = user_services
+        user_services = user_services.exclude(comm_status=True)
+        
         weekly_calc = user_services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price')).order_by('week')
-        # TRYING NEW WAY TO CALCULATE WEEKS
 
+        service_custom = 0
         service_bonus = 0
         service_bonus_bdt = 0
         cap = 0
         commission = 0
         total = 0
-        services_bonus_data = user_services.filter(service__comm_status=True)
+        services_bonus_data = service_data.filter(service__comm_status=True)
         bonus_data = services_bonus_data.values('service').annotate(pieces=Count('service'), total=Sum('price')).order_by()
-        print("service bonus")
-        print(services_bonus_data)
-        print(bonus_data)
 
-        for bonus_service in bonus_data:
-            service_id = bonus_service['service']
-            total = bonus_service['total']
-            service = Service.objects.get(id=service_id)
-            cap = service.cap
-            commission = service.commission
+        services_custom_comm = dummy_services.filter(comm_status=True)
+        print(services_custom_comm)
+        for custom in services_custom_comm:
+            service_custom += custom.price
+            service_bonus += custom.comm_amount
+        
+        service_bonus_bdt = service_bonus * BDT_CONVERTER
 
-            if total >= cap:
-                earned = total * commission / 100
-                service_bonus += earned
-                service_bonus_bdt += earned * BDT_CONVERTER
+        season_bonus = 0
+        seasonal_bonus = SalesBonus.objects.filter(emp_id=user_id).filter(date__month=mm)
+        for season in seasonal_bonus:
+            season_bonus += season.amount
 
-        print(service_bonus)
-        print(service_bonus_bdt)
+        # for bonus_service in bonus_data:
+        #     service_id = bonus_service['service']
+        #     total = bonus_service['total']
+        #     service = Service.objects.get(id=service_id)
+        #     cap = service.cap
+        #     commission = service.commission
 
-            
+        #     if total >= cap:
+        #         earned = total * commission / 100
+        #         service_bonus += earned
+        #         service_bonus_bdt += earned * BDT_CONVERTER
 
         tier_bonus = 0
         tier_bonus_bdt = 0
@@ -1030,6 +1077,7 @@ def monthlySaleDetail(request, mm, yy):
 
         total_earned += tier_bonus
         total_earned_bdt += tier_bonus_bdt
+        total_earned_bdt += season_bonus
 
         filtered_row = {
                 "user": user,
@@ -1039,8 +1087,10 @@ def monthlySaleDetail(request, mm, yy):
                 "week": weekly_data,        
                 "tier_bonus": tier_bonus,
                 "tier_bonus_bdt": tier_bonus_bdt,
+                "service_custom": service_custom,
                 "service_bonus": service_bonus,
-                "service_bonus_bdt": service_bonus_bdt       
+                "service_bonus_bdt": service_bonus_bdt,
+                "season_bonus": season_bonus, 
             }
         monthly_custom.append(filtered_row)
         # print("printing custom week data")

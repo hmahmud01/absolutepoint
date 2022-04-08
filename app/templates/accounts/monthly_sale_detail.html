@@ -25,7 +25,8 @@
                                     <th>WK1</th>
                                     <th>WK2</th>
                                     <th>WK3</th>
-                                    <th>WK4</th>                                                          
+                                    <th>WK4</th> 
+                                    <th>Custom</th>                                                         
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,6 +38,7 @@
                                     {% for week in data.week %}
                                     <td>{{ week.total }} </td>
                                     {% endfor %}
+                                    <td>{{ data.service_custom }}</td>
                                 </tr>                                
                                 {% endfor %}
                             </tbody>
@@ -108,7 +110,8 @@
                                     <th>WK3</th>
                                     <th>WK4</th>    
                                     <th>TIER BONUS</th>    
-                                    <th>SERVICE BONUS</th>                                      
+                                    <th>SERVICE BONUS</th>   
+                                    <th>Season Bonus</th>                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,6 +124,7 @@
                                     {% endfor %}
                                     <td>{{ data.tier_bonus_bdt }}</td>
                                     <td>{{ data.service_bonus_bdt }}</td>
+                                    <td>{{ data.season_bonus }}</td>
                                 </tr>                                
                                 {% endfor %}
                             </tbody>

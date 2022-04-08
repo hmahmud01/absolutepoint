@@ -19,8 +19,41 @@
                         <a class="btn btn-sm btn-danger" href="{% url 'declineservice' service.id %}"><i class="fa fa-times"></i> Decline</a>
                         {% endif %}                                                
                         <a class="btn btn-sm btn-warning" href="{% url 'serviceupdate' service.id %}"><i class="fa fa-pen"></i> Edit</a>
+                        {% comment %} <a class="btn btn-sm btn-info" href="{% url 'serviceupdate' service.id %}"><i class="fa fa-pen"></i> Bonus</a> {% endcomment %}
+                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#serviceBonus"> <i class="fa fa-tree"></i>
+                            Custom Commission
+                        </button>  
                     </div>                    
-                    {% endif %}
+                    {% endif %} 
+                </div>
+            </div>
+            <div class="modal fade" id="serviceBonus" data-bs-backdrop="static"
+                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Custom Commission</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <form action="{% url 'servicebonus' service.id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="modal-body">                                                
+                                <div class="row">
+                                    <input type="hidden" name="id" value="{{ service.id }}">
+                                    <label class="col-md-3 form-label">Commission %</label>
+                                    <div class="col-md-9">
+                                        <input class="form-control" name="commission" type="number" step="0.01" placeholder="Commission %">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                            </div>
+                        </form>                                            
+                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -41,6 +74,16 @@
                 <p>Accept Status : <span class="badge badge-success-light">Accepted</span> </p>
                 {% else %}
                 <p>Accept Status : <span class="badge badge-danger-light">Not Accepted Yet</span></p>
+                {% endif %}
+
+                <hr>
+                <h4> Service Custom Commission </h4>
+                {% if service.comm_status %}
+                <p>Custom Commission Status : <strong>Active</strong></p>
+                <p>Custom Commission (%) : {{ service.commission }} %</p>
+                <p>Custom Commission Amount (Calculated) : {{ service.comm_amount }} $</p>
+                {% else %}
+                <p>Custom Commission Status : <strong>Negative</strong></p>
                 {% endif %}
 
                 {% if toPay %}

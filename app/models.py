@@ -62,7 +62,9 @@ class Services(models.Model):
     status = models.CharField(max_length=128, null=True, blank=True)    
     accepted = models.BooleanField(default=False)
     payment_status = models.CharField(max_length=128, null=True, blank=True)
-
+    comm_status = models.BooleanField(default=False)
+    commission = models.FloatField(null=True, blank=True)
+    comm_amount = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.title}-{self.date}-{self.user.username} - {self.price}"
@@ -74,6 +76,17 @@ class Services(models.Model):
         yy = self.created_at.strftime('%Y')
         date = yy
         return date
+
+class SalesBonus(models.Model):
+    emp = models.ForeignKey(DashboardUser, on_delete=models.CASCADE)
+    amount = models.FloatField(null=True, blank=True)
+    detail = models.CharField(max_length=512, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    created_at = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.emp.name} - {self.amount}"
+    
 
 class ServicePayments(models.Model):
     service = models.ForeignKey(Services, on_delete=models.CASCADE)            

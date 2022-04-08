@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="/static/vendor/vanillajs-datepicker/css/datepicker-bs4.min.css">
+<style>
+.datepicker {
+    z-index: 1600 !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section>
+    <div class="page-header">
+        <div class="d-flex justify-content-between align-items-start align-items-sm-center mb-4 flex-column flex-sm-row">
+            <div class="left">
+                <h1 class="page-heading">Employee Season Bonus</h1>
+            </div>
+            <div class="right">
+                {% comment %} <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal"  data-bs-target="#seasonBonus">Add Season Bonus</button>   {% endcomment %}
+                <a class="btn btn-sm btn-outline-info" href="{% url 'addseasonbonus' %}">Add Season Bonus</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="seasonBonus" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="udpateServiceLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Season Bonus for Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{% url 'submitseasonbonus' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="modal-body">                                                
+                        <div class="row">
+                            <label class="col-md-3 form-label">Users</label>
+                            <div class="col-md-9 select mb-3">
+                                <select class="form-control" name="user">
+                                    <option value="none">None</option>
+                                    {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.name }}</option>
+                                    {% endfor %}                                
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Bonus Amount</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="bonus" type="number" placeholder="Bonus Amount in BDT" step="0.01">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Remarks</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="remarks" type="text" placeholder="Remarks">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-md-3 form-label">Date</label>
+                            <div class="col-md-9 mb-3">
+                                <div class="">
+                                    <input class="form-control input-datepicker-autoclose" name="date" type="text" value="{{ date }}">
+                                </div>
+                            </div>                        
+                        </div>
+                    </div>                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                    </div>
+                </form>                                            
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-table mb-4">
+                <div class="card-header">
+                    <h5 class="card-heading">Employee Season Bonus</h5>
+                    <small>Listing</small>    
+                </div>
+                <div class="card-body">
+                    <div class="preload-wrapper">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="ordersDatatable">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Employee Name</th>
+                                        <th>Date</th>
+                                        <th>Remarks</th>
+                                        <th>Amount (BDT)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in datas %}
+                                    <tr class="align-middle">
+                                        <td>{{ data.id }}</td>
+                                        <td>{{ data.emp.name }}</td>
+                                        <td>{{ data.date }}</td>
+                                        <td>{{ data.detail }}</td>
+                                        <td>{{ data.amount }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="/static/vendor/vanillajs-datepicker/js/datepicker-full.min.js"></script>
+<script>
+    const datepickerAutoClose = new Datepicker(document.querySelector(".input-datepicker-autoclose"), {
+        buttonClass: "btn",
+        autohide: true,
+    });
+
+</script>
+{% endblock %}
+
