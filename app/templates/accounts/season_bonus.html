@@ -22,7 +22,8 @@
                 <a class="btn btn-sm btn-outline-info" href="{% url 'addseasonbonus' %}">Add Season Bonus</a>
             </div>
         </div>
-    </div>
+    </div> 
+
 
     <div class="modal fade" id="seasonBonus" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="udpateServiceLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -94,6 +95,7 @@
                                         <th>Date</th>
                                         <th>Remarks</th>
                                         <th>Amount (BDT)</th>
+                                        <th>CHANGE</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,6 +106,7 @@
                                         <td>{{ data.date }}</td>
                                         <td>{{ data.detail }}</td>
                                         <td>{{ data.amount }}</td>
+                                        <td> <a class="btn btn-sm btn-outline-danger" href="{% url 'removeseasonbonus' data.id %}">REMOVE <i class="fa fa-times"></i></a> </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

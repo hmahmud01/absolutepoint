@@ -23,6 +23,7 @@
                         <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#serviceBonus"> <i class="fa fa-tree"></i>
                             Custom Commission
                         </button>  
+                        <a class="btn btn-sm btn-outline-danger" href="{% url 'removeservicebonus' service.id %}"><i class="fa fa-times"></i> Decline Commission</a>
                     </div>                    
                     {% endif %} 
                 </div>
