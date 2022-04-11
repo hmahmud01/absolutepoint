@@ -21,18 +21,20 @@
                                     <th>WK1</th>
                                     <th>WK2</th>
                                     <th>WK3</th>
-                                    <th>WK4</th>                                                          
+                                    <th>WK4</th>   
+                                    <th>Custom</th>                                                           
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for data in salary_row %}
                                 <tr>                                    
-                                    <td>{{ data.month }}</a></td>
+                                    <td>{{ data.month }}</td>
                                     <!-- <td>{{ data.service_count }}</td> -->
                                     <td>{{ data.total }}</td>
                                     {% for week in data.week %}
                                     <td>{{ week.total }} </td>
                                     {% endfor %}
+                                    <td>{{ data.service_custom }}</td>
                                 </tr>                                
                                 {% endfor %}
                             </tbody>
@@ -106,8 +108,10 @@
                                     <th>WK2</th>
                                     <th>WK3</th>
                                     <th>WK4</th>          
+                                    <th>BASE SALARY</th>    
                                     <th>TIER BONUS</th>    
-                                    <th>SERVICE BONUS</th>                                                 
+                                    <th>SERVICE BONUS</th>   
+                                    <th>Season Bonus</th>                                                
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,8 +123,10 @@
                                     {% for week in data.week %}
                                     <td>{{ week.earned_bdt|stringformat:".2f" }} </td>
                                     {% endfor %}
+                                    <td>{{ data.base_salary }}</td>
                                     <td>{{ data.tier_bonus_bdt }}</td>
                                     <td>{{ data.service_bonus_bdt }}</td>
+                                    <td>{{ data.season_bonus }}</td>
                                 </tr>                                
                                 {% endfor %}
                             </tbody>
