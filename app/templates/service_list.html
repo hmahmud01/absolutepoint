@@ -9,7 +9,9 @@
                     <h1 class="page-heading">Services</h1>
                 </div>
                 <div class="right">
+                    {% if request.user.is_superuser %}
                     <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal"  data-bs-target="#udpateServiceBonus">Update Service Bonus</button>  
+                    {% endif %}
                 </div>
         </div>
     </div> 

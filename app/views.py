@@ -77,11 +77,6 @@ def verifyLogin(request):
         else:
             auth_login(request, user)
             return redirect('/')
-        # else:
-        #     req_user = DashboardUser.objects.get(user=user.id)
-        #     if req_user.user_type == 'sales':
-        #         auth_login(request, user)
-        #         return redirect('salesdashboard')
 
     else:
         return redirect('login')
@@ -129,9 +124,7 @@ def registerUser(request):
             sale_percent=5.0,
             current_earn=0.0
         )
-
         user_rank.save()
-
         return redirect('/')
 
 def resetPassword(request):
@@ -456,7 +449,6 @@ def serviceUpdate(request, sid):
     data = ""
     servicelist = Service.objects.order_by("title")
     servicetypes = ServiceType.objects.all()
-    # service_create = True
     users = DashboardUser.objects.all()
     service = Services.objects.get(id=sid)
     today = date.today()
@@ -521,6 +513,14 @@ def updateServiceType(request):
     serviceType.save()
     return redirect('/')
 
+def removeUser(request):
+    post_data = request.POST
+    dash_user = DashboardUser.objects.get(id=post_data['user'])
+    user = User.objects.get(id=dash_user.user.id)
+    user.delete()
+    dash_user.delete()
+    return redirect('/')
+
 def addServiceType(request):
     data = ""
     service_type = True
@@ -558,8 +558,6 @@ def serviceDetail(request, sid):
 
     if paid >= service.price:
         toPay = False
-        # service.payment_status = "Received"
-        # service.status = "Done"
     
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
@@ -739,30 +737,7 @@ def donePayment(request, sid):
         payment.save()
         return redirect('servicedetail', sid)
 
-
-    # try:
-    #     print("inside try")
-
-        
-    #     print(payments)
-    #     for pay in payments:
-    #         pay.accepted = True
-    #         pay.save()
-    #     return redirect('servicedetail', sid)
-    # except:
-    #     print("inside exxcept")
-    #     payment = ServicePayments(
-    #         service = service,
-    #         amount = service.price,
-    #         link = "Auto Received",
-    #         accepted=True,
-    #     )
-    #     payment.save()
-    #     print(payment)
-    #     return redirect('servicedetail', sid)
-
     
-
 def fraudPayment(request, sid):
     service = Services.objects.get(id=sid)
     service.payment_status = "Fraud"
@@ -796,7 +771,7 @@ def otherPayment(request, sid):
     
 
 def serviceList(request):
-    servicelist = Service.objects.all()
+    servicelist = Service.objects.all().order_by('title')
     service_list = True
     bonuslist = servicelist.filter(comm_status=True)
     return render(request, "service_list.html", {"servicelist": servicelist, "service_list": service_list, 'bonuslist': bonuslist})
