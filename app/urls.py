@@ -33,6 +33,7 @@ urlpatterns = [
     path('removeservicelist/<int:sid>/', views.removeServiceList, name="removeservicelist"),
     path('updateservicelist/', views.updateServiceList, name="updateservicelist"),
     path('updateservicetype/', views.updateServiceType, name="updateservicetype"),
+    path('removeuser/', views.removeUser, name="removeuser"),
     path('updateservicebonus/', views.updateServiceBonus, name="updateservicebonus"),
     path('servicebonus/<int:sid>/', views.serviceBonus, name ="servicebonus"),
     path('removeservicebonus/<int:sid>/', views.removeServiceBonus, name="removeservicebonus"),
