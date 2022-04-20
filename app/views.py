@@ -1195,9 +1195,12 @@ def salesExecutiveSalary(request):
             total_earned += data['earned']
             total_earned_bdt += data['earned_bdt']
         
+        total += service_custom
         total_earned += tier_bonus
+        total_earned += service_bonus
         total_earned_bdt += tier_bonus_bdt
         total_earned_bdt += season_bonus
+        total_earned_bdt += service_bonus_bdt
         total_earned_bdt += BASE_SALARY 
 
         filtered_row = {
