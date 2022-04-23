@@ -73,6 +73,8 @@ urlpatterns = [
     path('productlist/', views.productList, name="productlist"),
     path('orderlist/', views.orderList, name="orderlist"),
     path('clientlist/', views.clientList, name="clientlist"),
+    path('cart/', views.cart, name="cart"),
+    path('checkout/', views.checkout, name="checkout"), 
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
 import json
-
+import requests
 from datetime import datetime, date
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth, TruncWeek
@@ -1301,3 +1301,20 @@ def clientList(request):
 def orderList(request):
     data = ""
     return render(request, "clientdash/order_list.html", {"data": data})
+
+def cart(request):
+    data = ""
+    return render(request, "client/cart.html", {"data": data})
+
+def checkout(request):
+    data = ""
+    params = {
+        "access_key": "e9bca0873fefe06bb0145b67feb8ec24"
+        }
+    response = requests.get('http://api.coinlayer.com/live', params=params)
+    
+    crypto_data = response.json()
+    rates = crypto_data['rates']
+        
+        
+    return render(request, "client/checkout.html", {"data": data, "rates": rates})
