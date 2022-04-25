@@ -8,17 +8,50 @@
     <div class="row">
         <div class="page-header">
             <h1 class="page-heading">Crypto Service Detail</h1>
-            <p>Crypto service for this Detail</p>
+            <p>Crypto service detail for {{ product.name }}</p>
         </div>
-        <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-header">Title JOB</div>
+        <div class="col-md-8 col-lg-8 col-sm-6">
+            <div class="card mb-8">
                 <div class="card-body">
-                    <h4 class="card-title">Main Crypto Title</h4>
-                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nemo aspernatur tempora. Repellat sapiente, assumenda architecto asperiores quae perspiciatis reiciendis mollitia molestias! Voluptatibus tempora harum obcaecati quos inventore nobis voluptatem.</p><a
-                        class="btn btn-outline-dark" href="">Action</a>
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <h6 class="card-subtitle text-muted">{{ product.ptype }}</h6>
                 </div>
-                <div class="card-footer text-muted">Available</div>
+                <img class="img-fluid service-img"
+                    src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                    alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">{{ product.category.name }}</p>
+                    <p class="card-text">{{ product.description }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-6">
+            <div class="card mb-4">
+                <form action="">
+                    <div class="card-body">
+                        <h5 class="card-title">Product Price</h5>
+                        <h6 class="card-subtitle text-muted">Select Your Price Option</h6>
+
+                        <div class="col-md">
+                            <label for="state" class="form-label">Options</label>
+                            <select class="form-select" id="product_price" required>
+                                <option value="">Choose...</option>
+                                {% for variable in variables %}
+                                <option value="{{ variable.id }}">{{ variable.measurement }} votes - {{ variable.price }}$</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-outline-secondary" type="button"><i class="fas fa-money me-2"></i>Add To Cart</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Have a Question</h5>
+                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @ishty or @pranto by <a href="">Clicking here</a></h6>
+                </div>
             </div>
         </div>
 

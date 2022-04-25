@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Products</h1>
+            <p>Crypto Service Product List</p>
+        </div>
+        <div class="col-md-8 col-lg-8 col-sm-6">
+            <div class="card mb-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <h6 class="card-subtitle text-muted">{{ product.ptype }}</h6>
+                </div>
+                <img class="img-fluid service-img"
+                    src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                    alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">{{ product.category.name }}</p>
+                    <p class="card-text">{{ product.description }}</p>
+                    {% if product.status is True %}
+                    <a class="btn btn-sm btn-outline-danger" href="{% url 'productact' product.id inactive %}">Activated</a>
+                    {% else %}
+                    <a class="btn btn-sm btn-outline-success" href="{% url 'productact' product.id active %}">Inactive</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Product</h5>
+                    <h6 class="card-subtitle text-muted">Price And Measurement</h6>
+                    <ul class="list-group mt-3">
+                        {% for variable in variables %}
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">{{ variable.measurement }}</h6>
+                                <small class="text-muted">Qty</small>
+                            </div>
+                            <span class="text-muted">${{ variable.price }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-outline-secondary" href="" data-bs-toggle="modal" data-bs-target="#variableprice"><i class="fas fa-money me-2"></i>Add price Measurement</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="variableprice" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Product Variable Price</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{% url 'savevariableprice' %}" method="post">{% csrf_token %}
+                    <div class="modal-body">   
+                        <input class="form-control" name="pid" type="number" value="{{ product.id }}" hidden>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Measurement Qty</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="measurement" type="number" placeholder="Measurement Quantity">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Measurement Price</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="price" type="number" placeholder="Measurement price" step="any">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>                                            
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Data Tables-->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script src="/static/js/e-commerce-orders.js"></script>
+{% endblock %}

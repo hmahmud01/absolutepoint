@@ -124,13 +124,19 @@ class serviceProduct(models.Model):
     ptype = models.CharField(max_length=128, null=True, blank=True)
     category = models.ForeignKey(productCategory, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
-    measurement = models.IntegerField(null=True, blank=True)
-    price = models.FloatField(null=True, blank=True)
     status = models.BooleanField(default=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+class variableProductPrice(models.Model):
+    product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
+    measurement = models.IntegerField(null=True, blank=True)
+    price = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return self.product.name
 
 class serviceOrder(models.Model):
     pass
