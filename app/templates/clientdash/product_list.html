@@ -20,18 +20,16 @@
                       <tr>                        
                         <th>Name</th>
                         <th>Category</th>
-                        <th>Price</th>
-                        <th>Measurement</th>
+                        <th>Price & Measurement</th>
                         <th>Status</th>                        
                       </tr>
                     </thead>
                     <tbody>
                         {% for product in products %}
                         <tr class="align-middle">                            
-                            <td> <strong>{{ product.name }}</strong><br><span class="text-muted text-sm">{{ product.ptype }}</span></td>
+                            <td> <strong> <a href="{% url 'productdetail' product.id %}"> {{ product.name }}</a></strong><br><span class="text-muted text-sm">{{ product.ptype }}</span></td>
                             <td>{{ product.category }}</td>
-                            <td>$ {{ product.price }}</td>
-                            <td>{{ product.measurement }}</td>
+                            <td>Variable </td>
                             {% if product.status is True %}
                             <td><a class="btn btn-sm btn-outline-danger" href="{% url 'productact' product.id inactive %}">Activated</a></span></td>
                             {% else %}
@@ -39,21 +37,15 @@
                             {% endif %}
                           </tr>
                         {% endfor %}
-                      <tr class="align-middle">
-                        <td> Product name </td>
-                        <td> Product Cat </td>
-                        <td> $$$$$ </td>
-                        <td> 5000 </td>
-                        <td> Status </td>
-                      </tr>
                     </tbody>
                   </table>
-                </div><span class="me-2" id="categoryBulkAction">
+                </div>
+                {% comment %} <span class="me-2" id="categoryBulkAction">
                   <select class="form-select form-select-sm d-inline w-auto" name="categoryBulkAction">
                     <option>Bulk Actions</option>
                     <option>Delete</option>
                   </select>
-                  <button class="btn btn-sm btn-outline-primary align-top">Apply</button></span>
+                  <button class="btn btn-sm btn-outline-primary align-top">Apply</button></span> {% endcomment %}
               </div>
             </div>
           </div>

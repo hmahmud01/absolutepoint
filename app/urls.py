@@ -61,8 +61,10 @@ urlpatterns = [
     path('monthlysales/', views.monthlySales, name='monthlysales'),
     path('monthlysales/detail/<int:mm>/<int:yy>', views.monthlySaleDetail, name='monthlysalesdetail'),
     path('salesexecutivesalary/', views.salesExecutiveSalary, name="salesexecutivesalary"),
+
+    # CLIENT AREA
     path('client/index/', views.clientIndex, name="clientindex"),
-    path('client/service/detail', views.clientServiceDetail, name="clientservicedetail"),
+    path('client/service/detail/<int:pid>/', views.clientServiceDetail, name="clientservicedetail"),
     path('client/orders', views.clientOrders, name="clientorders"),
     path('client/order/detail', views.orderDetail, name="orderdetail"),
     path('allorders/', views.allOrders, name="allorders"),
@@ -71,6 +73,8 @@ urlpatterns = [
     path('productact/<int:pid>/<str:act>/', views.productAct, name ="productact"),
     path('savecat/', views.saveCategory, name="savecat"),
     path('productlist/', views.productList, name="productlist"),
+    path('productdetail/<int:pid>/', views.productDetail, name="productdetail"),
+    path('savevariableprice/', views.saveVariablePrice, name="savevariableprice"),
     path('orderlist/', views.orderList, name="orderlist"),
     path('clientlist/', views.clientList, name="clientlist"),
     path('cart/', views.cart, name="cart"),

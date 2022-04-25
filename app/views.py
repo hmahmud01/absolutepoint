@@ -1221,14 +1221,18 @@ def salesExecutiveSalary(request):
 
     return render(request, "accounts/sales_person.html", {"salary_row": salary_row})
 
+
+# CLIENT AREA
 def clientIndex(request):
     data = ""
     products = serviceProduct.objects.all()
     return render(request, "client/index.html", {"data": data, "products": products})
 
-def clientServiceDetail(request):
+def clientServiceDetail(request, pid):
     data = ""
-    return render(request, "client/detail.html", {"data": data})
+    product = serviceProduct.objects.get(id=pid)
+    variables = variableProductPrice.objects.filter(product_id=pid)
+    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables})
 
 def clientOrders(request):
     data = ""
@@ -1258,8 +1262,6 @@ def saveProduct(request):
         ptype = post_data['type'],
         category = category,
         description = post_data['description'],
-        measurement = post_data['measurement'],
-        price = post_data['price']
     )
 
     product.save()
@@ -1282,6 +1284,26 @@ def productList(request):
     inactive = "inactive"
     active = "active"
     return render(request, "clientdash/product_list.html", {"data": data, "products": products, "inactive": inactive, "active": active})
+
+def productDetail(request, pid):
+    data = ""
+    product = serviceProduct.objects.get(id=pid)
+    inactive = "inactive"
+    active = "active"
+    variables = variableProductPrice.objects.filter(product_id=pid)
+    return render(request, "clientdash/product_detail.html", {"product": product, "inactive": inactive, "active": active, "variables": variables})
+
+def saveVariablePrice(request):
+    data = ""
+    post_data = request.POST
+    product = serviceProduct.objects.get(id=post_data['pid'])
+    variable = variableProductPrice(
+        product=product,
+        measurement=post_data['measurement'],
+        price=post_data['price']
+    )
+    variable.save()
+    return redirect('productdetail', post_data['pid'])
 
 def productAct(request, pid, act):
     product = serviceProduct.objects.get(id=pid)
