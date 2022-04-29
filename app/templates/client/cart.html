@@ -1,0 +1,122 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Cart</h1>
+            <p>Your Ordered Services</p>
+        </div>
+        <div class="col-md-8 col-lg-8 col-sm-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless mb-0">
+                            <thead class="light">
+                                <tr>
+                                    <th style="min-width: 300px;">Product</th>
+                                    <th>Items</th>
+                                    <th>Price</th>
+                                    <th>Ordered QTY</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for item in items %}
+                                <tr class="align-middle">
+                                    <td>
+                                        <img class="card-table-img img-fluid me-3"
+                                            src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                                            alt="" width="80">
+                                        <span class="card-table-text">
+                                            <a class="text-reset text-decoration-none" href="">
+                                                <strong>{{ item.product.name }}</strong><br>
+                                                <span class="text-muted">{{ item.product.ptype }} -
+                                                    {{ item.product.category.name }}</span><br>
+                                                <div class="btn-group" role="group" aria-label="Button Outlined">
+                                                    <button type="button" data-product="{{ item.product.id }}" data-action="add" class="btn btn-sm btn-outline-primary">Add</button>
+                                                    <button type="button" data-product="{{ item.product.id }}" data-action="remove"  class="btn btn-sm btn-outline-danger">Delete</button>
+                                                </div>
+
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td>{{ item.variance.measurement }} </td>
+                                    <td>${{ item.variance.price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td class="text-end">${{ item.get_total }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-heading"> Shipping address</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">John Brown<br>13/25 New Avenue<br>New Heaven<br>45Y
+                        73J<br>England<br><strong>Great Britain</strong><span
+                            class="ms-2 align-middle mt-n1 avatar avatar-xxs bg-cover"
+                            style="background-image: url(img/flag/gb.svg)"></span></p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-6">
+            <div class="card card-table mb-3">
+                <div class="card-header">
+                    <h5 class="card-heading">Cart Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive my-3">
+                        <table class="table table-borderless card-text">
+                            <tr class="text-muted">
+                                <th class="fw-normal">Total</th>
+                                <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Shipping Fee</th>
+                                <td class="text-end">$0.00</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Sales Tax</th>
+                                <td class="text-end">$0.00</td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'checkout' %}" class="btn btn-info" type="button">Checkout</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Have a Question</h5>
+                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @ishty or @pranto by <a
+                            href="">Clicking here</a></h6>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>
+{% endblock %}

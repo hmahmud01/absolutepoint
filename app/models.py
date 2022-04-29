@@ -143,3 +143,44 @@ class serviceOrder(models.Model):
 
 class Client(models.Model):
     pass
+
+class Order(models.Model):
+    customer = models.CharField(max_length=128, blank=True, null=True)
+    date_ordered = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    complete = models.BooleanField(default=False, null=True, blank=True)
+    trx_id = models.CharField(max_length=128, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+    
+    @property
+    def shipping(self):
+        shipping = False
+        orderitems = self.orderitems_set.all()
+        
+        return shipping
+    
+    @property
+    def get_cart_total(self):
+        orderitems = self.orderitems_set.all()
+        total = sum([item.get_total for item in orderitems])
+        return total
+
+    @property
+    def get_cart_items(self):
+        orderitems = self.orderitems_set.all()
+        total = sum([item.quantity for item in orderitems])
+        return total
+
+
+class OrderItems(models.Model):
+    product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE, null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    variance = models.ForeignKey(variableProductPrice, on_delete=models.CASCADE, null=True)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    @property
+    def get_total(self):
+        total = self.variance.price * self.quantity
+        return total

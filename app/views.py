@@ -2,7 +2,7 @@ from itertools import product
 from pdb import post_mortem
 from time import strftime
 from django.db.models.fields import PositiveBigIntegerField
-from django.http.response import ResponseHeaders
+from django.http.response import ResponseHeaders, JsonResponse
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout
@@ -18,6 +18,7 @@ from django.db.models.functions import TruncMonth, TruncWeek
 from pip import main
 
 from .models import *
+from .utils import cartData
 
 BASE_SALARY = 10000
 
@@ -1324,9 +1325,45 @@ def orderList(request):
     data = ""
     return render(request, "clientdash/order_list.html", {"data": data})
 
+def updateItem(request):
+    data = json.loads(request.body)
+    print(data)
+    # {'productId': '1', 'action': 'add', 'price': '2'}
+    productId = data['productId']
+    action = data['action']
+    price = data['price']
+
+    customer = request.user.username
+    product = serviceProduct.objects.get(id=productId)
+    variance  = variableProductPrice.objects.get(id=price)
+
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+    orderItem, created = OrderItems.objects.get_or_create(order=order, product=product, variance=variance)
+
+    if action == 'add':
+        orderItem.quantity = (orderItem.quantity + 1)
+    elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity - 1)
+
+    orderItem.save()
+
+    print(orderItem)
+
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+        
+    return JsonResponse('Item Was Added', safe=False)
+
 def cart(request):
-    data = ""
-    return render(request, "client/cart.html", {"data": data})
+    data = cartData(request)
+    print(data)
+    # {'cartItems': 1, 'order': <Order: 1>, 'items': <QuerySet [<OrderItems: OrderItems object (1)>]>}
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+    context = {'items': items, 'order':order, 'cartItems': cartItems}
+    return render(request, "client/cart.html", context)
 
 def checkout(request):
     data = ""
