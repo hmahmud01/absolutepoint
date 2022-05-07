@@ -76,6 +76,7 @@ urlpatterns = [
     path('productdetail/<int:pid>/', views.productDetail, name="productdetail"),
     path('savevariableprice/', views.saveVariablePrice, name="savevariableprice"),
     path('orderlist/', views.orderList, name="orderlist"),
+    path('orderlist/detail/<int:oid>/', views.orderDetailDash, name="orderlistdetail"),
     path('clientlist/', views.clientList, name="clientlist"),
     path('cart/', views.cart, name="cart"),
     path('update_item/', views.updateItem, name="update_item"),

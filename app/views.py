@@ -1247,6 +1247,8 @@ def orderDetail(request):
     data = ""
     return render(request, "client/order_detail.html", {"data": data})
 
+# CLIENT DASHBOARD
+
 def createProduct(request):
     data = ""
     categories = productCategory.objects.all()
@@ -1323,7 +1325,16 @@ def clientList(request):
 
 def orderList(request):
     data = ""
-    return render(request, "clientdash/order_list.html", {"data": data})
+    orders = Order.objects.all()
+    return render(request, "clientdash/order_list.html", {"data": data, "orders": orders})
+
+def orderDetailDash(request, oid):
+    data = ""
+    order = Order.objects.get(id=oid)
+    orderItems = OrderItems.objects.filter(order_id=oid)
+    context = {'items': orderItems, 'order':order}
+    return render(request, "clientdash/order_detail.html", context)
+
 
 def updateItem(request):
     data = json.loads(request.body)
