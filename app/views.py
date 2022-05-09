@@ -1376,7 +1376,7 @@ def cart(request):
     context = {'items': items, 'order':order, 'cartItems': cartItems}
     return render(request, "client/cart.html", context)
 
-def checkout(request):
+def checkout(request, oid):
     data = ""
     params = {
         "access_key": "e9bca0873fefe06bb0145b67feb8ec24"
@@ -1385,6 +1385,54 @@ def checkout(request):
     
     crypto_data = response.json()
     rates = crypto_data['rates']
+    
+    order = Order.objects.get(id=oid)
+    order_items = OrderItems.objects.filter(order_id=oid)
+
         
-        
-    return render(request, "client/checkout.html", {"data": data, "rates": rates})
+    return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items})
+
+
+# <QueryDict: {'csrfmiddlewaretoken': ['Ka4Nh9QauQ361lj7sH5F09KVFkGptdqV8IUl8IgoDvbUOBvM5Yi25xqXx7tM0xwz'], 
+# 'order': ['2'], 'firstname': ['Hasan'], 'lastname': ['Mahmud'], 'username': ['hmahmud01'], 'email': ['hmahmud01@example.com'], 
+# 'address': ['Shantinagar'], 'address2': [''], 'country': ['Bangladesh'], 'state': ['Dhaka'], 'zipcode': ['1217'], 
+# 'credit_type': ['on'], 'currency': ['{"AMB" : "0.009838"}']}>
+def processOrder(request):
+    data = ""
+    post_data = request.POST
+    order = Order.objects.get(id=post_data['order'])
+    currency = json.loads(post_data['currency'])
+
+    currency_key = list(currency.keys())[0]
+    currency_value = float(list(currency.values())[0])
+
+    order.complete = True
+    order.trx_id = "ord-000"+order.id 
+    order.save()
+
+    billing = Billing(
+        order = order,
+        firstname = post_data['firstname'],
+        lastname = post_data['lastname'],
+        username = post_data['username'],
+        email = post_data['email'],
+        address = post_data['address'],
+        address2 = post_data['address2'],
+        country = post_data['country'],
+        state = post_data['state'],
+        zipcode = post_data['zipcode']
+    )
+
+    billing.save()
+
+    payment = Payment(
+        order = order,
+        credit_type = post_data['credit_type'],
+        currency_key = currency_key,
+        currency_value = currency_value,
+        total = order.get_cart_total
+    )
+
+    payment.save()
+
+    return redirect('clientorders')

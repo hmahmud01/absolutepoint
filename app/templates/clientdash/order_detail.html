@@ -58,10 +58,16 @@
                     <h5 class="card-heading"> Shipping address</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text text-muted">John Brown<br>13/25 New Avenue<br>New Heaven<br>45Y
-                        73J<br>England<br><strong>Great Britain</strong><span
-                            class="ms-2 align-middle mt-n1 avatar avatar-xxs bg-cover"
-                            style="background-image: url(img/flag/gb.svg)"></span></p>
+                    <p class="card-text text-muted">
+                        {{ order.billing.firstname }} {{ order.billing.lastname }} <br>
+                        Telegram id: {{ order.billing.username }}<br>
+                        email: {{ order.billing.email }}<br>
+                        address: {{ order.billing.address }}<br>
+                        address2: {{ order.billing.address2 }}<br>
+                        <strong>{{ order.billing.country }}</strong><br>
+                        {{ order.billing.state }}<br>
+                        {{ order.billing.zipcode }}
+                    </p>
                 </div>
             </div>
 
@@ -93,6 +99,24 @@
                         </table>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <div class="table-responsive">
+                        <table class="table table-borderless card-text">
+                            <tr class="text-muted">
+                                <th class="fw-normal">Credit Type</th>
+                                <td class="text-end">{{ order.payment.credit_type }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Currency Type</th>
+                                <td class="text-end">{{ order.payment.currency_key }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Currency Value</th>
+                                <td class="text-end">{{ order.payment.currency_value }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
 
 
@@ -105,6 +129,10 @@
                         <table class="table table-borderless card-text">
                             <tr class="text-muted">
                                 <th class="fw-normal">Order Status</th>
+                                <td class="text-end">{{ order.complete }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Payment Status</th>
                                 <td class="text-end">{{ order.complete }}</td>
                             </tr>
                             <tr class="text-muted">

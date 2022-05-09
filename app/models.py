@@ -184,3 +184,28 @@ class OrderItems(models.Model):
     def get_total(self):
         total = self.variance.price * self.quantity
         return total
+
+class Billing(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    firstname = models.CharField(max_length=128, null=True, blank=True)
+    lastname = models.CharField(max_length=128, null=True, blank=True)
+    username = models.CharField(max_length=128, null=True, blank=True)
+    email = models.CharField(max_length=128, null=True, blank=True)
+    address = models.CharField(max_length=256, null=True, blank=True)
+    address2 = models.CharField(max_length=256, null=True, blank=True)
+    country = models.CharField(max_length=64, null=True, blank=True)
+    state = models.CharField(max_length=64, null=True, blank=True)
+    zipcode = models.CharField(max_length=128, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
+
+class Payment(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    credit_type = models.CharField(max_length=128, null=True, blank=True)
+    currency_key = models.CharField(max_length=128, null=True, blank=True)
+    currency_value =  models.FloatField(null=True, blank=True)
+    total = models.FloatField(null=True, blank=True)
+    
+    def __str__(self):
+        return str(self.id)

@@ -23,34 +23,25 @@
                                 <div class="card-body">
                                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="text-primary">Your cart</span>
-                                        <span class="badge bg-primary rounded-pill">3</span>
+                                        <span class="badge bg-primary rounded-pill">{{ order.get_cart_items }}</span>
                                     </h4>
                                     <ul class="list-group mb-3">
+                                        {% for item in order_items %}
                                         <li class="list-group-item d-flex justify-content-between lh-sm">
                                             <div>
-                                                <h6 class="my-0">Product name</h6>
-                                                <small class="text-muted">Brief description</small>
+                                                <h6 class="my-0">{{ item.product.name }}</h6>
+                                                <small class="text-muted">{{ item.product.ptype }}</small>
                                             </div>
-                                            <span class="text-muted">$12</span>
+                                            <span class="text-muted">${{ item.get_total }}</span>
                                         </li>
+                                        {% endfor %}
                                         <li class="list-group-item d-flex justify-content-between lh-sm">
                                             <div>
-                                                <h6 class="my-0">Second product</h6>
-                                                <small class="text-muted">Brief description</small>
+                                                <h6 class="my-0">Total</h6>
                                             </div>
-                                            <span class="text-muted">$8</span>
+                                            <span class="text-muted">${{ order.get_cart_total }}</span>
                                         </li>
-                                        <li class="list-group-item d-flex justify-content-between lh-sm">
-                                            <div>
-                                                <h6 class="my-0">Third item</h6>
-                                                <small class="text-muted">Brief description</small>
-                                            </div>
-                                            <span class="text-muted">$5</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <span>Total (USD)</span>
-                                            <strong>$20</strong>
-                                        </li>
+
                                     </ul>
                                 </div>
                             </div>
@@ -63,11 +54,12 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="mb-3">Billing Information</h4>
-                                    <form>
+                                    <form method="POST" action="{% url 'processorder' %}">{% csrf_token %}
+                                        <input type="hidden" name="order" value="{{ order.id }}" >
                                         <div class="row g-3">
                                             <div class="col-sm-6">
                                                 <label for="firstName" class="form-label">First name</label>
-                                                <input type="text" class="form-control" id="firstName" placeholder=""
+                                                <input type="text" class="form-control" name="firstname" id="firstName" placeholder=""
                                                     value="" required>
                                                 <div class="invalid-feedback">
                                                     Valid first name is required.
@@ -76,7 +68,7 @@
 
                                             <div class="col-sm-6">
                                                 <label for="lastName" class="form-label">Last name</label>
-                                                <input type="text" class="form-control" id="lastName" placeholder=""
+                                                <input type="text" class="form-control" name="lastname" id="lastName" placeholder=""
                                                     value="" required>
                                                 <div class="invalid-feedback">
                                                     Valid last name is required.
@@ -84,11 +76,11 @@
                                             </div>
 
                                             <div class="col-12">
-                                                <label for="username" class="form-label">Username</label>
+                                                <label for="username" class="form-label">Telegram Username</label>
                                                 <div class="input-group has-validation">
                                                     <span class="input-group-text">@</span>
-                                                    <input type="text" class="form-control" id="username"
-                                                        placeholder="Username" required>
+                                                    <input type="text" class="form-control" name="username" id="Username"
+                                                        placeholder="Telegram Username" required>
                                                     <div class="invalid-feedback">
                                                         Your username is required.
                                                     </div>
@@ -96,10 +88,9 @@
                                             </div>
 
                                             <div class="col-12">
-                                                <label for="email" class="form-label">Email <span
-                                                        class="text-muted">(Optional)</span></label>
-                                                <input type="email" class="form-control" id="email"
-                                                    placeholder="you@example.com">
+                                                <label for="email" class="form-label">Email</label>
+                                                <input type="email" class="form-control" name="email" id="email"
+                                                    placeholder="you@example.com" requred>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid email address for shipping updates.
                                                 </div>
@@ -107,7 +98,7 @@
 
                                             <div class="col-12">
                                                 <label for="address" class="form-label">Address</label>
-                                                <input type="text" class="form-control" id="address"
+                                                <input type="text" class="form-control" name="address" id="address"
                                                     placeholder="1234 Main St" required>
                                                 <div class="invalid-feedback">
                                                     Please enter your shipping address.
@@ -117,16 +108,14 @@
                                             <div class="col-12">
                                                 <label for="address2" class="form-label">Address 2 <span
                                                         class="text-muted">(Optional)</span></label>
-                                                <input type="text" class="form-control" id="address2"
+                                                <input type="text" class="form-control" name="address2" id="address2"
                                                     placeholder="Apartment or suite">
                                             </div>
 
                                             <div class="col-md-5">
                                                 <label for="country" class="form-label">Country</label>
-                                                <select class="form-select" id="country" required>
-                                                    <option value="">Choose...</option>
-                                                    <option>United States</option>
-                                                </select>
+                                                <input type="text" class="form-control" name="country" id="country" placeholder="Country"
+                                                    required>
                                                 <div class="invalid-feedback">
                                                     Please select a valid country.
                                                 </div>
@@ -134,10 +123,8 @@
 
                                             <div class="col-md-4">
                                                 <label for="state" class="form-label">State</label>
-                                                <select class="form-select" id="state" required>
-                                                    <option value="">Choose...</option>
-                                                    <option>California</option>
-                                                </select>
+                                                <input type="text" class="form-control" name="state" id="state" placeholder="State"
+                                                    required>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid state.
                                                 </div>
@@ -145,7 +132,7 @@
 
                                             <div class="col-md-3">
                                                 <label for="zip" class="form-label">Zip</label>
-                                                <input type="text" class="form-control" id="zip" placeholder=""
+                                                <input type="text" class="form-control" name="zipcode" id="zip" placeholder="Zip"
                                                     required>
                                                 <div class="invalid-feedback">
                                                     Zip code required.
@@ -168,7 +155,7 @@
 
                                         <div class="my-3">
                                             <div class="form-check">
-                                                <input id="credit" name="paymentMethod" type="radio"
+                                                <input id="credit" name="credit_type" name="paymentMethod" type="radio"
                                                     class="form-check-input" checked required>
                                                 <label class="form-check-label" for="credit">Crypto</label>
                                             </div>
@@ -176,13 +163,12 @@
 
                                         <div class="row gy-3">
                                             <div class="col-md-12">
-                                                <label for="state" class="form-label">Currency</label>
-                                                <select class="form-select" id="state" required>
+                                                <label for="currency" class="form-label">Currency</label>
+                                                <select class="form-select" id="currency" name="currency" required>
                                                     <option value="">Choose...</option>
                                                     {% for key, value in rates.items %}
-                                                    <option>{{ key }} - {{ value }}</option>
+                                                    <option value='{"{{key}}" : "{{value}}"}'>{{ key }} - {{ value }}</option>
                                                     {% endfor %}
-                                                    <option>California</option>
                                                 </select>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid state.
@@ -192,8 +178,7 @@
 
                                         <hr class="my-4">
 
-                                        <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to
-                                            checkout</button>
+                                        <button class="w-100 btn btn-primary btn-lg" type="submit">Confirm Checkout</button>
                                     </form>
                                 </div>
                             </div>
