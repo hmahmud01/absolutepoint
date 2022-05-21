@@ -27,7 +27,7 @@
         </div>
         <div class="col-md-4 col-lg-4 col-sm-6">
             <div class="card mb-4">
-                <form action="">
+                {% comment %} <form action="">
                     <div class="card-body">
                         <h5 class="card-title">Product Price</h5>
                         <h6 class="card-subtitle text-muted">Select Your Price Option</h6>
@@ -45,7 +45,24 @@
                     <div class="card-footer">
                         <button class="btn btn-outline-secondary" type="button"><i class="fas fa-money me-2"></i>Add To Cart</button>
                     </div>
-                </form>
+                </form> {% endcomment %}
+                <div class="card-body">
+                    <h5 class="card-title">Product Price</h5>
+                    <h6 class="card-subtitle text-muted">Select Your Price Option</h6>
+
+                    <div class="col-md">
+                        <label for="state" class="form-label">Options</label>
+                        <select class="form-select" id="product_price" required>
+                            <option value="">Choose...</option>
+                            {% for variable in variables %}
+                            <option value="{{ variable.id }}">{{ variable.measurement }} votes - {{ variable.price }}$</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary update-cart" type="button"><i class="fas fa-money me-2"></i>Add To Cart</button>
+                </div>
             </div>
             <div class="card">
                 <div class="card-body">
@@ -59,4 +76,8 @@
 
 
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/cart.js"></script>
 {% endblock %}

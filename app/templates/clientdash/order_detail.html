@@ -1,4 +1,4 @@
-{% extends 'base_client.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
@@ -7,8 +7,8 @@
 <section>
     <div class="row">
         <div class="page-header">
-            <h1 class="page-heading">Cart</h1>
-            <p>Your Ordered Services</p>
+            <h1 class="page-heading">Order Detail</h1>
+            <p>Order detail for the id of ORD - {{ order.id }}</p>
         </div>
         <div class="col-md-8 col-lg-8 col-sm-6">
             <div class="card mb-3">
@@ -37,10 +37,6 @@
                                                 <strong>{{ item.product.name }}</strong><br>
                                                 <span class="text-muted">{{ item.product.ptype }} -
                                                     {{ item.product.category.name }}</span><br>
-                                                <div class="btn-group" role="group" aria-label="Button Outlined">
-                                                    <button type="button" data-product="{{ item.product.id }}" data-action="add" class="btn btn-sm btn-outline-primary">Add</button>
-                                                    <button type="button" data-product="{{ item.product.id }}" data-action="remove"  class="btn btn-sm btn-outline-danger">Delete</button>
-                                                </div>
 
                                             </a>
                                         </span>
@@ -62,10 +58,16 @@
                     <h5 class="card-heading"> Shipping address</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text text-muted">John Brown<br>13/25 New Avenue<br>New Heaven<br>45Y
-                        73J<br>England<br><strong>Great Britain</strong><span
-                            class="ms-2 align-middle mt-n1 avatar avatar-xxs bg-cover"
-                            style="background-image: url(img/flag/gb.svg)"></span></p>
+                    <p class="card-text text-muted">
+                        {{ order.billing.firstname }} {{ order.billing.lastname }} <br>
+                        Telegram id: {{ order.billing.username }}<br>
+                        email: {{ order.billing.email }}<br>
+                        address: {{ order.billing.address }}<br>
+                        address2: {{ order.billing.address2 }}<br>
+                        <strong>{{ order.billing.country }}</strong><br>
+                        {{ order.billing.state }}<br>
+                        {{ order.billing.zipcode }}
+                    </p>
                 </div>
             </div>
 
@@ -73,7 +75,7 @@
         <div class="col-md-4 col-lg-4 col-sm-6">
             <div class="card card-table mb-3">
                 <div class="card-header">
-                    <h5 class="card-heading">Cart Summary</h5>
+                    <h5 class="card-heading">Order Summary</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive my-3">
@@ -96,21 +98,53 @@
                             </tr>
                         </table>
                     </div>
-                    
                 </div>
                 <div class="card-footer">
-                    <div class="d-grid gap-2">
-                        <a href="{% url 'checkout' order.id %}" class="btn btn-info" type="button">Checkout</a>
+                    <div class="table-responsive">
+                        <table class="table table-borderless card-text">
+                            <tr class="text-muted">
+                                <th class="fw-normal">Credit Type</th>
+                                <td class="text-end">{{ order.payment.credit_type }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Currency Type</th>
+                                <td class="text-end">{{ order.payment.currency_key }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Currency Value</th>
+                                <td class="text-end">{{ order.payment.currency_value }}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
 
 
-            <div class="card">
+            <div class="card card-table mb-3">
+                <div class="card-header">
+                    <h5 class="card-heading">Order Status</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Have a Question</h5>
-                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @ishty or @pranto by <a
-                            href="">Clicking here</a></h6>
+                    <div class="table-responsive my-3">
+                        <table class="table table-borderless card-text">
+                            <tr class="text-muted">
+                                <th class="fw-normal">Order Status</th>
+                                <td class="text-end">{{ order.complete }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Payment Status</th>
+                                <td class="text-end">{{ order.complete }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Order Customer</th>
+                                <td class="text-end">{{ order.customer }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Order trx_id</th>
+                                <td class="text-end">{{ order.trx_id }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

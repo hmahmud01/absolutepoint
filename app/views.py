@@ -2,7 +2,7 @@ from itertools import product
 from pdb import post_mortem
 from time import strftime
 from django.db.models.fields import PositiveBigIntegerField
-from django.http.response import ResponseHeaders
+from django.http.response import ResponseHeaders, JsonResponse
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout
@@ -18,6 +18,7 @@ from django.db.models.functions import TruncMonth, TruncWeek
 from pip import main
 
 from .models import *
+from .utils import cartData
 
 BASE_SALARY = 10000
 
@@ -1246,6 +1247,8 @@ def orderDetail(request):
     data = ""
     return render(request, "client/order_detail.html", {"data": data})
 
+# CLIENT DASHBOARD
+
 def createProduct(request):
     data = ""
     categories = productCategory.objects.all()
@@ -1322,13 +1325,58 @@ def clientList(request):
 
 def orderList(request):
     data = ""
-    return render(request, "clientdash/order_list.html", {"data": data})
+    orders = Order.objects.all()
+    return render(request, "clientdash/order_list.html", {"data": data, "orders": orders})
+
+def orderDetailDash(request, oid):
+    data = ""
+    order = Order.objects.get(id=oid)
+    orderItems = OrderItems.objects.filter(order_id=oid)
+    context = {'items': orderItems, 'order':order}
+    return render(request, "clientdash/order_detail.html", context)
+
+
+def updateItem(request):
+    data = json.loads(request.body)
+    print(data)
+    # {'productId': '1', 'action': 'add', 'price': '2'}
+    productId = data['productId']
+    action = data['action']
+    price = data['price']
+
+    customer = request.user.username
+    product = serviceProduct.objects.get(id=productId)
+    variance  = variableProductPrice.objects.get(id=price)
+
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+    orderItem, created = OrderItems.objects.get_or_create(order=order, product=product, variance=variance)
+
+    if action == 'add':
+        orderItem.quantity = (orderItem.quantity + 1)
+    elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity - 1)
+
+    orderItem.save()
+
+    print(orderItem)
+
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+        
+    return JsonResponse('Item Was Added', safe=False)
 
 def cart(request):
-    data = ""
-    return render(request, "client/cart.html", {"data": data})
+    data = cartData(request)
+    print(data)
+    # {'cartItems': 1, 'order': <Order: 1>, 'items': <QuerySet [<OrderItems: OrderItems object (1)>]>}
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+    context = {'items': items, 'order':order, 'cartItems': cartItems}
+    return render(request, "client/cart.html", context)
 
-def checkout(request):
+def checkout(request, oid):
     data = ""
     params = {
         "access_key": "e9bca0873fefe06bb0145b67feb8ec24"
@@ -1337,6 +1385,107 @@ def checkout(request):
     
     crypto_data = response.json()
     rates = crypto_data['rates']
+    
+    order = Order.objects.get(id=oid)
+    order_items = OrderItems.objects.filter(order_id=oid)
+
         
-        
-    return render(request, "client/checkout.html", {"data": data, "rates": rates})
+    return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items})
+
+
+# <QueryDict: {'csrfmiddlewaretoken': ['Ka4Nh9QauQ361lj7sH5F09KVFkGptdqV8IUl8IgoDvbUOBvM5Yi25xqXx7tM0xwz'], 
+# 'order': ['2'], 'firstname': ['Hasan'], 'lastname': ['Mahmud'], 'username': ['hmahmud01'], 'email': ['hmahmud01@example.com'], 
+# 'address': ['Shantinagar'], 'address2': [''], 'country': ['Bangladesh'], 'state': ['Dhaka'], 'zipcode': ['1217'], 
+# 'credit_type': ['on'], 'currency': ['{"AMB" : "0.009838"}']}>
+def processOrder(request):
+    data = ""
+    post_data = request.POST
+    order = Order.objects.get(id=post_data['order'])
+    currency = json.loads(post_data['currency'])
+
+    currency_key = list(currency.keys())[0]
+    currency_value = float(list(currency.values())[0])
+
+    order.complete = True
+    order.save()
+
+    billing = Billing(
+        order = order,
+        firstname = post_data['firstname'],
+        lastname = post_data['lastname'],
+        username = post_data['username'],
+        email = post_data['email'],
+        address = post_data['address'],
+        address2 = post_data['address2'],
+        country = post_data['country'],
+        state = post_data['state'],
+        zipcode = post_data['zipcode']
+    )
+
+    billing.save()
+
+    payment = Payment(
+        order = order,
+        credit_type = post_data['credit_type'],
+        currency_key = currency_key,
+        currency_value = currency_value,
+        total = order.get_cart_total
+    )
+
+    payment.save()
+
+    return redirect('clientorders')
+
+def createPortfolio(request):
+    users = DashboardUser.objects.all()
+
+    return render(request, "clientdash/create_portfolio.html", {"users": users})
+
+
+# <QueryDict: {'csrfmiddlewaretoken': ['O2XOzC1w1qEHCwr30tyB1QJLCQAV0XvqGCzXfnwyOrcjmw54edc4w6C0jfjsHSWy'], 
+# 'title': ['title'], 'description': ['SOME DESCRFITPION OF ALL TIME'], 'contributors': ['1', '2']}>
+def savePortfolio(request):
+    post_data = request.POST
+    portfolio = Portfolio(
+        title = post_data['title'],
+        description = post_data['description']
+    )
+
+    portfolio.save()
+
+    contributors = post_data['contributors']
+
+    for contributor in contributors:
+        dashuser = DashboardUser.objects.get(id=contributor)
+        keeper = PortfolioContributors(
+            portfolio = portfolio,
+            contributor = dashuser,
+        )
+
+        keeper.save()
+    
+    return redirect('createportfolio')
+
+def portfolio(request):
+    portfolios = Portfolio.objects.all()
+
+    return render(request, "client/portfolio.html", {"portfolios": portfolios})
+
+def portfolioDetail(request, pid):
+    portfolio = Portfolio.objects.get(id=pid)
+    contributors = PortfolioContributors.objects.filter(portfolio_id=pid)
+
+    print(contributors)
+
+    return render(request, "client/portfolio_detail.html", {"portfolio": portfolio, "contributors": contributors})
+
+def people(request):
+    people = DashboardUser.objects.all()
+
+    return render(request, "client/people.html", {"people": people})
+
+def peopleDetail(request, pid):
+    dashuser = DashboardUser.objects.get(id=pid)
+    portfolios = PortfolioContributors.objects.filter(contributor_id=pid)
+
+    return render(request, "client/people_detail.html", {"dashuser": dashuser, "portfolios": portfolios})
