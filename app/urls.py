@@ -82,6 +82,12 @@ urlpatterns = [
     path('update_item/', views.updateItem, name="update_item"),
     path('checkout/<int:oid>', views.checkout, name="checkout"), 
     path('processorder/', views.processOrder, name="processorder"),
+    path('createportfolio/', views.createPortfolio, name="createportfolio"),
+    path('saveportfolio/', views.savePortfolio, name="saveportfolio"),
+    path('portfolio/', views.portfolio, name="portfolio"),
+    path('portfoliodetail/<int:pid>/', views.portfolioDetail, name="portfoliodetail"),
+    path('people/', views.people, name="people"),
+    path('peopledetail/<int:pid>', views.peopleDetail, name="peopledetail"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

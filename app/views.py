@@ -1407,7 +1407,6 @@ def processOrder(request):
     currency_value = float(list(currency.values())[0])
 
     order.complete = True
-    order.trx_id = "ord-000"+order.id 
     order.save()
 
     billing = Billing(
@@ -1436,3 +1435,57 @@ def processOrder(request):
     payment.save()
 
     return redirect('clientorders')
+
+def createPortfolio(request):
+    users = DashboardUser.objects.all()
+
+    return render(request, "clientdash/create_portfolio.html", {"users": users})
+
+
+# <QueryDict: {'csrfmiddlewaretoken': ['O2XOzC1w1qEHCwr30tyB1QJLCQAV0XvqGCzXfnwyOrcjmw54edc4w6C0jfjsHSWy'], 
+# 'title': ['title'], 'description': ['SOME DESCRFITPION OF ALL TIME'], 'contributors': ['1', '2']}>
+def savePortfolio(request):
+    post_data = request.POST
+    portfolio = Portfolio(
+        title = post_data['title'],
+        description = post_data['description']
+    )
+
+    portfolio.save()
+
+    contributors = post_data['contributors']
+
+    for contributor in contributors:
+        dashuser = DashboardUser.objects.get(id=contributor)
+        keeper = PortfolioContributors(
+            portfolio = portfolio,
+            contributor = dashuser,
+        )
+
+        keeper.save()
+    
+    return redirect('createportfolio')
+
+def portfolio(request):
+    portfolios = Portfolio.objects.all()
+
+    return render(request, "client/portfolio.html", {"portfolios": portfolios})
+
+def portfolioDetail(request, pid):
+    portfolio = Portfolio.objects.get(id=pid)
+    contributors = PortfolioContributors.objects.filter(portfolio_id=pid)
+
+    print(contributors)
+
+    return render(request, "client/portfolio_detail.html", {"portfolio": portfolio, "contributors": contributors})
+
+def people(request):
+    people = DashboardUser.objects.all()
+
+    return render(request, "client/people.html", {"people": people})
+
+def peopleDetail(request, pid):
+    dashuser = DashboardUser.objects.get(id=pid)
+    portfolios = PortfolioContributors.objects.filter(contributor_id=pid)
+
+    return render(request, "client/people_detail.html", {"dashuser": dashuser, "portfolios": portfolios})

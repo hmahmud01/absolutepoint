@@ -15,6 +15,7 @@ class DashboardUser(models.Model):
     address = models.CharField(max_length=256, null=True, blank=True)
     status = models.BooleanField(default=True)
     password_change = models.BooleanField(default=False)
+    telegram_id = models.CharField(max_length=64, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
@@ -137,6 +138,16 @@ class variableProductPrice(models.Model):
 
     def __str__(self):
         return self.product.name
+
+class Portfolio(models.Model):
+    title = models.CharField(max_length=128, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    date_created = models.DateField(auto_now_add=True, blank=True, null=True)
+
+class PortfolioContributors(models.Model):
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+    contributor = models.ForeignKey(DashboardUser, on_delete=models.CASCADE)
+
 
 class serviceOrder(models.Model):
     pass
