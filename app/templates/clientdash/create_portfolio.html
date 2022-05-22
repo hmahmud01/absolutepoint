@@ -15,7 +15,7 @@
                 <h4 class="card-heading">Portfolio Create</h4>
             </div>
             <div class="card-body">
-                <form method="post" action="{% url 'saveportfolio' %}" class="form-horizontal">{% csrf_token %}
+                <form method="post" action="{% url 'saveportfolio' %}" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
 
                     <div class="row mb-3">
                         <label class="col-md-3 form-label">Title</label>
@@ -33,6 +33,22 @@
                     </div>
 
                     <div class="row mb-3">
+                        <label class="col-md-3 form-label">Thumb Image</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="thumb_image" type="file" placeholder="Image">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-md-3 form-label">Proof</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="image" type="file" placeholder="Image" multiple>
+                        </div>
+                    </div>
+
+                    <hr class="bg-gray-400 my-4">
+
+                    <div class="row mb-3">
                         <label class="col-md-3 form-label">Contributor</label>
                         <div class="col-md-9">
                             
@@ -45,13 +61,13 @@
                             </label>
                         </div>
                     </div>
-
+                    
                     <hr class="bg-gray-400 my-4">
 
                     <div class="row">
                         <div class="col-md-9 ms-auto">
                             <button class="btn btn-secondary" type="button">Cancel</button>
-                            <button class="btn btn-primary" type="submit">Create Service Product</button>
+                            <button class="btn btn-primary" type="submit">Create Portfolio</button>
                         </div>
                     </div>
                 </form>

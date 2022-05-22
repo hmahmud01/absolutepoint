@@ -1442,18 +1442,26 @@ def createPortfolio(request):
     return render(request, "clientdash/create_portfolio.html", {"users": users})
 
 
-# <QueryDict: {'csrfmiddlewaretoken': ['O2XOzC1w1qEHCwr30tyB1QJLCQAV0XvqGCzXfnwyOrcjmw54edc4w6C0jfjsHSWy'], 
-# 'title': ['title'], 'description': ['SOME DESCRFITPION OF ALL TIME'], 'contributors': ['1', '2']}>
+
+# <QueryDict: {'csrfmiddlewaretoken': ['RlLYyo0LFMCGHxog1xUuiLZWz9hV90FNFCDM9GSAtpRiX3tvUJ4jsVjTfjNColIx'], 
+# 'title': ['titl'], 'description': ['https://furniturefm.com'], 'contributors': ['1', '2']}>
+
+# <MultiValueDict: {'thumb_image': [<TemporaryUploadedFile: wallpaper1_large.jpg (image/jpeg)>], 
+# 'image': [<TemporaryUploadedFile: wallpaper1_large.jpg (image/jpeg)>, 
+# <TemporaryUploadedFile: wallpaper1_large.png (image/png)>, <TemporaryUploadedFile: wallpaper2_large.jpg (image/jpeg)>]}>
 def savePortfolio(request):
     post_data = request.POST
+    file_data = request.FILES
+    
     portfolio = Portfolio(
         title = post_data['title'],
-        description = post_data['description']
+        description = post_data['description'],
+        thumb = file_data['thumb_image']
     )
 
     portfolio.save()
 
-    contributors = post_data['contributors']
+    contributors = post_data.getlist('contributors')
 
     for contributor in contributors:
         dashuser = DashboardUser.objects.get(id=contributor)
@@ -1461,8 +1469,16 @@ def savePortfolio(request):
             portfolio = portfolio,
             contributor = dashuser,
         )
-
         keeper.save()
+
+    images = file_data.getlist('image')
+
+    for image in images:
+        proof = PortfolioProves(
+            portfolio = portfolio,
+            image = image
+        )
+        proof.save()
     
     return redirect('createportfolio')
 
@@ -1474,10 +1490,9 @@ def portfolio(request):
 def portfolioDetail(request, pid):
     portfolio = Portfolio.objects.get(id=pid)
     contributors = PortfolioContributors.objects.filter(portfolio_id=pid)
+    proofs = PortfolioProves.objects.filter(portfolio_id=pid)
 
-    print(contributors)
-
-    return render(request, "client/portfolio_detail.html", {"portfolio": portfolio, "contributors": contributors})
+    return render(request, "client/portfolio_detail.html", {"portfolio": portfolio, "contributors": contributors, 'proofs': proofs})
 
 def people(request):
     people = DashboardUser.objects.all()

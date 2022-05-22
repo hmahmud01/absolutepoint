@@ -142,12 +142,16 @@ class variableProductPrice(models.Model):
 class Portfolio(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    thumb = models.ImageField('portfolio_thumbs',upload_to='portfolio_thums', null=True, blank=True)
     date_created = models.DateField(auto_now_add=True, blank=True, null=True)
 
 class PortfolioContributors(models.Model):
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
     contributor = models.ForeignKey(DashboardUser, on_delete=models.CASCADE)
 
+class PortfolioProves(models.Model):
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+    image = models.ImageField('portfolio_proofs', upload_to='potfolio_proofs', null=True, blank=True)
 
 class serviceOrder(models.Model):
     pass
