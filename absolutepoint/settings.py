@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-TIME_ZONE = 'Asia/Dhaka'
+
+TIME_ZONE = None
+USE_TZ = True
 # Application definition
 
 INSTALLED_APPS = [

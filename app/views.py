@@ -12,7 +12,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 import json
 import requests
-from datetime import datetime, date
+# from datetime import datetime, date
+import datetime
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth, TruncWeek
 from pip import main
@@ -58,6 +59,7 @@ OCT = 31
 NOV = 30
 DEC = 31
 
+HOURS_DELTA = 6
 
 
 def login(request):
@@ -227,7 +229,7 @@ def home(request):
                 "servicelist": servicelist, "servicetypes": servicetypes, "home": home})
     else:
         req_user = DashboardUser.objects.get(user=user.id)
-        current_day = date.today()
+        current_day = datetime.date.today()
         month = current_day.month
         services_user = Services.objects.filter(user__id=req_user.id)
         service_data = services_user.filter(Q(payment_status="Received") | Q(payment_status="NA"))
@@ -306,8 +308,15 @@ def serviceCreate(request):
     servicetypes = ServiceType.objects.all()
     service_create = True
     users = DashboardUser.objects.all()
-    today = date.today()
-    today_date = today.strftime("%m/%d/%Y")
+    today = datetime.date.today()
+    timedate = datetime.datetime.now()
+    updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+    updated_time = timedate + updated_timedate
+
+    today_updated = updated_time.date()
+
+    # print(today_now)
+    today_date = today_updated.strftime("%m/%d/%Y")
 
     if request.user.is_superuser:
         date_stat = ""
@@ -329,10 +338,10 @@ def saveService(request):
         date = post_data['date']
         print(date)
         print(type(date))
-        date_obj = datetime.strptime(date, '%m/%d/%Y')
+        date_obj = datetime.datetime.strptime(date, '%m/%d/%Y')
         print(date_obj.date())
         print(type(date_obj.date()))
-        # print(isinstance(date, datetime.date))
+        # print(isinstance(date, datetime.datetime.date))
         service = Services(
             user=dashboarduser,
             date=date_obj,
@@ -357,7 +366,7 @@ def saveService(request):
         date = post_data['date']
         print(date)
         print(type(date))
-        date_obj = datetime.strptime(date, '%m/%d/%Y')
+        date_obj = datetime.datetime.strptime(date, '%m/%d/%Y')
         print(date_obj.date())
         print(type(date_obj.date()))
         service = Services(
@@ -419,7 +428,7 @@ def seasonBonus(request):
 
 def addSeasonBonus(request):
     users = DashboardUser.objects.all()
-    today = date.today()
+    today = datetime.date.today()
     today_date = today.strftime("%m/%d/%Y")
 
     return render(request, 'accounts/season_bonus_add.html', {"date": today_date, "users": users})
@@ -428,7 +437,7 @@ def submitseasonbonus(request):
     post_data = request.POST
     user = DashboardUser.objects.get(id=post_data['user'])
     date = post_data['date']
-    date_obj = datetime.strptime(date, '%m/%d/%Y')
+    date_obj = datetime.datetime.strptime(date, '%m/%d/%Y')
     salebonus = SalesBonus(
         emp = user,
         amount = post_data['bonus'],
@@ -452,7 +461,7 @@ def serviceUpdate(request, sid):
     servicetypes = ServiceType.objects.all()
     users = DashboardUser.objects.all()
     service = Services.objects.get(id=sid)
-    today = date.today()
+    today = datetime.date.today()
     today_date = today.strftime("%m/%d/%Y")
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
@@ -464,7 +473,7 @@ def serviceUpdate(request, sid):
 def updateServiceValue(request,sid):
     post_data = request.POST
     date = post_data['date']
-    date_obj = datetime.strptime(date, '%m/%d/%Y')
+    date_obj = datetime.datetime.strptime(date, '%m/%d/%Y')
     service_obj = Services.objects.get(id=sid)
     service_obj.title=post_data['title']
     service_obj.site_name=post_data['site_name']
@@ -914,7 +923,7 @@ def monthlySales(request):
 
 def monthlySaleDetail(request, mm, yy):
     sales_info = True
-    month = date(1900, mm, 1).strftime('%B')
+    month = datetime.date(1900, mm, 1).strftime('%B')
 
     services1 = Services.objects.filter(date__year=yy,
                                         date__month=mm)
@@ -1082,7 +1091,7 @@ def salesExecutiveSalary(request):
     
     for data in monthly_services:
         mm = data['month'].month
-        month_data = date(2022, mm, 1).strftime('%B')
+        month_data = datetime.date(2022, mm, 1).strftime('%B')
         service_month = service_data.filter(date__month=mm)
         services_custom_comm = service_month.filter(comm_status=True)
         service_month = service_month.exclude(comm_status=True)
