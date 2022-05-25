@@ -24,6 +24,7 @@ urlpatterns = [
     path('noticecreate/', views.noticeCreate, name="noticecreate"),
     path('savenotice/', views.saveNotice, name="savenotice"),
     path('noticedetail/<int:nid>/', views.noticeDetail, name="noticedetail"),
+    path('duplicateservice/', views.duplicateService, name="duplicateservice"),
     path('servicecreate/', views.serviceCreate, name="servicecreate"),
     path('serviceupdate/<int:sid>/', views.serviceUpdate, name="serviceupdate"),
     path('udpateservicevalue/<int:sid>/', views.updateServiceValue, name="udpateservicevalue"),

@@ -301,6 +301,9 @@ def noticeDetail(request, nid):
     notice = Notices.objects.get(id=nid)
     return render(request, 'notice_detail.html', {"data": data, "notice": notice})
 
+def duplicateService(request):
+    return render(request, 'service_create_duplicate.html')
+
 def serviceCreate(request):
     data = ""
     date_stat = "disabled"
@@ -329,19 +332,14 @@ def serviceCreate(request):
         return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create})
 
 def saveService(request):
+    check = True
     post_data = request.POST
-    print(post_data)
     if request.user.is_superuser:
         dashboarduser = DashboardUser.objects.get(id=post_data['dashboarduser'])
         service_title = Service.objects.get(id=post_data['service'])
         service_type = ServiceType.objects.get(id=post_data['service_type'])
         date = post_data['date']
-        print(date)
-        print(type(date))
         date_obj = datetime.datetime.strptime(date, '%m/%d/%Y')
-        print(date_obj.date())
-        print(type(date_obj.date()))
-        # print(isinstance(date, datetime.datetime.date))
         service = Services(
             user=dashboarduser,
             date=date_obj,
@@ -364,29 +362,37 @@ def saveService(request):
         service_title = Service.objects.get(id=post_data['service'])
         service_type = ServiceType.objects.get(id=post_data['service_type'])
         date = post_data['date']
-        print(date)
-        print(type(date))
         date_obj = datetime.datetime.strptime(date, '%m/%d/%Y')
-        print(date_obj.date())
-        print(type(date_obj.date()))
-        service = Services(
-            user=dashboarduser,
-            date=date_obj,
-            title=post_data['title'],
-            service_type=service_type,
-            service=service_title,
-            site_name=post_data['site_name'],
-            site_url=post_data['site_url'],
-            counter=post_data['counter'],
-            ratio=post_data['ratio'],
-            price=post_data['price']
-        )
-        service.save()
-        service.status = "Pending"
-        service.payment_status = "Due"
-        service.save()
 
-    return redirect('/')
+        services_objects = Services.objects.filter(date=date_obj)
+        for obj in services_objects:
+            if obj.site_url == post_data['site_url']:
+                check = False
+                break
+            else:
+                check = True
+        if check:
+            service = Services(
+                user=dashboarduser,
+                date=date_obj,
+                title=post_data['title'],
+                service_type=service_type,
+                service=service_title,
+                site_name=post_data['site_name'],
+                site_url=post_data['site_url'],
+                counter=post_data['counter'],
+                ratio=post_data['ratio'],
+                price=post_data['price']
+            )
+            service.save()
+            service.status = "Pending"
+            service.payment_status = "Due"
+            service.save()
+
+            return redirect('/')
+        else:
+            return redirect('duplicateservice')
+    # return redirect('servicecreate')
 
 # TODO 
 # DO an update function for service to create commision limit based on limited sales of the
