@@ -340,22 +340,36 @@ def saveService(request):
         service_type = ServiceType.objects.get(id=post_data['service_type'])
         date = post_data['date']
         date_obj = datetime.datetime.strptime(date, '%m/%d/%Y')
-        service = Services(
-            user=dashboarduser,
-            date=date_obj,
-            title=post_data['title'],
-            service_type=service_type,
-            service=service_title,
-            site_name=post_data['site_name'],
-            site_url=post_data['site_url'],
-            counter=post_data['counter'],
-            ratio=post_data['ratio'],
-            price=post_data['price']
-        )
-        service.save()
-        service.status = "Pending"
-        service.payment_status = "Due"
-        service.save()
+
+        services_objects = Services.objects.filter(date=date_obj)
+        for obj in services_objects:
+            if obj.site_url == post_data['site_url']:
+                check = False
+                break
+            else:
+                check = True
+
+        if check:
+            service = Services(
+                user=dashboarduser,
+                date=date_obj,
+                title=post_data['title'],
+                service_type=service_type,
+                service=service_title,
+                site_name=post_data['site_name'],
+                site_url=post_data['site_url'],
+                counter=post_data['counter'],
+                ratio=post_data['ratio'],
+                price=post_data['price']
+            )
+            service.save()
+            service.status = "Pending"
+            service.payment_status = "Due"
+            service.save()
+            return redirect('/')
+        else:
+            return redirect('duplicateservice')
+        
     else:        
         user = request.user
         dashboarduser = DashboardUser.objects.filter(user_id=user.id).last()
