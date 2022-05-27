@@ -126,6 +126,7 @@ class serviceProduct(models.Model):
     category = models.ForeignKey(productCategory, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     status = models.BooleanField(default=True)
+    thumb = models.ImageField('product_thumbs',upload_to='product_thumbs', null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):

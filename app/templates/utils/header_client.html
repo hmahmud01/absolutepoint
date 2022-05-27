@@ -29,14 +29,14 @@
                 <a href="{% url 'clientorders' %}" class="btn btn-outline-dark">Your Orders</a>
             </div>                
         </li>
-        <li class="nav-item dropdown">
+        {% comment %} <li class="nav-item dropdown">
           <form class="ms-auto me-4 d-none d-lg-block" id="searchForm" method="post" action="">{% csrf_token %}
             <div class="input-group input-group-sm input-group-navbar">
               <input class="form-control" id="searchInput" name="search_key" type="search" placeholder="Search Service Title">
               <button class="btn" type="submit"> <i class="fas fa-search"></i></button>
             </div>
           </form>
-        </li>        
+        </li>         {% endcomment %}
 
         <li class="nav-item dropdown ms-auto"><a class="nav-link pe-0" id="userInfo" href="#" data-bs-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false"><img class="avatar p-1" src="/static/img/axe2.jpg"

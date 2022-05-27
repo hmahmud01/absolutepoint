@@ -1286,6 +1286,7 @@ def createProduct(request):
 def saveProduct(request):
     data = ""
     post_data = request.POST
+    file_data = request.FILES
     cat_id = post_data['category']
     category = productCategory.objects.get(id=cat_id)
 
@@ -1294,6 +1295,7 @@ def saveProduct(request):
         ptype = post_data['type'],
         category = category,
         description = post_data['description'],
+        thumb = file_data['thumb_image']
     )
 
     product.save()
