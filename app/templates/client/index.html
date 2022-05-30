@@ -77,155 +77,112 @@
             {% endfor %} -->
         </div>
 
-        <!-- TABLE or price -->
+        
         <div class="page-header text-center mt-5">
             <h1 class="page-heading">Crypto Services</h1>
             <p>Provided Absolute Point</p>
         </div>
         <div class="row mb-5">
-            <div class="col-lg-4">
-                <!-- pricing card-->
-                <div class="card mb-5 mb-lg-0 border-0 shadow">
+            {% if facebook %}
+            <div class="col-lg-4 mb-5">
+                <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
+                <div class="card-status bg-primary"></div>
                     <div class="card-body">
-                        <h2 class="card-heading text-primary text-center fw-bold py-3">Text</h2>
+                        <h2 class="card-heading text-primary text-center fw-bold py-3">Facebook</h2>
                         <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
                                 class="ms-2">/ Something</span></p>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3 text-muted"><span class="fa-li"><i
-                                        class="fas fa-times"></i></span>Verticle</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Group Member</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Page Likes + Followers</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Page Review</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Post Like</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Profile Like</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Profile Follower</li>
                         </ul>
+                    </div>
+                    <div class="card-footer">
                         <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
                     </div>
                 </div>
-                <!-- /pricing card -->
             </div>
-            <div class="col-lg-4">
-                <!-- pricing card-->
-                <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden">
+            {% endif %}
+            
+            <div class="col-lg-4 mb-5">
+                <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
                     <div class="card-status bg-primary"></div>
                     <div class="card-body">
-                        <h2 class="card-heading text-primary text-center fw-bold py-3">Text</h2>
+                        <h2 class="card-heading text-primary text-center fw-bold py-3">Instagram</h2>
                         <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
                                 class="ms-2">/ Something</span></p>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3 text-muted"><span class="fa-li"><i
-                                        class="fas fa-times"></i></span>Verticle</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Followers</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Likes</li>
                         </ul>
+                    </div>
+                    <div class="card-footer">
                         <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
                     </div>
                 </div>
-                <!-- /pricing card -->
             </div>
-            <div class="col-lg-4">
-                <!-- pricing card-->
-                <div class="card mb-5 mb-lg-0 border-0 shadow">
+            <div class="col-lg-4 mb-5">
+                <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
+                <div class="card-status bg-primary"></div>
                     <div class="card-body">
-                        <h2 class="card-heading text-primary text-center fw-bold py-3">Text</h2>
+                        <h2 class="card-heading text-primary text-center fw-bold py-3">Youtube</h2>
                         <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
                                 class="ms-2">/ Something</span></p>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3 text-muted"><span class="fa-li"><i
-                                        class="fas fa-times"></i></span>Verticle</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Watch Time</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Likes</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Subscriber</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Views</li>
                         </ul>
+                    </div>
+                    <div class="card-footer">
                         <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
                     </div>
                 </div>
-                <!-- /pricing card -->
+            </div>
+            <div class="col-lg-4 mb-5">
+                <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
+                    <div class="card-status bg-primary"></div>
+                    <div class="card-body">
+                        <h2 class="card-heading text-primary text-center fw-bold py-3">Tiktok</h2>
+                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
+                                class="ms-2">/ Something</span></p>
+                        <hr class="text-muted">
+                        <ul class="fa-ul my-4">
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Follower</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-5">
+                <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
+                <div class="card-status bg-primary"></div>
+                    <div class="card-status bg-primary"></div>
+                    <div class="card-body">
+                        <h2 class="card-heading text-primary text-center fw-bold py-3">Twitter</h2>
+                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
+                                class="ms-2">/ Something</span></p>
+                        <hr class="text-muted">
+                        <ul class="fa-ul my-4">
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Follower</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- TABLE or price -->
-        <div class="page-header text-center mt-5">
-            <h1 class="page-heading">Crypto Services</h1>
-            <p>Provided Absolute Point</p>
-        </div>
-        <div class="row mb-5">
-            <div class="col-lg-4">
-                <!-- pricing card-->
-                <div class="card mb-5 mb-lg-0 border-0 shadow">
-                    <div class="card-body">
-                        <h2 class="card-heading text-primary text-center fw-bold py-3">Text</h2>
-                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
-                                class="ms-2">/ Something</span></p>
-                        <hr class="text-muted">
-                        <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3 text-muted"><span class="fa-li"><i
-                                        class="fas fa-times"></i></span>Verticle</li>
-                        </ul>
-                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
-                    </div>
-                </div>
-                <!-- /pricing card -->
-            </div>
-            <div class="col-lg-4">
-                <!-- pricing card-->
-                <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden">
-                    <div class="card-status bg-primary"></div>
-                    <div class="card-body">
-                        <h2 class="card-heading text-primary text-center fw-bold py-3">Text</h2>
-                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
-                                class="ms-2">/ Something</span></p>
-                        <hr class="text-muted">
-                        <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3 text-muted"><span class="fa-li"><i
-                                        class="fas fa-times"></i></span>Verticle</li>
-                        </ul>
-                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
-                    </div>
-                </div>
-                <!-- /pricing card -->
-            </div>
-            <div class="col-lg-4">
-                <!-- pricing card-->
-                <div class="card mb-5 mb-lg-0 border-0 shadow">
-                    <div class="card-body">
-                        <h2 class="card-heading text-primary text-center fw-bold py-3">Text</h2>
-                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
-                                class="ms-2">/ Something</span></p>
-                        <hr class="text-muted">
-                        <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i
-                                        class="fas fa-check"></i></span>Verticle</li>
-                            <li class="mb-3 text-muted"><span class="fa-li"><i
-                                        class="fas fa-times"></i></span>Verticle</li>
-                        </ul>
-                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
-                    </div>
-                </div>
-                <!-- /pricing card -->
-            </div>
-        </div>
     </div>
 
 

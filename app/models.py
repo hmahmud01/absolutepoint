@@ -136,7 +136,7 @@ class variableProductPrice(models.Model):
     product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
     measurement = models.IntegerField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
-
+    base_price = models.FloatField(null=True, blank=True)
     def __str__(self):
         return self.product.name
 
@@ -218,6 +218,7 @@ class Billing(models.Model):
 
 class Payment(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    trx_id = models.CharField(max_length=256, null=True, blank=True)
     credit_type = models.CharField(max_length=128, null=True, blank=True)
     currency_key = models.CharField(max_length=128, null=True, blank=True)
     currency_value =  models.FloatField(null=True, blank=True)

@@ -17,9 +17,11 @@ import datetime
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth, TruncWeek
 from pip import main
-
+import stripe
 from .models import *
 from .utils import cartData
+
+stripe.api_key = "sk_test_51HhxVlEfJWhMuLjgUFtwqRpA9iGwTip8o2QuIq7BwYzbBysGhQCLXCt8TNZZMF4zcSUAhhfR0axTQKHEuMorCilV009353SShi"
 
 BASE_SALARY = 10000
 
@@ -1255,8 +1257,23 @@ def salesExecutiveSalary(request):
 # CLIENT AREA
 def clientIndex(request):
     data = ""
-    products = serviceProduct.objects.all()
-    return render(request, "client/index.html", {"data": data, "products": products})
+    try:
+        print("inside social media Marketing")
+        products = serviceProduct.objects.all()
+        facebook = serviceProduct.objects.get(name="Facebook")
+        instagram = serviceProduct.objects.get(name="Instagram")
+        youtube = serviceProduct.objects.get(name="Youtube")
+        tiktok = serviceProduct.objects.get(name="Tiktok")
+        twitter = serviceProduct.objects.get(name="Twitter")
+
+        return render(request, "client/index.html", 
+            {"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter})
+    except:
+        print("social not")
+        facebook = serviceProduct.objects.get(name="Facebook")
+        # instagram = serviceProduct.objects.get(name="Instagram")
+        products = serviceProduct.objects.all()
+        return render(request, "client/index.html", {"data": data, "products": products})
 
 def clientServiceDetail(request, pid):
     data = ""
@@ -1428,6 +1445,7 @@ def checkout(request, oid):
 # 'order': ['2'], 'firstname': ['Hasan'], 'lastname': ['Mahmud'], 'username': ['hmahmud01'], 'email': ['hmahmud01@example.com'], 
 # 'address': ['Shantinagar'], 'address2': [''], 'country': ['Bangladesh'], 'state': ['Dhaka'], 'zipcode': ['1217'], 
 # 'credit_type': ['on'], 'currency': ['{"AMB" : "0.009838"}']}>
+
 def processOrder(request):
     data = ""
     post_data = request.POST
@@ -1437,8 +1455,8 @@ def processOrder(request):
     currency_key = list(currency.keys())[0]
     currency_value = float(list(currency.values())[0])
 
-    order.complete = True
-    order.save()
+    # order.complete = True
+    # order.save()
 
     billing = Billing(
         order = order,
@@ -1465,7 +1483,59 @@ def processOrder(request):
 
     payment.save()
 
-    return redirect('clientorders')
+    return redirect('stripecheckout', order.id)
+
+def stripeCheckout(request, oid):
+    return render(request, "client/checkout-stripe.html", {"oid": oid})
+
+def create_checkout_session(request, oid):
+    order = Order.objects.get(id=oid)
+    order_name = "ORD - " + str(order.id)
+    amount = order.get_cart_total * 100
+    YOUR_DOMAIN = "http://127.0.0.1:8000"
+    product = stripe.Product.create(name=order_name)
+
+    price = stripe.Price.create(
+        unit_amount=int(amount),
+        currency="usd",
+        product=product.id,
+    )
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types = ['card'],    
+        line_items=[
+            {
+                'price': price.id,
+                'quantity': 1,
+            }
+        ],
+        mode="payment",
+        success_url=YOUR_DOMAIN + '/checkout-success/',
+        cancel_url=YOUR_DOMAIN + '/checkout-cancel/'
+    )
+
+    request.session['oid'] = oid
+    request.session['cid'] = checkout_session.id
+
+    return redirect(checkout_session.url, code=303)
+
+def success(request):
+    order = Order.objects.get(id=request.session['oid'])
+    checkout_id = request.session['cid']
+
+    order.complete = True
+    order.trx_id = checkout_id
+    order.save()
+
+    try:
+        del request.session['oid']
+        del request.session['cid']
+    except:
+        pass
+
+    return render(request, 'client/success.html')
+
+def cancel(request):
+    return  render(request, 'client/cancel.html')
 
 def createPortfolio(request):
     users = DashboardUser.objects.all()
