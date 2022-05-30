@@ -155,13 +155,13 @@
 
                                         <div class="my-3">
                                             <div class="form-check">
-                                                <input id="credit" name="credit_type" name="paymentMethod" type="radio"
-                                                    class="form-check-input" checked required>
+                                                <input id="credit" name="credit_type" type="radio" value="crypto"
+                                                    class="form-check-input" required>
                                                 <label class="form-check-label" for="credit">Crypto</label>
                                             </div>
                                             <div class="form-check">
-                                                <input id="credit" name="credit_type" name="paymentMethod" type="radio"
-                                                    class="form-check-input">
+                                                <input id="credit" name="credit_type" type="radio" value="stripe"
+                                                    class="form-check-input" required>
                                                 <label class="form-check-label" for="credit">Stripe</label>
                                             </div>
 <!-- 
@@ -177,9 +177,9 @@
                                         </div>
 
                                         <div class="row gy-3">
-                                            <div class="col-md-12">
+                                            <!-- <div class="col-md-12">
                                                 <label for="currency" class="form-label">Currency</label>
-                                                <select class="form-select" id="currency" name="currency" required>
+                                                <select class="form-select" id="currency" name="currency">
                                                     <option value="">Choose...</option>
                                                     {% for key, value in rates.items %}
                                                     <option value='{"{{key}}" : "{{value}}"}'>{{ key }} - {{ value }}</option>
@@ -188,6 +188,9 @@
                                                 <div class="invalid-feedback">
                                                     Please provide a valid state.
                                                 </div>
+                                            </div> -->
+                                            <div>
+                                                <p class="lead" id="show-payment-msg"></p>
                                             </div>
                                         </div>
 
@@ -209,11 +212,11 @@
 
 {% block scripts %}
 <script>
-    // This is your test publishable API key.
+
 const stripe = Stripe("pk_test_51HhxVlEfJWhMuLjgh14bha3VhsgRfqiGwrZ2isRneRqJcguiEnMFimEZCQ9QHoRAiFLCtiF8ApplE8iHWx7UAjYg00zCFU6vaE");
 
-// The items the customer wants to buy
-const items = [{ id: "xl-tshirt" }];
+
+const items = [{ id: "absolutepoint-order" }];
 
 let elements;
 
@@ -323,5 +326,21 @@ function setLoading(isLoading) {
     document.querySelector("#button-text").classList.remove("hidden");
   }
 }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $('input[name=credit_type]').on('change', function(){
+            var val = $(this).val();
+            switch(val){
+                case "crypto":
+                    $('#show-payment-msg').html("You Have Selected Crypto Payment Method. Your order will be registered in our System. Absolute Point Service will contact you shortly for the Order Completion..");
+                    break;
+                case "stripe":
+                    $('#show-payment-msg').html("You have Selected Stripe Payment Method. You will be redirected to Stripe Payment page for the order completion as soon as you Complete the Checkout here.")
+                    break;
+            }
+        });
+    })
 </script>
 {% endblock %}

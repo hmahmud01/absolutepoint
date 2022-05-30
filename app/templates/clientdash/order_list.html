@@ -22,6 +22,7 @@
                         <th>Date Ordered</th>
                         <th>Status</th>
                         <th>Customer Name</th>
+                        <th>Method</th>
                         <th>Total</th>                        
                       </tr>
                     </thead>
@@ -32,6 +33,11 @@
                         <td> {{ order.date_ordered }} </td>
                         <td> {{ order.complete }} </td>
                         <td> {{ order.customer }} </td>
+                        {% if order.payment.credit_type == "crypto" %}
+                        <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span></td>
+                        {% else %}
+                        <td><span class="badge badge-success-light">{{ order.payment.credit_type }}</span></td>
+                        {% endif %}
                         <td> {{ order.get_cart_total }} </td>
                       </tr>
                       {% endfor %}

@@ -7,147 +7,151 @@
 <section>
     <div class="row">
         <div class="page-header">
-            <h1 class="page-heading">Orders</h1>
-            <p>Crypto Service Orders</p>
+            <h1 class="page-heading">Order Detail</h1>
+            <p>Order detail for the id of ORD - {{ order.id }}</p>
         </div>
-        <div class="page-header d-md-flex justify-content-between">
-            <div>
-              <h1 class="page-heading">Order #25646</h1>
-              <ul class="list-inline text-sm">
-                <li class="list-inline-item"><a class="text-gray-600" href="#!"><i class="fas fa-download me-2"> </i>Export</a></li>
-                <li class="list-inline-item"><a class="text-gray-600" href="#!"><i class="fas fa-print me-2"> </i>Print                        </a></li>
-                <li class="list-inline-item">
-                  <div class="dropdown"><a class="text-gray-600" id="moreActions" href="#!" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-plus-circle me-2"> </i>More actions <i class="fas fa-angle-down"></i></a>
-                    <ul class="dropdown-menu text-sm" aria-labelledby="moreActions">
-                      <li><a class="dropdown-item text-muted" href="#">Action</a></li>
-                      <li><a class="dropdown-item text-muted" href="#">Another action</a></li>
-                      <li><a class="dropdown-item text-muted" href="#">Something else here </a></li>
-                    </ul>
-                  </div>
-                </li>
-              </ul>
+        <div class="col-md-8 col-lg-8 col-sm-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless mb-0">
+                            <thead class="light">
+                                <tr>
+                                    <th style="min-width: 300px;">Product</th>
+                                    <th>Items</th>
+                                    <th>Price</th>
+                                    <th>Ordered QTY</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for item in items %}
+                                <tr class="align-middle">
+                                    <td>
+                                        <img class="card-table-img img-fluid me-3"
+                                            src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                                            alt="" width="80">
+                                        <span class="card-table-text">
+                                            <a class="text-reset text-decoration-none" href="">
+                                                <strong>{{ item.product.name }}</strong><br>
+                                                <span class="text-muted">{{ item.product.ptype }} -
+                                                    {{ item.product.category.name }}</span><br>
+
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td>{{ item.variance.measurement }} </td>
+                                    <td>${{ item.variance.price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td class="text-end">${{ item.get_total }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="mt-2"> 
-              <p class="mb-2"> <span class="text-base badge badge-success-light me-2 mb-2"><span class="indicator"> </span>Paid</span><span class="text-base badge badge-warning-light"> <span class="indicator"> </span>Being Processed</span></p>
-              <p class="text-end text-muted text-sm"><i class="far fa-calendar me-2"></i> Jun 22, 2021 &mdash; 10:25 AM</p>
-            </div>
-          </div>
-          <div class="row mb-5">
-            <div class="col-lg-8">
-              <div class="card card-table mb-4">
+
+            <div class="card mb-3">
                 <div class="card-header">
-                  <h5 class="card-heading"> Order details</h5>
-                      <div class="card-header-more">
-                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
-                        <div class="dropdown-menu dropdown-menu-end text-sm"><a class="dropdown-item" href="#!"><i class="fas fa-expand-arrows-alt me-2"></i>Expand</a><a class="dropdown-item" href="#!"><i class="far fa-window-minimize me-2"></i>Minimize</a><a class="dropdown-item" href="#!"><i class="fas fa-redo me-2"></i> Reload</a><a class="dropdown-item" href="#!"><i class="far fa-trash-alt me-2"></i> Remove        </a></div>
-                      </div>
+                    <h5 class="card-heading"> Shipping address</h5>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-hover table-borderless mb-0">
-                      <thead class="light">
-                        <tr>
-                          <th style="min-width: 300px;">Product</th>
-                          <th>Items</th>
-                          <th>Price</th>
-                          <th class="text-end">Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr class="align-middle">
-                          <td> <img class="card-table-img img-fluid me-3" src="img/product/product-1.jpg" alt="" width="80"><span class="card-table-text"><a class="text-reset text-decoration-none" href="#!"><strong>Round grey hanging decor</strong><br><span class="text-muted">Size: M</span></a></span></td>
-                          <td>1 </td>
-                          <td>$22.00</td>
-                          <td class="text-end">$22.00</td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td> <img class="card-table-img img-fluid me-3" src="img/product/product-2.jpg" alt="" width="80"><span class="card-table-text"><a class="text-reset text-decoration-none" href="#!"><strong>silver black round Ipod</strong></a></span></td>
-                          <td>1 </td>
-                          <td>$22.00</td>
-                          <td class="text-end">$22.00</td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td> <img class="card-table-img img-fluid me-3" src="img/product/product-3.jpg" alt="" width="80"><span class="card-table-text"><a class="text-reset text-decoration-none" href="#!"><strong>White USB cable</strong></a></span></td>
-                          <td>1 </td>
-                          <td>$22.00</td>
-                          <td class="text-end">$22.00</td>
-                        </tr>
-                        <tr class="align-middle">
-                          <td> <img class="card-table-img img-fluid me-3" src="img/product/product-4.jpg" alt="" width="80"><span class="card-table-text"><a class="text-reset text-decoration-none" href="#!"><strong>Sony PS 4 game controller</strong></a></span></td>
-                          <td>1 </td>
-                          <td>$22.00</td>
-                          <td class="text-end">$22.00</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                    <p class="card-text text-muted">
+                        {{ order.billing.firstname }} {{ order.billing.lastname }} <br>
+                        Telegram id: {{ order.billing.username }}<br>
+                        email: {{ order.billing.email }}<br>
+                        address: {{ order.billing.address }}<br>
+                        address2: {{ order.billing.address2 }}<br>
+                        <strong>{{ order.billing.country }}</strong><br>
+                        {{ order.billing.state }}<br>
+                        {{ order.billing.zipcode }}
+                    </p>
                 </div>
-              </div>
-              <div class="row gy-4">
-                <div class="col-lg-6">
-                  <div class="card">
-                    <div class="card-header">
-                      <h5 class="card-heading"> Invoice address</h5>
-                          <div class="card-header-more">
-                            <button class="btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
-                            <div class="dropdown-menu dropdown-menu-end text-sm"><a class="dropdown-item" href="#!"><i class="fas fa-expand-arrows-alt me-2"></i>Expand</a><a class="dropdown-item" href="#!"><i class="far fa-window-minimize me-2"></i>Minimize</a><a class="dropdown-item" href="#!"><i class="fas fa-redo me-2"></i> Reload</a><a class="dropdown-item" href="#!"><i class="far fa-trash-alt me-2"></i> Remove        </a></div>
-                          </div>
-                    </div>
-                    <div class="card-body">
-                      <p class="card-text text-muted">John Brown<br>13/25 New Avenue<br>New Heaven<br>45Y 73J<br>England<br><strong>Great Britain</strong><span class="ms-2 align-middle mt-n1 avatar avatar-xxs bg-cover" style="background-image: url(img/flag/gb.svg)"></span></p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="card">
-                    <div class="card-header">
-                      <h5 class="card-heading"> Shipping address</h5>
-                          <div class="card-header-more">
-                            <button class="btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
-                            <div class="dropdown-menu dropdown-menu-end text-sm"><a class="dropdown-item" href="#!"><i class="fas fa-expand-arrows-alt me-2"></i>Expand</a><a class="dropdown-item" href="#!"><i class="far fa-window-minimize me-2"></i>Minimize</a><a class="dropdown-item" href="#!"><i class="fas fa-redo me-2"></i> Reload</a><a class="dropdown-item" href="#!"><i class="far fa-trash-alt me-2"></i> Remove        </a></div>
-                          </div>
-                    </div>
-                    <div class="card-body">
-                      <p class="card-text text-muted">John Brown<br>13/25 New Avenue<br>New Heaven<br>45Y 73J<br>England<br><strong>Great Britain</strong><span class="ms-2 align-middle mt-n1 avatar avatar-xxs bg-cover" style="background-image: url(img/flag/gb.svg)"></span></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-            <div class="col-lg-4">
-              <div class="card card-table">
+
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-6">
+            <div class="card card-table mb-3">
                 <div class="card-header">
-                  <h5 class="card-heading">Finance</h5>
-                      <div class="card-header-more">
-                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
-                        <div class="dropdown-menu dropdown-menu-end text-sm"><a class="dropdown-item" href="#!"><i class="fas fa-expand-arrows-alt me-2"></i>Expand</a><a class="dropdown-item" href="#!"><i class="far fa-window-minimize me-2"></i>Minimize</a><a class="dropdown-item" href="#!"><i class="fas fa-redo me-2"></i> Reload</a><a class="dropdown-item" href="#!"><i class="far fa-trash-alt me-2"></i> Remove        </a></div>
-                      </div>
+                    <h5 class="card-heading">Order Summary</h5>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive my-3">
-                    <table class="table table-borderless card-text">
-                      <tr class="text-muted"> 
-                        <th class="fw-normal">Products</th>
-                        <td class="text-end">$165.00</td>
-                      </tr>
-                      <tr class="text-muted">
-                        <th class="fw-normal">Shipping Fee</th>
-                        <td class="text-end">$5.00</td>
-                      </tr>
-                      <tr class="text-muted">
-                        <th class="fw-normal">Sales Tax</th>
-                        <td class="text-end">$7.00</td>
-                      </tr>
-                      <tr>
-                        <th>Total</th>
-                        <td class="text-end">$177.00</td>
-                      </tr>
-                    </table>
-                  </div>
+                    <div class="table-responsive my-3">
+                        <table class="table table-borderless card-text">
+                            <tr class="text-muted">
+                                <th class="fw-normal">Total</th>
+                                <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Shipping Fee</th>
+                                <td class="text-end">$0.00</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Sales Tax</th>
+                                <td class="text-end">$0.00</td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-              </div>
+                <div class="card-footer">
+                    <div class="table-responsive">
+                        <table class="table table-borderless card-text">
+                            <tr class="text-muted">
+                                <th class="fw-normal">Payment Method</th>
+                                {% if order.payment.credit_type == "crypto" %}
+                                <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span></td>
+                                {% else %}
+                                <td><span class="badge badge-success-light">{{ order.payment.credit_type }}</span></td>
+                                {% endif %}
+                            </tr>
+                            {% comment %} <tr class="text-muted">
+                                <th class="fw-normal">Currency Type</th>
+                                <td class="text-end">{{ order.payment.currency_key }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Currency Value</th>
+                                <td class="text-end">{{ order.payment.currency_value }}</td> {% endcomment %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-          </div>
+
+
+            <div class="card card-table mb-3">
+                <div class="card-header">
+                    <h5 class="card-heading">Order Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive my-3">
+                        <table class="table table-borderless card-text">
+                            <tr class="text-muted">
+                                <th class="fw-normal">Order Status</th>
+                                <td class="text-end">{{ order.complete }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Payment Status</th>
+                                <td class="text-end">{{ order.complete }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Order Customer</th>
+                                <td class="text-end">{{ order.customer }}</td>
+                            </tr>
+                            <tr class="text-muted">
+                                <th class="fw-normal">Order trx_id</th>
+                                <td class="text-end">{{ order.trx_id }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 

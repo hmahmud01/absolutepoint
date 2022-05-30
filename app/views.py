@@ -1257,23 +1257,38 @@ def salesExecutiveSalary(request):
 # CLIENT AREA
 def clientIndex(request):
     data = ""
-    try:
-        print("inside social media Marketing")
-        products = serviceProduct.objects.all()
-        facebook = serviceProduct.objects.get(name="Facebook")
-        instagram = serviceProduct.objects.get(name="Instagram")
-        youtube = serviceProduct.objects.get(name="Youtube")
-        tiktok = serviceProduct.objects.get(name="Tiktok")
-        twitter = serviceProduct.objects.get(name="Twitter")
+    products = serviceProduct.objects.all().exclude(category__name="Marketing")
+    marketing = serviceProduct.objects.filter(category__name="Marketing")
+    print(marketing)
+    for prod in marketing:
+        if prod.name == "Facebook":
+            facebook = prod
+        elif prod.name == "Instagram":
+            instagram = prod
+        elif prod.name == "Youtube":
+            youtube = prod
+        elif prod.name == "Tiktok":
+            tiktok = prod
+        elif prod.name == "Twitter":
+            twitter = prod
 
-        return render(request, "client/index.html", 
+
+    return render(request, "client/index.html", 
             {"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter})
-    except:
-        print("social not")
-        facebook = serviceProduct.objects.get(name="Facebook")
-        # instagram = serviceProduct.objects.get(name="Instagram")
-        products = serviceProduct.objects.all()
-        return render(request, "client/index.html", {"data": data, "products": products})
+        
+    # try:
+    #     products = serviceProduct.objects.all()
+    #     facebook = serviceProduct.objects.get(name="Facebook")
+    #     instagram = serviceProduct.objects.get(name="Instagram")
+    #     youtube = serviceProduct.objects.get(name="Youtube")
+    #     tiktok = serviceProduct.objects.get(name="Tiktok")
+    #     twitter = serviceProduct.objects.get(name="Twitter")
+
+    #     return render(request, "client/index.html", 
+    #         {"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter})
+    # except:
+    #     products = serviceProduct.objects.all()
+    #     return render(request, "client/index.html", {"data": data, "products": products})
 
 def clientServiceDetail(request, pid):
     data = ""
@@ -1283,15 +1298,19 @@ def clientServiceDetail(request, pid):
 
 def clientOrders(request):
     data = ""
-    return render(request, "client/orders.html", {"data": data})
+    orders = Order.objects.filter(customer=request.user.username)
+    return render(request, "client/orders.html", {"data": data, "orders": orders})
 
 def allOrders(request):
     data = ""
     return render(request, "orders.html", {"data": data})
 
-def orderDetail(request):
+def orderDetail(request, oid):
     data = ""
-    return render(request, "client/order_detail.html", {"data": data})
+    order = Order.objects.get(id=oid)
+    orderItems = OrderItems.objects.filter(order_id=oid)
+    context = {'items': orderItems, 'order':order}
+    return render(request, "client/order_detail.html", context)
 
 # CLIENT DASHBOARD
 
@@ -1450,10 +1469,11 @@ def processOrder(request):
     data = ""
     post_data = request.POST
     order = Order.objects.get(id=post_data['order'])
-    currency = json.loads(post_data['currency'])
+    # if(post_data['currency']):
+    #     currency = json.loads(post_data['currency'])
 
-    currency_key = list(currency.keys())[0]
-    currency_value = float(list(currency.values())[0])
+    #     currency_key = list(currency.keys())[0]
+    #     currency_value = float(list(currency.values())[0])
 
     # order.complete = True
     # order.save()
@@ -1476,17 +1496,24 @@ def processOrder(request):
     payment = Payment(
         order = order,
         credit_type = post_data['credit_type'],
-        currency_key = currency_key,
-        currency_value = currency_value,
         total = order.get_cart_total
     )
 
     payment.save()
 
-    return redirect('stripecheckout', order.id)
+    if post_data['credit_type'] == "crypto":
+        order.complete = True
+        order.trx_id = "ORDER - " + str(order.id)
+        order.save()
+        return redirect('cryptocheckout')
+    else:
+        return redirect('stripecheckout', order.id)
 
 def stripeCheckout(request, oid):
     return render(request, "client/checkout-stripe.html", {"oid": oid})
+
+def cryptoCheckout(request):
+    return render(request, "client/checkout-crypto.html")
 
 def create_checkout_session(request, oid):
     order = Order.objects.get(id=oid)
@@ -1514,7 +1541,7 @@ def create_checkout_session(request, oid):
     )
 
     request.session['oid'] = oid
-    request.session['cid'] = checkout_session.id
+    request.session['cid'] = checkout_session.payment_intent
 
     return redirect(checkout_session.url, code=303)
 

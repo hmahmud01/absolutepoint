@@ -38,16 +38,6 @@
                     </a>
                     
                 </div>
-                <div>
-                    <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
-                        class="img-thumbnail p-1" style="width:200px; height: 200px;" alt="{{ product.name }}">
-                    <p class="text-center lead">{{ product.name }}</p>
-                </div>
-                <div>
-                    <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
-                        class="img-thumbnail p-1" style="width:200px; height: 200px;" alt="{{ product.name }}">
-                    <p class="text-center lead">{{ product.name }}</p>
-                </div>
 
                 <!-- <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" class="img-thumbnail p-1" style="width:200px; height: 200px;" alt="{{ product.name }}">
                 <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" class="img-thumbnail p-1" style="width:200px; height: 200px;" alt="{{ product.name }}"> -->
@@ -102,12 +92,13 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' facebook.id %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
             {% endif %}
             
+            {% if instagram %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
                     <div class="card-status bg-primary"></div>
@@ -122,10 +113,12 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' instagram.id %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if youtube %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
                 <div class="card-status bg-primary"></div>
@@ -142,10 +135,12 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' youtube.id %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if tiktok %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
                     <div class="card-status bg-primary"></div>
@@ -159,10 +154,12 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' tiktok.id %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if twitter %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
                 <div class="card-status bg-primary"></div>
@@ -177,10 +174,11 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="#">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' twitter.id %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
 
     </div>

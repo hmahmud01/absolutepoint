@@ -103,16 +103,20 @@
                     <div class="table-responsive">
                         <table class="table table-borderless card-text">
                             <tr class="text-muted">
-                                <th class="fw-normal">Credit Type</th>
-                                <td class="text-end">{{ order.payment.credit_type }}</td>
+                                <th class="fw-normal">Payment Method</th>
+                                {% if order.payment.credit_type == "crypto" %}
+                                <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span></td>
+                                {% else %}
+                                <td><span class="badge badge-success-light">{{ order.payment.credit_type }}</span></td>
+                                {% endif %}
                             </tr>
-                            <tr class="text-muted">
+                            {% comment %} <tr class="text-muted">
                                 <th class="fw-normal">Currency Type</th>
                                 <td class="text-end">{{ order.payment.currency_key }}</td>
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Currency Value</th>
-                                <td class="text-end">{{ order.payment.currency_value }}</td>
+                                <td class="text-end">{{ order.payment.currency_value }}</td> {% endcomment %}
                             </tr>
                         </table>
                     </div>
