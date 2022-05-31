@@ -45,10 +45,14 @@
                         {% for variable in variables %}
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
-                                <h6 class="my-0">{{ variable.measurement }}</h6>
-                                <small class="text-muted">Qty</small>
+                                <h6 class="my-0">{{ variable.price }}</h6>
+                                <small class="text-muted"> for {{ variable.measurement }} measurement</small>
                             </div>
-                            <span class="text-muted">${{ variable.price }}</span>
+                            
+                            {% comment %} <span class="text-muted">${{ variable.price }}</span> {% endcomment %}
+                            <div class="float-end">
+                                <a class="btn btn-sm btn-outline-warning" href="{% url 'updatevariableprice' variable.id %}">Edit</a>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>

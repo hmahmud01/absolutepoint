@@ -1257,38 +1257,54 @@ def salesExecutiveSalary(request):
 # CLIENT AREA
 def clientIndex(request):
     data = ""
-    products = serviceProduct.objects.all().exclude(category__name="Marketing")
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")
     marketing = serviceProduct.objects.filter(category__name="Marketing")
-    print(marketing)
-    for prod in marketing:
-        if prod.name == "Facebook":
-            facebook = prod
-        elif prod.name == "Instagram":
-            instagram = prod
-        elif prod.name == "Youtube":
-            youtube = prod
-        elif prod.name == "Tiktok":
-            tiktok = prod
-        elif prod.name == "Twitter":
-            twitter = prod
+    facebook = serviceProduct.objects.filter(category__name="Facebook")
+    instagram = serviceProduct.objects.filter(category__name="Instagram")
+    youtube = serviceProduct.objects.filter(category__name="Youtube")
+    tiktok = serviceProduct.objects.filter(category__name="Tiktok")
+    twitter = serviceProduct.objects.filter(category__name="Twitter")
 
+    cat_fb = productCategory.objects.get(name="Facebook").id
+    cat_it = productCategory.objects.get(name="Instagram").id
+    cat_yt = productCategory.objects.get(name="Youtube").id
+    cat_tt = productCategory.objects.get(name="Tiktok").id
+    cat_tw = productCategory.objects.get(name="Twitter").id
 
-    return render(request, "client/index.html", 
-            {"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter})
-        
-    # try:
-    #     products = serviceProduct.objects.all()
-    #     facebook = serviceProduct.objects.get(name="Facebook")
-    #     instagram = serviceProduct.objects.get(name="Instagram")
-    #     youtube = serviceProduct.objects.get(name="Youtube")
-    #     tiktok = serviceProduct.objects.get(name="Tiktok")
-    #     twitter = serviceProduct.objects.get(name="Twitter")
+    context = {
+        "products": products,
+        "facebook": facebook,
+        "instagram": instagram,
+        "youtube": youtube,
+        "tiktok": tiktok,
+        "twitter": twitter,
+        "cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw
+    }
 
-    #     return render(request, "client/index.html", 
-    #         {"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter})
-    # except:
-    #     products = serviceProduct.objects.all()
-    #     return render(request, "client/index.html", {"data": data, "products": products})
+    # print(marketing)
+    # for prod in marketing:
+    #     if prod.name == "Facebook":
+    #         facebook = prod
+    #     elif prod.name == "Instagram":
+    #         instagram = prod
+    #     elif prod.name == "Youtube":
+    #         youtube = prod
+    #     elif prod.name == "Tiktok":
+    #         tiktok = prod
+    #     elif prod.name == "Twitter":
+    #         twitter = prod
+
+    ctx2 ={"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter}
+    return render(request, "client/index.html",context)
+
+def socialServices(request, cid):
+    cat = productCategory.objects.get(id=cid)
+    products = serviceProduct.objects.filter(category__id=cid)
+    return render(request, "client/index-category.html", {"products": products, "cat": cat})
 
 def clientServiceDetail(request, pid):
     data = ""
@@ -1375,6 +1391,21 @@ def saveVariablePrice(request):
     variable.save()
     return redirect('productdetail', post_data['pid'])
 
+def updateVariablePrice(request, vid):
+    variable = variableProductPrice.objects.get(id=vid)
+    return render(request, "clientdash/update_variable_price.html", {"variable": variable})
+
+def saveUpdatedVariablePrice(request):
+    post_data = request.POST
+    variable = variableProductPrice.objects.get(id=post_data['vid'])
+    variable.price = post_data['price']
+    variable.measurement = post_data['measurement']
+
+    variable.save()
+
+    return redirect('productdetail', variable.product.id)
+
+
 def productAct(request, pid, act):
     product = serviceProduct.objects.get(id=pid)
     if act == "active":
@@ -1410,6 +1441,7 @@ def updateItem(request):
     productId = data['productId']
     action = data['action']
     price = data['price']
+    print(productId)
 
     customer = request.user.username
     product = serviceProduct.objects.get(id=productId)

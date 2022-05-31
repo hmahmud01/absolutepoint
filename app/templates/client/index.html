@@ -12,9 +12,22 @@
 </style>
 {% endblock %}
 
+{% block cover %}
+<div class="g-0 position-relative overflow-hidden dark-overlay text-white" style="height:90vh">
+    <img class="bg-image text-white dark-overlay" src="/static/img/photos/test.jpg" alt="">
+    <div class="card-img-overlay d-flex align-items-center">
+        <div class="w-100 overlay-content">
+            <div class="container">
+                <h1 class="mb-0">Absolute Point</h1>
+                <p class="lead w-50">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                <button class="btn btn-primary">See Our Services</button>
+            </div>
+        </div>
+    </div>  
+</div>
+{% endblock %}
 
 {% block content %}
-
 <section>
     <div class="container">
         <div class="row">
@@ -23,7 +36,7 @@
                 <p>Provided Absolute Point</p>
             </div>
             <div class="product-slider my-3 px-3">
-                {% for product in products %}
+                <!-- {% for product in products %}
                 {% if product.status %}
                 <div>
                     <a href="{% url 'clientservicedetail' product.id %}">
@@ -39,39 +52,54 @@
                     
                 </div>
 
-                <!-- <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" class="img-thumbnail p-1" style="width:200px; height: 200px;" alt="{{ product.name }}">
-                <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" class="img-thumbnail p-1" style="width:200px; height: 200px;" alt="{{ product.name }}"> -->
                 {% endif %}
-                {% endfor %}
+                {% endfor %} -->
             </div>
-            <!-- {% for product in products %}
+            {% for product in products %}
             {% if product.status %}
             <div class="col-md-6 col-lg-3">
+                <a href="{% url 'clientservicedetail' product.id %}">
                 <div class="card mb-4">
+                    {% if product.thumb %}
+                    <img class="card-img-top img-fluid" src="/media/{{ product.thumb }}" alt="{{ product.name }}">
+                    {% else %}
+                    <img class="card-img-top img-fluid" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ product.name }}">
+                    {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
-                        <h6 class="card-subtitle text-muted">{{  product.ptype }}</h6>
+                    <p class="lead text-dark text-decoration-none">{{ product.name }}</p>
+                    <p class="card-text text-decoration-none text-dark text-truncate">{{ product.description }}</p>
                     </div>
-                    <img class="img-fluid service-img"
-                        src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
-                        alt="Card image cap">
-                    <div class="card-body">
-                        <h6 class="card-subtitle text-muted">{{  product.category }}</h6>
-                        <p class="card-text text-truncate">{{ product.description }}</p>
-                        <a class="card-link" href="{% url 'clientservicedetail' product.id %}">Detail</a>
-                        {% comment %} <a class="card-link" href="#">Another link</a> {% endcomment %}
+                </div>
+                </a>    
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+
+        <div class="row my-5">
+            <div class="col-md-6 py-5">
+                <h1>Some Title</h1>
+                <p class="lead">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-5 border-0 text-white dark-overlay shadow-lg"><img class="card-img" src="/static/img/photos/elizabeth-gottwald-dnIWYrliZfU-unsplash.jpg" alt=""><a class="tile-link" href="category.html"> </a>
+                    <div class="card-img-overlay d-flex align-items-center">
+                    <div class="w-100 overlay-content">
+                        <h2 class="text-center mb-0">INFO</h2>
                     </div>
                 </div>
             </div>
-            {% endif %}
-            {% endfor %} -->
+            </div>
         </div>
 
         
         <div class="page-header text-center mt-5">
-            <h1 class="page-heading">Crypto Services</h1>
+            <h1 class="page-heading">Social Media Marketing Services</h1>
             <p>Provided Absolute Point</p>
         </div>
+
+
         <div class="row mb-5">
             {% if facebook %}
             <div class="col-lg-4 mb-5">
@@ -79,20 +107,15 @@
                 <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="card-heading text-primary text-center fw-bold py-3">Facebook</h2>
-                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
-                                class="ms-2">/ Something</span></p>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Group Member</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Page Likes + Followers</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Page Review</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Post Like</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Profile Like</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Profile Follower</li>
+                            {% for prod in facebook %}
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' facebook.id %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_fb %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
@@ -104,16 +127,15 @@
                     <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="card-heading text-primary text-center fw-bold py-3">Instagram</h2>
-                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
-                                class="ms-2">/ Something</span></p>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Followers</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Likes</li>
+                            {% for prod in instagram %}
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' instagram.id %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_it %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
@@ -124,41 +146,40 @@
                 <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="card-heading text-primary text-center fw-bold py-3">Youtube</h2>
-                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
-                                class="ms-2">/ Something</span></p>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Watch Time</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Likes</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Subscriber</li>
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Views</li>
+                            {% for prod in youtube %}
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' youtube.id %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_yt %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
             {% endif %}
+
             {% if tiktok %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
                     <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="card-heading text-primary text-center fw-bold py-3">Tiktok</h2>
-                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
-                                class="ms-2">/ Something</span></p>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Follower</li>
+                            {% for prod in tiktok %}
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' tiktok.id %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tt %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
             {% endif %}
+
             {% if twitter %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
@@ -166,19 +187,35 @@
                     <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="card-heading text-primary text-center fw-bold py-3">Twitter</h2>
-                        <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00</span><span
-                                class="ms-2">/ Something</span></p>
                         <hr class="text-muted">
-                        <ul class="fa-ul my-4">
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>Follower</li>
+                        <ul class="fa-ul my-4">                        
+                            {% for prod in twitter %}
+                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'clientservicedetail' twitter.id %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tw %}">Buy Now</a></div>
                     </div>
                 </div>
             </div>
             {% endif %}
+        </div>
+
+        <div class="row my-5">
+            <div class="col-md-6 py-5 order-last">
+                <h1>Post Title</h1>
+                <p class="lead">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-5 border-0 text-white dark-overlay shadow-lg"><img class="card-img" src="/static/img/photos/joseph-barrientos-Ji_G7Bu1MoM-unsplash.jpg" alt=""><a class="tile-link" href="category.html"> </a>
+                    <div class="card-img-overlay d-flex align-items-center">
+                    <div class="w-100 overlay-content">
+                        <h2 class="text-center mb-0">INFO</h2>
+                    </div>
+                </div>
+            </div>
+            </div>
         </div>
 
     </div>
