@@ -1,0 +1,83 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4 px-5">
+            <div class="page-header mt-5">
+                <h1 class="mb-3">Let's Talk.</h1>
+                <p class="my-4 fs-4">Schedule a call with us and let's explore ways how we can grow your crypto or NFT Project today.</p>
+                <p class="my-4 fs-4">For urgent matters, please contact <a href="">@teleid on Telegram</a></p>
+                <div class="card-widget my-4">
+                    <div class="card-widget-body">
+                        <div class="icon text-white bg-green"><i class="far fa-comment-alt"></i></div>
+                        <div class="text mx-2">
+                            <h6 class="mb-0">Write Us on Telegram</h6><span class="">@teleid</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-widget my-4">
+                    <div class="card-widget-body">
+                        <div class="icon text-white bg-green"><i class="far fa-envelope"></i></div>
+                        <div class="text mx-2">
+                            <h6 class="mb-0">Email Us</h6><span class="">hello@cryptomarketers.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 px-5">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-heading">Request A Quote</h4>
+                </div>
+                <div class="card-body">
+                    <p>Lorem ipsum dolor sit amet consectetur.</p>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telegram Username</label>
+                                    <input class="form-control" type="text" placeholder="@telegram">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Subject</label>
+                                    <input class="form-control" type="text" placeholder="Ex. Growth package">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Socials(Website/twitter etc)</label>
+                                    <input class="form-control" type="text" placeholder="yourproject.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Estimated Budget</label>
+                                    <input class="form-control" type="text" placeholder="4500 USD">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Message</label>
+                                    <!-- <input class="form-control" type="text" placeholder="4500 USD"> -->
+                                    <textarea class="form-control" name="message" id="" rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="mb-3">       
+                            <a class="btn btn-primary" href="{% url 'requestconfirm' %}">Make A Request</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

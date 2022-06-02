@@ -100,6 +100,8 @@ urlpatterns = [
     path('portfoliodetail/<int:pid>/', views.portfolioDetail, name="portfoliodetail"),
     path('people/', views.people, name="people"),
     path('peopledetail/<int:pid>', views.peopleDetail, name="peopledetail"),
+    path('contactus/', views.contactUs, name="contactus"),
+    path('requestconfirm/', views.requestConfirm, name="requestconfirm"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

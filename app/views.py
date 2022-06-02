@@ -1292,6 +1292,12 @@ def allService(request):
     products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")
     return render(request, "client/allservices.html", {"products": products})
 
+def contactUs(request):
+    return render(request, "client/contact-us.html")
+
+def requestConfirm(request):
+    return render(request, "client/contact-done.html")
+
 def socialServices(request, cid):
     cat = productCategory.objects.get(id=cid)
     products = serviceProduct.objects.filter(category__id=cid)
