@@ -65,6 +65,7 @@ urlpatterns = [
 
     # CLIENT AREA
     path('client/index/', views.clientIndex, name="clientindex"),
+    path('allservices/', views.allService, name="allservices"),
     path('socialservices/<int:cid>', views.socialServices, name="socialservices"),
     path('client/service/detail/<int:pid>/', views.clientServiceDetail, name="clientservicedetail"),
     path('client/orders', views.clientOrders, name="clientorders"),
@@ -81,8 +82,10 @@ urlpatterns = [
     path('saveupdatedvariableprice/', views.saveUpdatedVariablePrice, name="saveupdatedvariableprice"),
     path('orderlist/', views.orderList, name="orderlist"),
     path('orderlist/detail/<int:oid>/', views.orderDetailDash, name="orderlistdetail"),
+    path('confirmcryptoorder/<int:oid>/', views.confirmCryptoOrder, name="confirmcryptoorder"),
     path('clientlist/', views.clientList, name="clientlist"),
     path('cart/', views.cart, name="cart"),
+    path('removecartitem/<int:iid>/', views.removeCartItem, name="removecartitem"),
     path('update_item/', views.updateItem, name="update_item"),
     path('checkout/<int:oid>', views.checkout, name="checkout"), 
     path('stripecheckout/<int:oid>', views.stripeCheckout, name="stripecheckout"),

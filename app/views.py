@@ -115,11 +115,11 @@ def registerUser(request):
             username = post_data['email'],
             email = post_data['email']
         )
-        subject = 'Welcome to Absolute Point'
-        message = f'Hi {dashboardUser.username}, Your Account has been Created please login to the system with your email and password.'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [dashboardUser.email, ]
-        send_mail( subject, message, email_from, recipient_list )
+        # subject = 'Welcome to Absolute Point'
+        # message = f'Hi {dashboardUser.username}, Your Account has been Created please login to the system with your email and password.'
+        # email_from = settings.EMAIL_HOST_USER
+        # recipient_list = [dashboardUser.email, ]
+        # send_mail( subject, message, email_from, recipient_list )
         dashboardUser.save()
 
         user_rank = UserRank(
@@ -1257,7 +1257,7 @@ def salesExecutiveSalary(request):
 # CLIENT AREA
 def clientIndex(request):
     data = ""
-    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")[:9]
     marketing = serviceProduct.objects.filter(category__name="Marketing")
     facebook = serviceProduct.objects.filter(category__name="Facebook")
     instagram = serviceProduct.objects.filter(category__name="Instagram")
@@ -1285,21 +1285,12 @@ def clientIndex(request):
         "cat_tw": cat_tw
     }
 
-    # print(marketing)
-    # for prod in marketing:
-    #     if prod.name == "Facebook":
-    #         facebook = prod
-    #     elif prod.name == "Instagram":
-    #         instagram = prod
-    #     elif prod.name == "Youtube":
-    #         youtube = prod
-    #     elif prod.name == "Tiktok":
-    #         tiktok = prod
-    #     elif prod.name == "Twitter":
-    #         twitter = prod
-
     ctx2 ={"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter}
     return render(request, "client/index.html",context)
+
+def allService(request):
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")
+    return render(request, "client/allservices.html", {"products": products})
 
 def socialServices(request, cid):
     cat = productCategory.objects.get(id=cid)
@@ -1435,6 +1426,7 @@ def orderDetailDash(request, oid):
 
 
 def updateItem(request):
+    print("inside Update Item")
     data = json.loads(request.body)
     print(data)
     # {'productId': '1', 'action': 'add', 'price': '2'}
@@ -1454,7 +1446,8 @@ def updateItem(request):
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
     elif action == 'remove':
-        orderItem.quantity = (orderItem.quantity - 1)
+        # orderItem.quantity = (orderItem.quantity - 1)
+        orderItem.delete()
 
     orderItem.save()
 
@@ -1474,6 +1467,12 @@ def cart(request):
     items = data['items']
     context = {'items': items, 'order':order, 'cartItems': cartItems}
     return render(request, "client/cart.html", context)
+
+def removeCartItem(request, iid):
+    orderitem = OrderItems.objects.get(id=iid)
+    orderitem.delete()
+
+    return redirect('cart')
 
 def checkout(request, oid):
     data = ""
@@ -1537,9 +1536,28 @@ def processOrder(request):
         order.complete = True
         order.trx_id = "ORDER - " + str(order.id)
         order.save()
+        # subject = 'Order Completion'
+        # message = f'Hi {order.customer},\nYour Order has been placed in our system. Your order number is {order.id}.\nPlease Visit your orders page to see the detail of your order. Absolute point help center will be contacting you shortly for further order completion process.\nThanks\n-Absolute Point.'
+        # email_from = settings.EMAIL_HOST_USER
+        # recipient_list = [billing.email, ]
+        # send_mail( subject, message, email_from, recipient_list )
         return redirect('cryptocheckout')
     else:
         return redirect('stripecheckout', order.id)
+
+def confirmCryptoOrder(requet, oid):
+    order = Order.objects.get(id=oid)
+    billing = Billing.objects.get(order__id=oid)
+    # subject = 'Order Completion'
+    # message = f'Hi {order.customer},\nYour order for {order.id} has been placed as per our communication with you. We appreciate doing business with you.\nThanks\n-Absolute Point.'
+    # email_from = settings.EMAIL_HOST_USER
+    # recipient_list = [billing.email, ]
+    # send_mail( subject, message, email_from, recipient_list )
+
+    order.order_payment = True
+    order.save()
+
+    return redirect('orderlistdetail', oid)
 
 def stripeCheckout(request, oid):
     return render(request, "client/checkout-stripe.html", {"oid": oid})
@@ -1580,9 +1598,10 @@ def create_checkout_session(request, oid):
 def success(request):
     order = Order.objects.get(id=request.session['oid'])
     checkout_id = request.session['cid']
-
+    billing = Billing.objects.get(order__id=order.id)
     order.complete = True
     order.trx_id = checkout_id
+    order.order_payment = True
     order.save()
 
     try:
@@ -1590,6 +1609,12 @@ def success(request):
         del request.session['cid']
     except:
         pass
+
+    # subject = 'Order Completion'
+    # message = f'Hi {order.customer},\nYour Order has been placed in our system. Your order number is {order.id}.\nPlease Visit your orders page to see the detail of your order.\nThanks\n-Absolute Point.'
+    # email_from = settings.EMAIL_HOST_USER
+    # recipient_list = [billing.email, ]
+    # send_mail( subject, message, email_from, recipient_list )
 
     return render(request, 'client/success.html')
 

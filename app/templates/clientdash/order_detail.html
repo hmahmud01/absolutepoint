@@ -137,7 +137,7 @@
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Payment Status</th>
-                                <td class="text-end">{{ order.complete }}</td>
+                                <td class="text-end">{{ order.order_payment }}</td>
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Order Customer</th>
@@ -150,6 +150,11 @@
                         </table>
                     </div>
                 </div>
+                {% if order.order_payment == False %}
+                <div class="card-footer">
+                    <a href="{% url 'confirmcryptoorder' order.id %}" class="btn btn-sm btn-outline-success">Confirm Payment</a>
+                </div>
+                {% endif %}
             </div>
         </div>
 

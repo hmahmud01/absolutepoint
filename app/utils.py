@@ -45,5 +45,5 @@ def cartData(request):
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitems_set.all()
         cartItems = order.get_cart_items
-        print(cartItems)
+        # print(cartItems)
     return {'cartItems': cartItems, 'order':order, 'items':items}

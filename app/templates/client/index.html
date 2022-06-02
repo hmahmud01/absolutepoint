@@ -30,12 +30,12 @@
 {% block content %}
 <section>
     <div class="container">
-        <div class="row">
+        <div class="row mb-5">
             <div class="page-header text-center">
                 <h1 class="page-heading">Crypto Services</h1>
                 <p>Provided Absolute Point</p>
             </div>
-            <div class="product-slider my-3 px-3">
+            {% comment %} <div class="product-slider my-3 px-3"> {% endcomment %}
                 <!-- {% for product in products %}
                 {% if product.status %}
                 <div>
@@ -54,7 +54,7 @@
 
                 {% endif %}
                 {% endfor %} -->
-            </div>
+            {% comment %} </div> {% endcomment %}
             {% for product in products %}
             {% if product.status %}
             <div class="col-md-6 col-lg-3">
@@ -74,11 +74,15 @@
             </div>
             {% endif %}
             {% endfor %}
+            <div class="text-center mb-3">
+                <!-- <button class="btn btn-lg btn-primary">All Services</button> -->
+                <a href="{% url 'allservices' %}" class="btn btn-lg btn-primary">See More</a>
+            </div>
         </div>
 
 
-        <div class="row my-5">
-            <div class="col-md-6 py-5">
+        <div class="row">
+            <div class="col-md-6 my-5 py-5">
                 <h1>Some Title</h1>
                 <p class="lead">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
             </div>
@@ -115,7 +119,7 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_fb %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_fb %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -135,7 +139,7 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_it %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_it %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -154,7 +158,7 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_yt %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_yt %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -174,7 +178,7 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tt %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tt %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -195,7 +199,7 @@
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tw %}">Buy Now</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tw %}">See More</a></div>
                     </div>
                 </div>
             </div>

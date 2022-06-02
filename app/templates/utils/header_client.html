@@ -1,7 +1,7 @@
 <header class="header">
-    <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow">
+    <nav class="navbar fixed-top navbar-expand-lg px-4 py-2 bg-white shadow" style="z-index:99">
         <a class="navbar-brand-client fw-bold text-uppercase text-base" href="/">
-            <span class="d-none d-brand-partial">Absolute </span><span class="d-none d-sm-inline">Point</span>
+            <span class="d-none d-brand-partial">Crypto </span><span class="d-none d-sm-inline">Marketers</span>
         </a>
       <ul class="ms-auto d-flex align-items-center list-unstyled mb-0">
         <li class="nav-item dropdown">
@@ -14,11 +14,11 @@
                 <a href="{% url 'portfolio' %}" class="btn btn-outline-primary">Portfolio</a>
             </div>            
         </li>
-        <li class="nav-item dropdown">
+        {% comment %} <li class="nav-item dropdown">
             <div class="me-2">
                 <a href="{% url 'people' %}" class="btn btn-outline-primary">People</a>
             </div>            
-        </li>
+        </li> {% endcomment %}
         <li class="nav-item dropdown">
             <div class="me-2">
                 <a href="{% url 'cart' %}" class="btn btn-outline-dark">Cart</a>
