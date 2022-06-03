@@ -1331,7 +1331,27 @@ def ticketSeen(request, tid):
 def socialServices(request, cid):
     cat = productCategory.objects.get(id=cid)
     products = serviceProduct.objects.filter(category__id=cid)
-    return render(request, "client/index-category.html", {"products": products, "cat": cat})
+    items = []
+    for prod in products:
+        print(prod.id)
+        variable = variableProductPrice.objects.filter(product__id=prod.id)
+        try:
+            # print(variable.first().price)
+            product = {
+                'product': prod,
+                'price': variable.first().price
+            }
+            items.append(product)
+        except:
+            # print(00)            
+            product = {
+                'product': prod,
+                'price': 00
+            }
+            items.append(product)
+
+    print(items)
+    return render(request, "client/index-category.html", {"items": items, "products": products, "cat": cat})
 
 def clientServiceDetail(request, pid):
     data = ""
