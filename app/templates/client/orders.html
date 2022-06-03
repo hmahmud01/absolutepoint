@@ -33,14 +33,14 @@
                         <td><a href="{% url 'orderdetail' order.id %}">ORD - {{ order.id }}</a></td>
                         <td> {{ order.date_ordered }} </td>
                         {% if order.complete %}
-                        <td class="text-end">Successful</td>
+                        <td>Successful</td>
                         {% else %}
-                        <td class="text-end">Not Completed</td>
+                        <td>Not Completed</td>
                         {% endif %}
                         {% if order.order_payment %}
-                        <td class="text-end">Payment Success</td>
+                        <td>Payment Success</td>
                         {% else %}
-                        <td class="text-end">Not Paid Yet</td>
+                        <td>Not Paid Yet</td>
                         {% endif %}
                         <td> {{ order.customer }} </td>
                         {% if order.payment.credit_type == "crypto" %}
