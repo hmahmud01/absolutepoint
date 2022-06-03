@@ -45,8 +45,9 @@
             </div>        
             <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'resetpassword'  %}">Reset Password</a>
             <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'logout'  %}">Logout</a>
-            {% endif %}
+            {% else %}
             <a class="dropdown-item" href="{% url 'login'  %}">Login</a>
+            {% endif %}
           </div>
         </li>
       </ul>
