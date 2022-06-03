@@ -140,14 +140,14 @@
                                             </div>
                                         </div>
 
-                                        <hr class="my-4">
+                                        {% comment %} <hr class="my-4">
 
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input" id="save-info">
                                             <label class="form-check-label" for="save-info">Save this information for
                                                 next
                                                 time</label>
-                                        </div>
+                                        </div> {% endcomment %}
 
                                         <hr class="my-4">
 
@@ -164,31 +164,9 @@
                                                     class="form-check-input" required>
                                                 <label class="form-check-label" for="credit">Stripe</label>
                                             </div>
-<!-- 
-                                            <div id="payment-form">
-                                                <div id="payment-element">
-                                                </div>
-                                                <button id="submit">
-                                                    <div class="spinner hidden" id="spinner"></div>
-                                                    <span id="button-text">Pay now</span>
-                                                </button>
-                                                <div id="payment-message" class="hidden"></div>
-                                            </div> -->
                                         </div>
 
                                         <div class="row gy-3">
-                                            <!-- <div class="col-md-12">
-                                                <label for="currency" class="form-label">Currency</label>
-                                                <select class="form-select" id="currency" name="currency">
-                                                    <option value="">Choose...</option>
-                                                    {% for key, value in rates.items %}
-                                                    <option value='{"{{key}}" : "{{value}}"}'>{{ key }} - {{ value }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                                <div class="invalid-feedback">
-                                                    Please provide a valid state.
-                                                </div>
-                                            </div> -->
                                             <div>
                                                 <p class="lead" id="show-payment-msg"></p>
                                             </div>

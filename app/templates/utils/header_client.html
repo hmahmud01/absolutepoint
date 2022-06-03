@@ -34,134 +34,21 @@
                 <a href="{% url 'clientorders' %}" class="btn btn-outline-dark">Your Orders</a>
             </div>                
         </li>
-        {% comment %} <li class="nav-item dropdown">
-          <form class="ms-auto me-4 d-none d-lg-block" id="searchForm" method="post" action="">{% csrf_token %}
-            <div class="input-group input-group-sm input-group-navbar">
-              <input class="form-control" id="searchInput" name="search_key" type="search" placeholder="Search Service Title">
-              <button class="btn" type="submit"> <i class="fas fa-search"></i></button>
-            </div>
-          </form>
-        </li>         {% endcomment %}
 
         <li class="nav-item dropdown ms-auto"><a class="nav-link pe-0" id="userInfo" href="#" data-bs-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false"><img class="avatar p-1" src="/static/img/axe2.jpg"
               alt="Jason Doe"></a>
           <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated" aria-labelledby="userInfo">
+            {% if user.is_authenticated %}
             <div class="dropdown-header text-gray-700">
               <h6 class="font-weight-bold">{{ request.user.username }}</h6>
-            </div>
-            <div class="dropdown-divider"></div>          
-            <!-- <a class="dropdown-item" href="#">Activity log </a> -->
-            <a class="dropdown-item" data-bs-toggle="offcanvas" href="#profileOffcanvas" role="button"
-              aria-controls="offcanvasExample">
-              Profile
-            </a>
-            <div class="dropdown-divider"></div><a class="dropdown-item" href="">Reset Password</a>
-            <div class="dropdown-divider"></div><a class="dropdown-item" href="">Logout</a>
+            </div>        
+            <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'resetpassword'  %}">Reset Password</a>
+            <div class="dropdown-divider"></div><a class="dropdown-item" href="{% url 'logout'  %}">Logout</a>
+            {% endif %}
+            <a class="dropdown-item" href="{% url 'login'  %}">Login</a>
           </div>
         </li>
       </ul>
     </nav>
   </header>
-  
-  
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Profile</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <div>
-        <h1>Profile Information</h1>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="">
-          Update Profile
-        </button>
-        {% if rank %}
-        <div class="card h-100 mt-5 mb-5">
-          <div class="card-body d-flex">
-            <div class="row w-100 align-items-center">
-              <div class="col-sm-12 mb-4 mb-sm-0">
-                <h2 class="mb-0 d-flex align-items-center"></h2>
-                <span class="text-muted text-uppercase small">Profile Tier</span>
-                <hr>
-                <small class="text-muted">Tier: T{{ rank.tier }}</small> <br>
-                <small class="text-muted">Rank: {{ rank.title }}</small> <br>
-                <small class="text-muted">Percentage: {{ rank.sale_percent }}%</small> <br>
-                <small class="text-muted">Current earning: {{ rank.current_earn }}</small> <br>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endif %}      
-        <div class="card h-100 mt-5 mb-5">
-          <div class="card-body d-flex">
-            <div class="row w-100 align-items-center">
-              <div class="col-sm-12 mb-4 mb-sm-0">
-                <h2 class="mb-0 d-flex align-items-center"></h2>
-                <span class="text-muted text-uppercase small">User Information</span>
-                <hr>
-                <p>Username : Username</p>
-                <p>Name : Full Name</p>
-                <p>Email : name@something.com</p>
-                <p>Phone : +8832658888</p>
-                <p>Address : Mars</p>
-                <p>Date Joined : Somday Sooner will be</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  
-  
-  
-  <!-- Modal -->
-  <div class="modal fade" id="updateprofile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="{% url 'updateuser' %}" method="post"> {% csrf_token %}
-          <div class="modal-body">
-            <input type="hidden" name="id" value="{{ request.user.id }}">
-            <div class="row">
-              <label class="col-md-3 form-label">Full Name</label>
-              <div class="col-md-9">
-                <input class="form-control" name="name" type="text" placeholder="Full Name" value="{{ info.name }}">
-              </div>
-            </div>
-            <hr class="bg-gray-400 my-4">
-            <div class="row">
-              <label class="col-md-3 form-label">Email Address</label>
-              <div class="col-md-9">
-                <input class="form-control" name="email" type="text" placeholder="Email Address" value="{{ info.email }}">
-              </div>
-            </div>
-            <hr class="bg-gray-400 my-4">
-            <div class="row">
-              <label class="col-md-3 form-label">Phone Number</label>
-              <div class="col-md-9">
-                <input class="form-control" name="phone" type="text" placeholder="Phone Number" value="{{ info.phone }}">
-              </div>
-            </div>
-            <hr class="bg-gray-400 my-4">
-            <div class="row">
-              <label class="col-md-3 form-label">Address</label>
-              <div class="col-md-9">
-                <input class="form-control" name="address" type="text" placeholder="Address" value="{{ info.address }}">
-              </div>
-            </div>
-            <hr class="bg-gray-400 my-4">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
