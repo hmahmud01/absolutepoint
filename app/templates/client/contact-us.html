@@ -35,30 +35,42 @@
                 </div>
                 <div class="card-body">
                     <p>Lorem ipsum dolor sit amet consectetur.</p>
-                    <form>
+                    <form method="post" action="{% url 'saverequest' %}">{% csrf_token %}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input class="form-control" name="fname" type="text" placeholder="First Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input class="form-control" name="lname" type="text" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label class="form-label">Telegram Username</label>
-                                    <input class="form-control" type="text" placeholder="@telegram">
+                                    <input class="form-control" name="telid" type="text" placeholder="@telegram">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Subject</label>
-                                    <input class="form-control" type="text" placeholder="Ex. Growth package">
+                                    <input class="form-control" name="subject" type="text" placeholder="Ex. Growth package">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Socials(Website/twitter etc)</label>
-                                    <input class="form-control" type="text" placeholder="yourproject.com">
+                                    <input class="form-control" name="social" type="text" placeholder="yourproject.com">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Estimated Budget</label>
-                                    <input class="form-control" type="text" placeholder="4500 USD">
+                                    <input class="form-control" name="budget" type="number" placeholder="4500">
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -69,10 +81,9 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        
-                        <div class="mb-3">       
-                            <a class="btn btn-primary" href="{% url 'requestconfirm' %}">Make A Request</a>
+                        <div class="mb-3">     
+                            <button class="btn btn-primary" type="submit">Make A Request</button>  
+                            <!-- <a class="btn btn-primary" href="{% url 'requestconfirm' %}">Make A Request</a> -->
                         </div>
                     </form>
                 </div>

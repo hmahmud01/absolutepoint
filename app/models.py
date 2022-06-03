@@ -227,3 +227,18 @@ class Payment(models.Model):
     
     def __str__(self):
         return str(self.id)
+
+class Ticket(models.Model):
+    fname = models.CharField(max_length=128, null=True, blank=True)
+    lname = models.CharField(max_length=128, null=True, blank=True)
+    telid = models.CharField(max_length=128, null=True, blank=True)
+    subject = models.CharField(max_length=256, null=True, blank=True)
+    social = models.CharField(max_length=128, null=True, blank=True)
+    budget = models.IntegerField(null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    seen = models.BooleanField(default=False)
+    date_created = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.subject
+    

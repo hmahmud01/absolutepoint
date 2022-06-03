@@ -133,11 +133,21 @@
                         <table class="table table-borderless card-text">
                             <tr class="text-muted">
                                 <th class="fw-normal">Order Status</th>
-                                <td class="text-end">{{ order.complete }}</td>
+                                {% if order.comlete %}
+                                <td class="text-end">Order Successful</td>
+                                {% else %}
+                                <td class="text-end">Order Not completed yet</td>
+                                {% endif %}
+                                {% comment %} <td class="text-end">{{ order.complete }}</td> {% endcomment %}
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Payment Status</th>
-                                <td class="text-end">{{ order.order_payment }}</td>
+                                {% if order.order_payment %}
+                                <td class="text-end">Payment Success</td>
+                                {% else %}
+                                <td class="text-end">Not Paid Yet</td>
+                                {% endif %}
+                                {% comment %} <td class="text-end"></td> {% endcomment %}
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Order Customer</th>

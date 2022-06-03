@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Tickets from Users</h1>
+            <p>In Absolute Point System</p>
+        </div>
+        <div class="col-md-12">
+            <div class="card card-table mb-4">
+            <div class="card-body">
+              <div class="preload-wrapper">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0" id="ordersDatatable">
+                    <thead>
+                      <tr>                        
+                        <th>Ticket Id</th>
+                        <th>Date</th>
+                        <th>telid</th>
+                        <th>Subject</th>                     
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in tickets %}
+                        <td><a href="{% url 'ticketdetail' ticket.id %}">{{ ticket.id }}</a></td>
+                        <td>{{ ticket.date_created }}</td>
+                        <td>{{ ticket.telid }}</td>
+                        <td>{{ ticket.subject }}</td>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Data Tables-->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script src="/static/js/e-commerce-orders.js"></script>
+{% endblock %}

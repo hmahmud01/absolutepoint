@@ -18,7 +18,7 @@ urlpatterns = [
     path('updateuser/', views.updateUser, name="updateuser"),
     path('detailuser/<int:uid>/', views.detailUser, name="detailuser"),
     path('reupdateuser/', views.reupdateUser, name="reupdateuser"),
-    path('', views.home, name="home"),    
+    path('dashboard/', views.home, name="home"),    
     path('salesdashboard/', views.salesDashboard, name="salesdashboard"),
     path('searchresult', views.searchResult, name="searchresult"),
     path('noticecreate/', views.noticeCreate, name="noticecreate"),
@@ -64,7 +64,7 @@ urlpatterns = [
     path('salesexecutivesalary/', views.salesExecutiveSalary, name="salesexecutivesalary"),
 
     # CLIENT AREA
-    path('client/index/', views.clientIndex, name="clientindex"),
+    path('', views.clientIndex, name="clientindex"),
     path('allservices/', views.allService, name="allservices"),
     path('socialservices/<int:cid>', views.socialServices, name="socialservices"),
     path('client/service/detail/<int:pid>/', views.clientServiceDetail, name="clientservicedetail"),
@@ -101,7 +101,11 @@ urlpatterns = [
     path('people/', views.people, name="people"),
     path('peopledetail/<int:pid>', views.peopleDetail, name="peopledetail"),
     path('contactus/', views.contactUs, name="contactus"),
+    path('saverequest/', views.saveRequest, name="saverequest"),
     path('requestconfirm/', views.requestConfirm, name="requestconfirm"),
+    path('ticketlist/', views.listTickets, name="ticketlist"),
+    path('ticketdetail/<int:tid>', views.ticketDetail, name="ticketdetail"),
+    path('ticketseen/<int:tid>', views.ticketSeen, name="ticketseen"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

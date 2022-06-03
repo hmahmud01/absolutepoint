@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Ticket Detail for {{ ticket.id }}</h1>
+        </div>
+
+        <div class="col-md-8 col-lg-8 col-sm-6">
+            <div class="card mb-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ticket.subject }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Request User Name:  {{ ticket.fname }} {{ ticket.lname }}</p>
+                    <p class="card-text">Subject: {{ ticket.subject }}</p>
+                    <p class="card-text">Social Link: {{ ticket.social }}</p>
+                    <p class="card-text">Budget: {{ ticket.budget }}</p>
+                    <p class="card-text">Message:</p>
+                    <p class="card-text">{{ ticket.message }}</p>
+                    <p class="card-text">Date: {{ ticket.date_created }}</p>
+                    {% if ticket.seen is True %}
+                    <p class="card-text">Ticket Status: Taken Care Of</p>
+                    {% else %}
+                    <p class="card-text">Ticket Stats: Open</p>
+                    {% endif %}
+                    {% if ticket.seen is False %}
+                    <a class="btn btn-sm btn-outline-danger" href="{% url 'ticketseen' ticket.id  %}">Take care</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Data Tables-->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script src="/static/js/e-commerce-orders.js"></script>
+{% endblock %}

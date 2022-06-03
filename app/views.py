@@ -81,7 +81,7 @@ def verifyLogin(request):
             return redirect('login')
         else:
             auth_login(request, user)
-            return redirect('/')
+            return redirect('home')
 
     else:
         return redirect('login')
@@ -130,7 +130,7 @@ def registerUser(request):
             current_earn=0.0
         )
         user_rank.save()
-        return redirect('/')
+        return redirect('home')
 
 def resetPassword(request):
     data = ""
@@ -170,7 +170,7 @@ def updateUser(request):
         print(user_rank)
     except:
         pass
-    return redirect('/')
+    return redirect('home')
 
 def reupdateUser(request):
     post_data = request.POST
@@ -192,7 +192,7 @@ def reupdateUser(request):
         print(user_rank)
     except:
         pass
-    return redirect('/')
+    return redirect('home')
 
 def detailUser(request, uid):
     info = DashboardUser.objects.get(user_id=uid)
@@ -296,7 +296,7 @@ def saveNotice(request):
     )
 
     notice.save()
-    return redirect('/')
+    return redirect('home')
 
 def noticeDetail(request, nid):
     data = ""
@@ -368,7 +368,7 @@ def saveService(request):
             service.status = "Pending"
             service.payment_status = "Due"
             service.save()
-            return redirect('/')
+            return redirect('home')
         else:
             return redirect('duplicateservice')
         
@@ -405,7 +405,7 @@ def saveService(request):
             service.payment_status = "Due"
             service.save()
 
-            return redirect('/')
+            return redirect('home')
         else:
             return redirect('duplicateservice')
     # return redirect('servicecreate')
@@ -522,13 +522,13 @@ def addServiceList(request):
         price = post_data['price'],
     )
     service.save()
-    return redirect('/')
+    return redirect('home')
 
 def removeServiceList(request, sid):
     service = Service.objects.get(id=sid)
     service.delete()
 
-    return redirect('/')
+    return redirect('home')
 
 def updateServiceList(request):
     post_data = request.POST
@@ -536,14 +536,14 @@ def updateServiceList(request):
     service.quantity = post_data['quantity']
     service.price = post_data['price']
     service.save()
-    return redirect('/')
+    return redirect('home')
 
 def updateServiceType(request):
     post_data = request.POST
     serviceType = ServiceType.objects.get(id=post_data['type'])
     serviceType.title = post_data['title']
     serviceType.save()
-    return redirect('/')
+    return redirect('home')
 
 def removeUser(request):
     post_data = request.POST
@@ -551,7 +551,7 @@ def removeUser(request):
     user = User.objects.get(id=dash_user.user.id)
     user.delete()
     dash_user.delete()
-    return redirect('/')
+    return redirect('home')
 
 def addServiceType(request):
     data = ""
@@ -565,13 +565,13 @@ def addServiceTypeList(request):
         title = post_data['title'],
     )
     servicetype.save()
-    return redirect('/')
+    return redirect('home')
     
 def removeServiceTypeList(request, sid):
     service_type = ServiceType.objects.get(id=sid)
     service_type.delete()
 
-    return redirect('/')
+    return redirect('home')
 
 def serviceDetail(request, sid):
     data = ""    
@@ -1295,8 +1295,38 @@ def allService(request):
 def contactUs(request):
     return render(request, "client/contact-us.html")
 
+def saveRequest(request):
+    post_data = request.POST
+
+    ticket = Ticket(
+        fname=post_data['fname'],
+        lname=post_data['lname'],
+        telid=post_data['telid'],
+        subject=post_data['subject'],
+        social=post_data['social'],
+        budget=post_data['budget'],
+        message=post_data['message']
+    )
+
+    ticket.save()
+    return redirect('requestconfirm')
+
 def requestConfirm(request):
     return render(request, "client/contact-done.html")
+
+def listTickets(request):
+    tickets = Ticket.objects.all()
+    return render(request, "clientdash/ticketlist.html", {"tickets": tickets})
+
+def ticketDetail(request, tid):
+    ticket = Ticket.objects.get(id=tid)
+    return render(request, "clientdash/ticketdetail.html", {"ticket": ticket})
+
+def ticketSeen(request, tid):
+    ticket = Ticket.objects.get(id=tid)
+    ticket.seen = True
+    ticket.save()
+    return redirect('ticketdetail', tid)
 
 def socialServices(request, cid):
     cat = productCategory.objects.get(id=cid)
