@@ -63,6 +63,9 @@ DEC = 31
 
 HOURS_DELTA = 6
 
+scount = Services.objects.filter(status="Pending").count()
+tcount = Ticket.objects.filter(seen=False).count()
+
 
 def login(request):
     data = ""
@@ -225,10 +228,10 @@ def home(request):
         servicelist = Service.objects.order_by('title')
         servicetypes = ServiceType.objects.all()
         users = User.objects.all().exclude(is_superuser=True)
-        users1 = DashboardUser.objects.all()
+        users1 = DashboardUser.objects.all()    
         return render(request, 'index.html', 
             {"data": data, "notices": notices, "services": services, "users": users1, 
-                "servicelist": servicelist, "servicetypes": servicetypes, "home": home})
+                "servicelist": servicelist, "servicetypes": servicetypes, "home": home, "tcount": tcount, "scount": scount})
     else:
         req_user = DashboardUser.objects.get(user=user.id)
         current_day = datetime.date.today()
@@ -284,7 +287,7 @@ def home(request):
 def noticeCreate(request):
     data = ""
     note_create = True
-    return render(request, 'notice_create.html', {"data": data, "note_create": note_create})
+    return render(request, 'notice_create.html', {"data": data, "note_create": note_create, "tcount": tcount, "scount": scount})
 
 def saveNotice(request):
     post_data = request.POST
@@ -301,7 +304,7 @@ def saveNotice(request):
 def noticeDetail(request, nid):
     data = ""
     notice = Notices.objects.get(id=nid)
-    return render(request, 'notice_detail.html', {"data": data, "notice": notice})
+    return render(request, 'notice_detail.html', {"data": data, "notice": notice, "tcount": tcount, "scount": scount})
 
 def duplicateService(request):
     return render(request, 'service_create_duplicate.html')
@@ -329,9 +332,9 @@ def serviceCreate(request):
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
         rank = UserRank.objects.get(user_id=info.id)
-        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create})
+        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create, "tcount": tcount, "scount": scount})
     except:
-        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create})
+        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create, "tcount": tcount, "scount": scount})
 
 def saveService(request):
     check = True
@@ -814,15 +817,32 @@ def serviceTypeList(request):
     return render(request, "service_type_list.html", {"servicetypes": servicetypes, "service_types": service_types})
 
 def salesServices(request):
+    items = []
     if request.user.is_superuser:
+        status = ""
         services = Services.objects.all().order_by('-date')
+        for service in services:
+            payments = ServicePayments.objects.filter(service__id=service.id)
+            for payment in payments:
+                if payment.accepted == False:
+                    status = "New Payment"
+                else:
+                    status = "No New Payment"
+                
+            obj = {
+                'service': service,
+                'status': status
+            }
+
+            items.append(obj)
+                    
     else:
         user = request.user
         dash_user = DashboardUser.objects.get(user=user.id)
         services = Services.objects.filter(user__id=dash_user.id).order_by('-date')
     sales = True
     print(sales)
-    return render(request, "sales_services.html", {"services": services, "sales": sales})
+    return render(request, "sales_services.html", {"services": services, "items": items, "sales": sales, "tcount": tcount, "scount": scount})
 
 def accountsIndex(request):
     accounts = True
@@ -1316,11 +1336,13 @@ def requestConfirm(request):
 
 def listTickets(request):
     tickets = Ticket.objects.all()
-    return render(request, "clientdash/ticketlist.html", {"tickets": tickets})
+    tcount = tickets.filter(seen=False).count()
+    return render(request, "clientdash/ticketlist.html", {"tickets": tickets, "tcount": tcount})
 
 def ticketDetail(request, tid):
     ticket = Ticket.objects.get(id=tid)
-    return render(request, "clientdash/ticketdetail.html", {"ticket": ticket})
+    tcount = Ticket.objects.filter(seen=False).count()
+    return render(request, "clientdash/ticketdetail.html", {"ticket": ticket, "tcount": tcount})
 
 def ticketSeen(request, tid):
     ticket = Ticket.objects.get(id=tid)
@@ -1625,8 +1647,8 @@ def create_checkout_session(request, oid):
     order = Order.objects.get(id=oid)
     order_name = "ORD - " + str(order.id)
     amount = order.get_cart_total * 100
-    # YOUR_DOMAIN = "http://127.0.0.1:8000"
-    YOUR_DOMAIN = "http://174.138.27.160:8000"
+    YOUR_DOMAIN = "http://127.0.0.1:8000"
+    # YOUR_DOMAIN = "http://174.138.27.160:8000"
     product = stripe.Product.create(name=order_name)
 
     price = stripe.Price.create(

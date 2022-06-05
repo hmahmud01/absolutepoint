@@ -136,7 +136,12 @@
           <svg class="svg-icon svg-icon-md me-3">
             <use xlink:href="/static/icons/orion-svg-sprite.svg#strategy-1"></use>
           </svg>
+          {% if scount > 0 %}
+          <span class="sidebar-link-title">Sales ({{ scount }})</span>
+          {% else %}
           <span class="sidebar-link-title">Sales</span>
+          {% endif %}
+          
         </a>
     </li>
     {% if not request.user.is_superuser %}
@@ -191,7 +196,12 @@
         <svg class="svg-icon svg-icon-md me-3">
           <use xlink:href="/static/icons/orion-svg-sprite.svg#man-1"></use>
         </svg>
+        {% if tcount > 0 %}
+        <span class="sidebar-link-title">Ticket List ({{ tcount }})</span>
+        {% else %}
         <span class="sidebar-link-title">Ticket List</span>
+        {% endif %}
+        
       </a>
     </li>
     <li class="sidebar-list-item">

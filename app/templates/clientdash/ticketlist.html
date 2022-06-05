@@ -26,10 +26,12 @@
                     </thead>
                     <tbody>
                         {% for ticket in tickets %}
-                        <td><a href="{% url 'ticketdetail' ticket.id %}">{{ ticket.id }}</a></td>
-                        <td>{{ ticket.date_created }}</td>
-                        <td>{{ ticket.telid }}</td>
-                        <td>{{ ticket.subject }}</td>
+                        <tr>
+                          <td><a href="{% url 'ticketdetail' ticket.id %}">{{ ticket.id }}</a></td>
+                          <td>{{ ticket.date_created }}</td>
+                          <td>{{ ticket.telid }}</td>
+                          <td>{{ ticket.subject }}</td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                   </table>
