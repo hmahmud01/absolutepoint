@@ -3,9 +3,9 @@
   <ul class="list-unstyled">
     <li class="sidebar-list-item">
       {% if home %}
-      <a class="sidebar-link text-muted active" href="/">
+      <a class="sidebar-link text-muted active" href="{% url 'home' %}">
         {% else %}
-        <a class="sidebar-link text-muted" href="/">
+        <a class="sidebar-link text-muted" href="{% url 'home' %}">
           {% endif %}
           <svg class="svg-icon svg-icon-md me-3">
             <use xlink:href="/static/icons/orion-svg-sprite.svg#real-estate-1"> </use>

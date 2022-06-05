@@ -222,6 +222,8 @@ def home(request):
     user = request.user
     home = True
     if user.is_superuser:
+        print(tcount)
+        print(scount)
         data = ""        
         notices = Notices.objects.all()
         services = Services.objects.all().order_by('-date')
@@ -823,25 +825,53 @@ def salesServices(request):
         services = Services.objects.all().order_by('-date')
         for service in services:
             payments = ServicePayments.objects.filter(service__id=service.id)
-            for payment in payments:
-                if payment.accepted == False:
-                    status = "New Payment"
-                else:
-                    status = "No New Payment"
-                
-            obj = {
-                'service': service,
-                'status': status
-            }
-
-            items.append(obj)
+            if payments:
+                for payment in payments:
+                    if payment.accepted == False:
+                        status = "New Payment"
+                    else:
+                        status = "No New Payment"
                     
+                    obj = {
+                        'service': service,
+                        'status': status
+                    }
+            else:
+                status = "No Payment"
+                obj = {
+                    'service': service,
+                    'status': status
+                }
+
+            items.append(obj)      
     else:
         user = request.user
         dash_user = DashboardUser.objects.get(user=user.id)
         services = Services.objects.filter(user__id=dash_user.id).order_by('-date')
+        for service in services:
+            payments = ServicePayments.objects.filter(service__id=service.id)
+            if payments:
+                for payment in payments:
+                    if payment.accepted == False:
+                        status = "New Payment"
+                    else:
+                        status = "No New Payment"
+                    
+                    obj = {
+                        'service': service,
+                        'status': status
+                    }
+            else:
+                status = "No Payment"
+                obj = {
+                    'service': service,
+                    'status': status
+                }
+
+            items.append(obj)
     sales = True
     print(sales)
+    print(items)
     return render(request, "sales_services.html", {"services": services, "items": items, "sales": sales, "tcount": tcount, "scount": scount})
 
 def accountsIndex(request):
@@ -1337,12 +1367,12 @@ def requestConfirm(request):
 def listTickets(request):
     tickets = Ticket.objects.all()
     tcount = tickets.filter(seen=False).count()
-    return render(request, "clientdash/ticketlist.html", {"tickets": tickets, "tcount": tcount})
+    return render(request, "clientdash/ticketlist.html", {"tickets": tickets, "tcount": tcount, "scount": scount})
 
 def ticketDetail(request, tid):
     ticket = Ticket.objects.get(id=tid)
     tcount = Ticket.objects.filter(seen=False).count()
-    return render(request, "clientdash/ticketdetail.html", {"ticket": ticket, "tcount": tcount})
+    return render(request, "clientdash/ticketdetail.html", {"ticket": ticket, "tcount": tcount, "scount": scount})
 
 def ticketSeen(request, tid):
     ticket = Ticket.objects.get(id=tid)
