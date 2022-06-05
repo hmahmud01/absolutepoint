@@ -63,7 +63,7 @@ DEC = 31
 
 HOURS_DELTA = 6
 
-scount = Services.objects.filter(status="Pending").count()
+scount = Services.objects.filter(accepted=False).count()
 tcount = Ticket.objects.filter(seen=False).count()
 
 
