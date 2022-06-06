@@ -21,6 +21,21 @@ class DashboardUser(models.Model):
     def __str__(self):
         return self.name
 
+class AppUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fname = models.CharField(max_length=128, null=True, blank=True)
+    lname = models.CharField(max_length=128, null=True, blank=True)
+    telid = models.CharField(max_length=128, null=True, blank=True)
+    email = models.CharField(max_length=64, null=True, blank=True)
+    address = models.CharField(max_length=256, null=True, blank=True)
+    country = models.CharField(max_length=32, null=True, blank=True)
+    state = models.CharField(max_length=32, null=True, blank=True)
+    zipcode = models.CharField(max_length=32, null=True, blank=True)
+    created_at = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.telid
+
 class UserRank(models.Model):
     user = models.ForeignKey(DashboardUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=128, null=True, blank=True)

@@ -235,53 +235,57 @@ def home(request):
             {"data": data, "notices": notices, "services": services, "users": users1, 
                 "servicelist": servicelist, "servicetypes": servicetypes, "home": home, "tcount": tcount, "scount": scount})
     else:
-        req_user = DashboardUser.objects.get(user=user.id)
-        current_day = datetime.date.today()
-        month = current_day.month
-        services_user = Services.objects.filter(user__id=req_user.id)
-        service_data = services_user.filter(Q(payment_status="Received") | Q(payment_status="NA"))
-        services = service_data.filter(date__month=month)
-        weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price')).order_by('week')
-        timeline = [1, 2, 3, 4]
-        sale = []
+        try:
+            req_user = AppUser.objects.get(user=user.id)
+            return redirect('/')   
+        except:
+            req_user = DashboardUser.objects.get(user=user.id)
+            current_day = datetime.date.today()
+            month = current_day.month
+            services_user = Services.objects.filter(user__id=req_user.id)
+            service_data = services_user.filter(Q(payment_status="Received") | Q(payment_status="NA"))
+            services = service_data.filter(date__month=month)
+            weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price')).order_by('week')
+            timeline = [1, 2, 3, 4]
+            sale = []
 
-        for data in weekly_data:
-            sale.append(data['total'])
+            for data in weekly_data:
+                sale.append(data['total'])
 
-        length = len(weekly_data)
+            length = len(weekly_data)
 
-        if length > 4 :
-            idx = 4
-            main_sale = sale[:idx]
-            remain_sale = sale[idx:]
+            if length > 4 :
+                idx = 4
+                main_sale = sale[:idx]
+                remain_sale = sale[idx:]
 
-            for data in remain_sale:
-                main_sale[idx-1] += data
+                for data in remain_sale:
+                    main_sale[idx-1] += data
+                
+                sale = main_sale
+            elif length < 4:
+                for x in range(0, 4-length):
+                    sale.append(0.0)
             
-            sale = main_sale
-        elif length < 4:
-            for x in range(0, 4-length):
-                sale.append(0.0)
-        
-        if req_user.user_type == 'sales':
-            try:
-                data = ""
-                notices = Notices.objects.all()
-                services = Services.objects.filter(user__id=req_user.id).order_by('-date')
-                servicelist = Service.objects.order_by('title')      
-                info = DashboardUser.objects.get(user_id=request.user.id)
-                rank = UserRank.objects.get(user_id=info.id)
-                print(rank.title)
-                return render(request, 'sales_dashboard.html',
-                    {"timeline": timeline, "sale": sale, "data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "rank": rank, "home": home})
-            except:
-                data = ""
-                notices = Notices.objects.all()
-                services = Services.objects.filter(user__id=req_user.id).order_by('-date')
-                servicelist = Service.objects.order_by('title')         
-                info = DashboardUser.objects.get(user_id=request.user.id)
-                return render(request, 'sales_dashboard.html', 
-                    {"timeline": timeline, "sale": sale, "data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "home": home})
+            if req_user.user_type == 'sales':
+                try:
+                    data = ""
+                    notices = Notices.objects.all()
+                    services = Services.objects.filter(user__id=req_user.id).order_by('-date')
+                    servicelist = Service.objects.order_by('title')      
+                    info = DashboardUser.objects.get(user_id=request.user.id)
+                    rank = UserRank.objects.get(user_id=info.id)
+                    print(rank.title)
+                    return render(request, 'sales_dashboard.html',
+                        {"timeline": timeline, "sale": sale, "data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "rank": rank, "home": home})
+                except:
+                    data = ""
+                    notices = Notices.objects.all()
+                    services = Services.objects.filter(user__id=req_user.id).order_by('-date')
+                    servicelist = Service.objects.order_by('title')         
+                    info = DashboardUser.objects.get(user_id=request.user.id)
+                    return render(request, 'sales_dashboard.html', 
+                        {"timeline": timeline, "sale": sale, "data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "home": home})
             
 
     # return render(request, 'index.html', {"data": data})
@@ -1543,7 +1547,10 @@ def updateItem(request):
     price = data['price']
     print(productId)
 
-    customer = request.user.username
+    if request.user.is_authenticated:
+        customer = request.user.username
+    else:
+        customer = "Anonymous"
     product = serviceProduct.objects.get(id=productId)
     variance  = variableProductPrice.objects.get(id=price)
 
@@ -1595,8 +1602,12 @@ def checkout(request, oid):
     order = Order.objects.get(id=oid)
     order_items = OrderItems.objects.filter(order_id=oid)
 
+    auth_status = False
+
+    if request.user.is_authenticated:
+        auth_status = True
         
-    return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items})
+    return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status})
 
 
 # <QueryDict: {'csrfmiddlewaretoken': ['Ka4Nh9QauQ361lj7sH5F09KVFkGptdqV8IUl8IgoDvbUOBvM5Yi25xqXx7tM0xwz'], 
@@ -1605,53 +1616,148 @@ def checkout(request, oid):
 # 'credit_type': ['on'], 'currency': ['{"AMB" : "0.009838"}']}>
 
 def processOrder(request):
-    data = ""
-    post_data = request.POST
-    order = Order.objects.get(id=post_data['order'])
-    # if(post_data['currency']):
-    #     currency = json.loads(post_data['currency'])
+    if request.user.is_authenticated:
+        data = ""
+        post_data = request.POST
+        order = Order.objects.get(id=post_data['order'])
 
-    #     currency_key = list(currency.keys())[0]
-    #     currency_value = float(list(currency.values())[0])
+        billing = Billing(
+            order = order,
+            firstname = post_data['firstname'],
+            lastname = post_data['lastname'],
+            username = post_data['username'],
+            email = post_data['email'],
+            address = post_data['address'],
+            address2 = post_data['address2'],
+            country = post_data['country'],
+            state = post_data['state'],
+            zipcode = post_data['zipcode']
+        )
 
-    # order.complete = True
-    # order.save()
+        billing.save()
 
-    billing = Billing(
-        order = order,
-        firstname = post_data['firstname'],
-        lastname = post_data['lastname'],
-        username = post_data['username'],
-        email = post_data['email'],
-        address = post_data['address'],
-        address2 = post_data['address2'],
-        country = post_data['country'],
-        state = post_data['state'],
-        zipcode = post_data['zipcode']
-    )
+        payment = Payment(
+            order = order,
+            credit_type = post_data['credit_type'],
+            total = order.get_cart_total
+        )
 
-    billing.save()
+        payment.save()
 
-    payment = Payment(
-        order = order,
-        credit_type = post_data['credit_type'],
-        total = order.get_cart_total
-    )
-
-    payment.save()
-
-    if post_data['credit_type'] == "crypto":
-        order.complete = True
-        order.trx_id = "ORDER - " + str(order.id)
-        order.save()
-        # subject = 'Order Completion'
-        # message = f'Hi {order.customer},\nYour Order has been placed in our system. Your order number is {order.id}.\nPlease Visit your orders page to see the detail of your order. Absolute point help center will be contacting you shortly for further order completion process.\nThanks\n-Absolute Point.'
-        # email_from = settings.EMAIL_HOST_USER
-        # recipient_list = [billing.email, ]
-        # send_mail( subject, message, email_from, recipient_list )
-        return redirect('cryptocheckout')
+        if post_data['credit_type'] == "crypto":
+            order.complete = True
+            order.trx_id = "ORDER - " + str(order.id)
+            order.save()
+            return redirect('cryptocheckout')
+        else:
+            return redirect('stripecheckout', order.id)
+    
     else:
-        return redirect('stripecheckout', order.id)
+        post_data = request.POST
+
+        if post_data['pass'] == post_data['conf_pass']:
+
+            try:
+                user = User.objects.create_user(post_data['email'], post_data['email'], post_data['pass'])
+            except:
+                data = ""
+                params = {
+                    "access_key": "e9bca0873fefe06bb0145b67feb8ec24"
+                    }
+                response = requests.get('http://api.coinlayer.com/live', params=params)
+                
+                crypto_data = response.json()
+                rates = crypto_data['rates']
+                
+                order = Order.objects.get(id=post_data['order'])
+                order_items = OrderItems.objects.filter(order_id=post_data['order'])
+
+                auth_status = False
+
+                if request.user.is_authenticated:
+                    auth_status = True
+                
+                msg = f"User Already exists with this email {post_data['email']}"
+
+                return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "msg": msg})
+
+            appuser = AppUser(
+                user = user,
+                fname = post_data['firstname'],
+                lname = post_data['lastname'],
+                telid = post_data['username'],
+                email = post_data['email'],
+                address = post_data['address'],
+                country = post_data['country'],
+                state = post_data['state'],
+                zipcode = post_data['zipcode']
+            )
+
+            appuser.save()
+
+            order = Order.objects.get(id=post_data['order'])
+
+            order.customer = user.username
+            order.save()
+
+            billing = Billing(
+                order = order,
+                firstname = post_data['firstname'],
+                lastname = post_data['lastname'],
+                username = post_data['username'],
+                email = post_data['email'],
+                address = post_data['address'],
+                address2 = post_data['address2'],
+                country = post_data['country'],
+                state = post_data['state'],
+                zipcode = post_data['zipcode']
+            )
+
+            billing.save()
+
+            payment = Payment(
+                order = order,
+                credit_type = post_data['credit_type'],
+                total = order.get_cart_total
+            )
+
+            payment.save()
+
+            auth_login(request, user)
+
+            if post_data['credit_type'] == "crypto":
+                order.complete = True
+                order.trx_id = "ORDER - " + str(order.id)
+                order.save()
+                return redirect('cryptocheckout')
+            else:
+                return redirect('stripecheckout', order.id)
+
+        else:
+            data = ""
+            params = {
+                "access_key": "e9bca0873fefe06bb0145b67feb8ec24"
+                }
+            response = requests.get('http://api.coinlayer.com/live', params=params)
+            
+            crypto_data = response.json()
+            rates = crypto_data['rates']
+            
+            order = Order.objects.get(id=post_data['order'])
+            order_items = OrderItems.objects.filter(order_id=post_data['order'])
+
+            auth_status = False
+
+            if request.user.is_authenticated:
+                auth_status = True
+            
+            msg = "Password Didn't Match"
+
+            return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "msg": msg})
+
+        
+
+        
 
 def confirmCryptoOrder(requet, oid):
     order = Order.objects.get(id=oid)
