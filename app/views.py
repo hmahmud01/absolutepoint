@@ -1783,8 +1783,8 @@ def create_checkout_session(request, oid):
     order = Order.objects.get(id=oid)
     order_name = "ORD - " + str(order.id)
     amount = order.get_cart_total * 100
-    YOUR_DOMAIN = "http://127.0.0.1:8000"
-    # YOUR_DOMAIN = "http://174.138.27.160:8000"
+    # YOUR_DOMAIN = "http://127.0.0.1:8000"
+    YOUR_DOMAIN = "http://174.138.27.160:8000"
     product = stripe.Product.create(name=order_name)
 
     price = stripe.Price.create(
