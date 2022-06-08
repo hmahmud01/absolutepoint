@@ -66,6 +66,13 @@
                 </div>
                 <div class="card-footer">
                     <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary update-cart" type="button"><i class="fas fa-money me-2"></i>Add To Cart</button>
+                    
+                    {% if checkout %}
+                    <a href="{% url 'checkout' order.id %}" class="btn btn-info" type="button">Checkout</a>
+                    {% comment %} <div class="d-grid gap-2">
+                        <a href="{% url 'checkout' order.id %}" class="btn btn-info" type="button">Checkout</a>
+                    </div> {% endcomment %}
+                    {% endif %}
                 </div>
             </div>
             <div class="card">

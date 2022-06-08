@@ -1452,16 +1452,24 @@ def socialServices(request, cid):
 
 def clientServiceDetail(request, pid):
     data = ""
+    checkout = False
     product = serviceProduct.objects.get(id=pid)
     variables = variableProductPrice.objects.filter(product_id=pid)
     data = cartData(request)
     order = data['order']
+    items = data['items']
+
+    for item in items:
+        if item.product.id == pid:
+            checkout = True
+
     return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order,
                                         "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "checkout": checkout})
 
 def clientOrders(request):
     data = ""
