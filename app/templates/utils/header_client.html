@@ -26,7 +26,11 @@
         </li> {% endcomment %}
         <li class="nav-item dropdown">
             <div class="me-2">
-                <a href="{% url 'cart' %}" class="btn btn-outline-dark">Cart</a>
+                {% if order.get_cart_items %}
+                <a href="{% url 'cart' %}" class="btn btn-outline-dark">Cart ({{ order.get_cart_items }})</a>
+                {% else %}
+                <a href="{% url 'cart' %}" class="btn btn-outline-dark">Cart (0)</a>
+                {% endif %}
             </div>                
         </li>
         {% if request.user.is_authenticated %}
