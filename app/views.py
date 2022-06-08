@@ -66,6 +66,12 @@ HOURS_DELTA = 6
 scount = Services.objects.filter(accepted=False).count()
 tcount = Ticket.objects.filter(seen=False).count()
 
+cat_fb = productCategory.objects.get(name="Facebook").id
+cat_it = productCategory.objects.get(name="Instagram").id
+cat_yt = productCategory.objects.get(name="Youtube").id
+cat_tt = productCategory.objects.get(name="Tiktok").id
+cat_tw = productCategory.objects.get(name="Twitter").id
+
 
 def login(request):
     data = ""
@@ -1311,7 +1317,7 @@ def salesExecutiveSalary(request):
 # CLIENT AREA
 def clientIndex(request):
     data = ""
-    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter").filter(status=True)[:9]
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter").filter(status=True)[:8]
     marketing = serviceProduct.objects.filter(category__name="Marketing")
     facebook = serviceProduct.objects.filter(category__name="Facebook")
     instagram = serviceProduct.objects.filter(category__name="Instagram")
@@ -1325,6 +1331,9 @@ def clientIndex(request):
     cat_tt = productCategory.objects.get(name="Tiktok").id
     cat_tw = productCategory.objects.get(name="Twitter").id
 
+    data = cartData(request)
+    order = data['order']
+
     context = {
         "products": products,
         "facebook": facebook,
@@ -1336,7 +1345,8 @@ def clientIndex(request):
         "cat_it": cat_it,
         "cat_yt": cat_yt,
         "cat_tt": cat_tt,
-        "cat_tw": cat_tw
+        "cat_tw": cat_tw,
+        "order": order,
     }
 
     ctx2 ={"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter}
@@ -1347,16 +1357,31 @@ def allService(request):
     all_products = []
     active_products = products.filter(status=True)
     inactive_products = products.filter(status=False)
+    data = cartData(request)
+    order = data['order']
     for active in active_products:
         all_products.append(active)
 
     for inactive in inactive_products:
         all_products.append(inactive)
 
-    return render(request, "client/allservices.html", {"products": all_products})
+    return render(request, "client/allservices.html", {
+                                        "products": all_products, "order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
 def contactUs(request):
-    return render(request, "client/contact-us.html")
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/contact-us.html", {"order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
 def saveRequest(request):
     post_data = request.POST
@@ -1416,18 +1441,39 @@ def socialServices(request, cid):
             items.append(product)
 
     print(items)
-    return render(request, "client/index-category.html", {"items": items, "products": products, "cat": cat})
+    return render(request, "client/index-category.html", {
+                                        "items": items, "products": products, "cat": cat,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                         })
 
 def clientServiceDetail(request, pid):
     data = ""
     product = serviceProduct.objects.get(id=pid)
     variables = variableProductPrice.objects.filter(product_id=pid)
-    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables})
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
 def clientOrders(request):
     data = ""
     orders = Order.objects.filter(customer=request.user.username)
-    return render(request, "client/orders.html", {"data": data, "orders": orders})
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/orders.html", {"data": data, "orders": orders, "order": order,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
 def allOrders(request):
     data = ""
@@ -1437,7 +1483,11 @@ def orderDetail(request, oid):
     data = ""
     order = Order.objects.get(id=oid)
     orderItems = OrderItems.objects.filter(order_id=oid)
-    context = {'items': orderItems, 'order':order}
+    context = {'items': orderItems, 'order':order , "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,}
     return render(request, "client/order_detail.html", context)
 
 # CLIENT DASHBOARD
@@ -1584,12 +1634,14 @@ def updateItem(request):
 
 def cart(request):
     data = cartData(request)
-    print(data)
-    # {'cartItems': 1, 'order': <Order: 1>, 'items': <QuerySet [<OrderItems: OrderItems object (1)>]>}
     cartItems = data['cartItems']
     order = data['order']
     items = data['items']
-    context = {'items': items, 'order':order, 'cartItems': cartItems}
+    context = {'items': items, 'order':order, 'cartItems': cartItems, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,}
     return render(request, "client/cart.html", context)
 
 def removeCartItem(request, iid):
@@ -1616,7 +1668,11 @@ def checkout(request, oid):
     if request.user.is_authenticated:
         auth_status = True
         
-    return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status})
+    return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
 
 # <QueryDict: {'csrfmiddlewaretoken': ['Ka4Nh9QauQ361lj7sH5F09KVFkGptdqV8IUl8IgoDvbUOBvM5Yi25xqXx7tM0xwz'], 
@@ -1688,7 +1744,11 @@ def processOrder(request):
                 
                 msg = f"User Already exists with this email {post_data['email']}"
 
-                return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "msg": msg})
+                return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "msg": msg, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
             appuser = AppUser(
                 user = user,
@@ -1762,11 +1822,12 @@ def processOrder(request):
             
             msg = "Password Didn't Match"
 
-            return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "msg": msg})
-
-        
-
-        
+            return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "msg": msg, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
+      
 
 def confirmCryptoOrder(requet, oid):
     order = Order.objects.get(id=oid)
@@ -1783,10 +1844,20 @@ def confirmCryptoOrder(requet, oid):
     return redirect('orderlistdetail', oid)
 
 def stripeCheckout(request, oid):
-    return render(request, "client/checkout-stripe.html", {"oid": oid})
+    return render(request, "client/checkout-stripe.html", {"oid": oid, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
 def cryptoCheckout(request):
-    return render(request, "client/checkout-crypto.html")
+    return render(request, "client/checkout-crypto.html", {
+                                        "cat_fb": cat_fb,   
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+    })
 
 def create_checkout_session(request, oid):
     order = Order.objects.get(id=oid)
@@ -1840,10 +1911,22 @@ def success(request):
     # recipient_list = [billing.email, ]
     # send_mail( subject, message, email_from, recipient_list )
 
-    return render(request, 'client/success.html')
+    return render(request, 'client/success.html', {
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+    })
 
 def cancel(request):
-    return  render(request, 'client/cancel.html')
+    return  render(request, 'client/cancel.html', {
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+    })
 
 def createPortfolio(request):
     users = DashboardUser.objects.all()
@@ -1893,15 +1976,27 @@ def savePortfolio(request):
 
 def portfolio(request):
     portfolios = Portfolio.objects.all()
-
-    return render(request, "client/portfolio.html", {"portfolios": portfolios})
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/portfolio.html", {"portfolios": portfolios, "order": order,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
 def portfolioDetail(request, pid):
     portfolio = Portfolio.objects.get(id=pid)
     contributors = PortfolioContributors.objects.filter(portfolio_id=pid)
     proofs = PortfolioProves.objects.filter(portfolio_id=pid)
-
-    return render(request, "client/portfolio_detail.html", {"portfolio": portfolio, "contributors": contributors, 'proofs': proofs})
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/portfolio_detail.html", {"portfolio": portfolio, "contributors": contributors, 'proofs': proofs, "order": order,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
 
 def people(request):
     people = DashboardUser.objects.all()

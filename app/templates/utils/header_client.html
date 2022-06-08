@@ -9,6 +9,19 @@
                 <a href="{% url 'clientindex' %}" class="btn btn-primary">Home</a>
             </div>            
         </li>
+        <div class="dropdown me-2">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                All Services
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="{% url 'allservices' %}">Crypto Services</a></li>
+                <li><a class="dropdown-item" href="{% url 'socialservices' cat_fb %}">Facebook Services</a></li>
+                <li><a class="dropdown-item" href="{% url 'socialservices' cat_fb %}">Instagram Services</a></li>
+                <li><a class="dropdown-item" href="{% url 'socialservices' cat_fb %}">Youtube Services</a></li>
+                <li><a class="dropdown-item" href="{% url 'socialservices' cat_fb %}">Tiktok Services</a></li>
+                <li><a class="dropdown-item" href="{% url 'socialservices' cat_fb %}">Twitter Services</a></li>
+            </ul>
+        </div>
         <li class="nav-item dropdown">
             <div class="me-2">
                 <a href="{% url 'portfolio' %}" class="btn btn-outline-primary">Portfolio</a>
