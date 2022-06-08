@@ -1311,7 +1311,7 @@ def salesExecutiveSalary(request):
 # CLIENT AREA
 def clientIndex(request):
     data = ""
-    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")[:9]
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter").filter(status=True)[:9]
     marketing = serviceProduct.objects.filter(category__name="Marketing")
     facebook = serviceProduct.objects.filter(category__name="Facebook")
     instagram = serviceProduct.objects.filter(category__name="Instagram")
@@ -1344,7 +1344,16 @@ def clientIndex(request):
 
 def allService(request):
     products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")
-    return render(request, "client/allservices.html", {"products": products})
+    all_products = []
+    active_products = products.filter(status=True)
+    inactive_products = products.filter(status=False)
+    for active in active_products:
+        all_products.append(active)
+
+    for inactive in inactive_products:
+        all_products.append(inactive)
+
+    return render(request, "client/allservices.html", {"products": all_products})
 
 def contactUs(request):
     return render(request, "client/contact-us.html")

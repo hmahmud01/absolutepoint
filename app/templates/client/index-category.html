@@ -10,23 +10,9 @@
 
 <div class="container">
     <div class="row mb-5">
-        {% comment %} {% for prod in products %}
-        <div class="col-lg-4 mb-5">
-            <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
-                <div class="card-status bg-primary"></div>
-                <div class="card-body">
-                    <h2 class="card-heading text-primary text-center fw-bold py-3">{{ prod.name }} </h2>
-                    <p class="text-muted text-center mb-4"><span class="h1 text-dark fw-bold">00 $</span></p>
-                </div>
-                <div class="card-footer text-center">
-                    <a class="btn btn-sm btn-outline-primary" href="{% url 'clientservicedetail' prod.id %}">Buy Now</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %} {% endcomment %}
         {% for item in items %}
         {% if item.product.status %}
-        <div class="col-lg-4 mb-5">
+        <!-- <div class="col-lg-4 mb-5">
             <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
                 <div class="card-status bg-primary"></div>
                 <div class="card-body">
@@ -41,10 +27,35 @@
                     class="img-fluid" style="height: 200px;" alt="{{ item.product.name }}">
                 {% endif %}
                 <div class="card-footer text-center">
-                    <a class="btn btn-sm btn-outline-primary" href="{% url 'clientservicedetail' item.product.id %}">Buy Now</a>
+                    <a class="btn btn-sm btn-outline-primary" href="{% url 'clientservicedetail' item.product.id %}">Order Now</a>
                 </div>
             </div>
+        </div> -->
+
+        <div class="col-md-6 col-lg-3">
+            <!-- <a href="{% url 'clientservicedetail' item.product.id %}"> -->
+            <div class="card mb-4">
+                {% if item.product.thumb %}
+                <img class="card-img-top img-fluid" src="/media/{{ item.product.thumb }}" alt="{{ item.product.name }}">
+                {% else %}
+                <img class="card-img-top img-fluid" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ product.name }}">
+                {% endif %}
+                <div class="card-body">
+                <p class="lead text-dark text-decoration-none">{{ item.product.name }}</p> 
+                {% if item.product.status == False %}
+                <p class="lead text-dark text-decoration-none">Currently Unavailable</p> 
+                {% else %}
+                <p class="card-text text-decoration-none text-dark text-truncate">{{ item.price }} $</p>
+                {% endif %}
+                </div>
+                <div class="card-footer text-center">
+                    <a class="btn btn-sm btn-outline-primary" href="{% url 'clientservicedetail' item.product.id %}">Order Now</a>
+                </div>
+            </div>
+            
+            <!-- </a>     -->
         </div>
+        
         {% endif %}
         {% endfor %}
     </div>
