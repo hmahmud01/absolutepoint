@@ -65,7 +65,7 @@ HOURS_DELTA = 6
 
 scount = Services.objects.filter(accepted=False).count()
 tcount = Ticket.objects.filter(seen=False).count()
-new_orders = Order.objects.filter(new_order=True).count()
+# new_orders = Order.objects.filter(new_order=True).count()
 
 cat_fb = productCategory.objects.get(name="Facebook").id
 cat_it = productCategory.objects.get(name="Instagram").id
