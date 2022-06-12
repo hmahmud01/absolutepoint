@@ -143,15 +143,24 @@ class serviceProduct(models.Model):
     status = models.BooleanField(default=True)
     thumb = models.ImageField('product_thumbs',upload_to='product_thumbs', null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
+    base_price = models.FloatField(null=True, blank=True)
+    base_qty = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
+
 
 class variableProductPrice(models.Model):
     product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
     measurement = models.IntegerField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
-    base_price = models.FloatField(null=True, blank=True)
+    def __str__(self):
+        return self.product.name
+
+class productTerms(models.Model):
+    product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
+    terms = models.CharField(max_length=512, null=True, blank=True)
+
     def __str__(self):
         return self.product.name
 
@@ -181,6 +190,7 @@ class Order(models.Model):
     complete = models.BooleanField(default=False, null=True, blank=True)
     trx_id = models.CharField(max_length=128, null=True, blank=True)
     order_payment = models.BooleanField(default=False, null=True, blank=True)
+    new_order = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.id)
@@ -203,6 +213,20 @@ class Order(models.Model):
         orderitems = self.orderitems_set.all()
         total = sum([item.quantity for item in orderitems])
         return total
+
+class cryptoNetwork(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    network = models.CharField(max_length=128, null=True, blank=True)
+
+    def __str__(self):
+        return self.network
+
+class cryptoProof(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    proof = models.ImageField('crypto_proof',upload_to='crypto_proof', null=True, blank=True)
+
+    def __str__(self):
+        return str(self.order.id)
 
 
 class OrderItems(models.Model):

@@ -65,6 +65,7 @@ HOURS_DELTA = 6
 
 scount = Services.objects.filter(accepted=False).count()
 tcount = Ticket.objects.filter(seen=False).count()
+new_orders = Order.objects.filter(new_order=True).count()
 
 cat_fb = productCategory.objects.get(name="Facebook").id
 cat_it = productCategory.objects.get(name="Instagram").id
@@ -228,8 +229,12 @@ def home(request):
     user = request.user
     home = True
     if user.is_superuser:
+        scount = Services.objects.filter(accepted=False).count()
+        tcount = Ticket.objects.filter(seen=False).count()
+        new_orders = Order.objects.filter(new_order=True).count()
         print(tcount)
         print(scount)
+        print(new_orders)
         data = ""        
         notices = Notices.objects.all()
         services = Services.objects.all().order_by('-date')
@@ -239,7 +244,7 @@ def home(request):
         users1 = DashboardUser.objects.all()    
         return render(request, 'index.html', 
             {"data": data, "notices": notices, "services": services, "users": users1, 
-                "servicelist": servicelist, "servicetypes": servicetypes, "home": home, "tcount": tcount, "scount": scount})
+                "servicelist": servicelist, "servicetypes": servicetypes, "home": home, "tcount": tcount, "scount": scount, "new_orders": new_orders})
     else:
         try:
             req_user = AppUser.objects.get(user=user.id)
@@ -1455,6 +1460,7 @@ def clientServiceDetail(request, pid):
     checkout = False
     product = serviceProduct.objects.get(id=pid)
     variables = variableProductPrice.objects.filter(product_id=pid)
+    terms = productTerms.objects.filter(product_id=pid)
     data = cartData(request)
     order = data['order']
     items = data['items']
@@ -1463,13 +1469,55 @@ def clientServiceDetail(request, pid):
         if item.product.id == pid:
             checkout = True
 
-    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order,
+    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order, "terms": terms,
                                         "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
                                         "checkout": checkout})
+
+def loadPrice(request):
+    price_id = request.GET.get('price_id')
+    product_id = request.GET.get('product_id')
+
+
+    product = serviceProduct.objects.get(id=product_id)
+    pricing = variableProductPrice.objects.get(id=price_id)
+
+    base_price = product.base_price
+    base_qty = product.base_qty
+
+    if base_price == None or base_qty == None:
+        base_price = 0
+        base_qty = 0
+
+    variable_price = pricing.price
+    variable_qty = pricing.measurement
+
+    if base_qty == 0:
+        multiplier = 1
+    else:
+        multiplier = variable_qty / base_qty
+
+    primary_price = base_price * multiplier
+
+    if primary_price <= variable_price:
+        data = {
+            "base": None,
+            "main": variable_price
+        }
+    else:
+        data = {
+            "base": primary_price,
+            "main": variable_price
+        }
+
+
+    print(data)
+
+    return render(request, 'client/loadprice.html', {"data": data})
+
 
 def clientOrders(request):
     data = ""
@@ -1547,7 +1595,8 @@ def productDetail(request, pid):
     inactive = "inactive"
     active = "active"
     variables = variableProductPrice.objects.filter(product_id=pid)
-    return render(request, "clientdash/product_detail.html", {"product": product, "inactive": inactive, "active": active, "variables": variables})
+    terms = productTerms.objects.filter(product_id=pid)
+    return render(request, "clientdash/product_detail.html", {"product": product, "inactive": inactive, "active": active, "variables": variables, "terms": terms})
 
 def saveVariablePrice(request):
     data = ""
@@ -1559,6 +1608,29 @@ def saveVariablePrice(request):
         price=post_data['price']
     )
     variable.save()
+    return redirect('productdetail', post_data['pid'])
+
+def saveTerms(request):
+    post_data = request.POST
+    product = serviceProduct.objects.get(id=post_data['pid'])
+    terms = productTerms(
+        product = product,
+        terms = post_data['terms']
+    )
+
+    terms.save()
+    return redirect('productdetail', post_data['pid'])
+
+def saveBasePrice(request):
+    data = ""
+    post_data = request.POST
+
+    product = serviceProduct.objects.get(id=post_data['pid'])
+    product.base_price = post_data['base_price']
+    product.base_qty = post_data['base_qty']
+
+    product.save()
+
     return redirect('productdetail', post_data['pid'])
 
 def updateVariablePrice(request, vid):
@@ -1599,8 +1671,17 @@ def orderList(request):
 def orderDetailDash(request, oid):
     data = ""
     order = Order.objects.get(id=oid)
+    order.new_order = False
+    order.save()
     orderItems = OrderItems.objects.filter(order_id=oid)
-    context = {'items': orderItems, 'order':order}
+    if order.payment.credit_type == "crypto":
+        
+        proofs = cryptoProof.objects.filter(order_id=oid)
+        print(proofs)
+        context = {'items': orderItems, 'order':order, 'proofs': proofs}
+    else:
+        context = {'items': orderItems, 'order':orders}
+    
     return render(request, "clientdash/order_detail.html", context)
 
 
@@ -1721,7 +1802,7 @@ def processOrder(request):
             order.complete = True
             order.trx_id = "ORDER - " + str(order.id)
             order.save()
-            return redirect('cryptocheckout')
+            return redirect('cryptocheckout', order.id)
         else:
             return redirect('stripecheckout', order.id)
     
@@ -1806,7 +1887,7 @@ def processOrder(request):
                 order.complete = True
                 order.trx_id = "ORDER - " + str(order.id)
                 order.save()
-                return redirect('cryptocheckout')
+                return redirect('cryptocheckout', order.id)
             else:
                 return redirect('stripecheckout', order.id)
 
@@ -1858,8 +1939,49 @@ def stripeCheckout(request, oid):
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,})
 
-def cryptoCheckout(request):
+def cryptoCheckout(request, oid):
+    
     return render(request, "client/checkout-crypto.html", {
+                                        "oid": oid,
+                                        "cat_fb": cat_fb,   
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+    })
+
+def saveCryptoProof(request, oid):
+    
+    post_data = request.POST
+    file_data = request.FILES
+    print(post_data)
+    print(file_data)
+    order = Order.objects.get(id=oid)
+
+    networks = cryptoNetwork(
+        order=order,
+        network=post_data['network']
+    )
+    networks.save()
+
+    order.complete = True
+    order.order_payment = True
+    order.save()
+
+    if file_data:
+        images = file_data.getlist('proof_img')
+
+        for image in images:
+            proofs = cryptoProof(
+                order=order,
+                proof=image
+            )
+            proofs.save()
+
+    return redirect('cryptosuccess')
+
+def cryptoSuccess(request):
+    return render(request, "client/checkout-crypto-proof.html", {
                                         "cat_fb": cat_fb,   
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
@@ -1871,8 +1993,8 @@ def create_checkout_session(request, oid):
     order = Order.objects.get(id=oid)
     order_name = "ORD - " + str(order.id)
     amount = order.get_cart_total * 100
-    # YOUR_DOMAIN = "http://127.0.0.1:8000"
-    YOUR_DOMAIN = "http://174.138.27.160:8000"
+    YOUR_DOMAIN = "http://127.0.0.1:8000"
+    # YOUR_DOMAIN = "http://174.138.27.160:8000"
     product = stripe.Product.create(name=order_name)
 
     price = stripe.Price.create(
@@ -1900,6 +2022,7 @@ def create_checkout_session(request, oid):
 
 def success(request):
     order = Order.objects.get(id=request.session['oid'])
+    orderItems = OrderItems.objects.filter(order_id=order.id)
     checkout_id = request.session['cid']
     billing = Billing.objects.get(order__id=order.id)
     order.complete = True
@@ -1920,6 +2043,8 @@ def success(request):
     # send_mail( subject, message, email_from, recipient_list )
 
     return render(request, 'client/success.html', {
+                                        "items": orderItems,
+                                        "order": order,
                                         "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,

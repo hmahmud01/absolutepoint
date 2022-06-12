@@ -51,17 +51,18 @@
                     </div>
                 </form> {% endcomment %}
                 <div class="card-body">
-                    <h5 class="card-title">Product Price</h5>
-                    <h6 class="card-subtitle text-muted">Select Your Price Option</h6>
+                    <h5 class="card-title">Quantity</h5>
+                    <h6 class="card-subtitle text-muted">Select Your Option</h6>
 
                     <div class="col-md">
-                        <label for="state" class="form-label">Options</label>
                         <select class="form-select" id="product_price" required>
-                            <option value="">Choose...</option>
+                            <option value="none">Select</option>
                             {% for variable in variables %}
-                            <option value="{{ variable.id }}">{{ variable.measurement }} votes - {{ variable.price }}$</option>
+                            <option value="{{ variable.id }}">{{ variable.measurement }} </option>
                             {% endfor %}
                         </select>
+
+                        <div class="p-3" id="price_content"></div>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -73,6 +74,16 @@
                         <a href="{% url 'checkout' order.id %}" class="btn btn-info" type="button">Checkout</a>
                     </div> {% endcomment %}
                     {% endif %}
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Terms And Conditions</h5>
+                    <ol>
+                        {% for term in terms %}
+                        <li> {{ term.terms }}  </li>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
             <div class="card">
@@ -91,4 +102,28 @@
 
 {% block scripts %}
 <script src="/static/js/cart.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script>
+    var product_id = "{{ product.id }}"
+    
+    $("#product_price").change(function() {
+        var url = '/ajax/load-price/';
+        var price_id = $(this).val();
+
+        console.log(price_id);
+        console.log(product_id);
+
+        $.ajax({
+            url: url,
+            data: {
+                'price_id': price_id,
+                'product_id': product_id
+            },
+            success: function(data){
+                $("#price_content").html(data);
+            }
+        });
+    });
+</script>
 {% endblock %}

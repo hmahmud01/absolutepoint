@@ -160,6 +160,21 @@
 
     </div>
 
+    <div class="row mb-3">
+        <p>Selected Network: {{ order.cryptonetwork.network }}</p>
+        {% if proofs %}
+        <h3>Proofs</h3>
+        
+        {% for proof in proofs %}
+        <div class="col-md-3">
+            <div class="card m-8">
+                <img src="/media/{{ proof.proof }}" alt="">
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
 
 </section>
 {% endblock %}

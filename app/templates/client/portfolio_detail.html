@@ -15,11 +15,11 @@
                     <h5 class="card-title">{{ portfolio.title }}</h5>
                 </div>
                 {% if portfolio.thumb %}
-                <img class="img-fluid service-img"
+                <img class="img-fluid"
                     src="/media/{{ portfolio.thumb }}"
                     alt="Card image cap">
                 {% else %}
-                <img class="img-fluid service-img"
+                <img class="img-fluid"
                     src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
                     alt="Card image cap">
                 {% endif %}
@@ -31,9 +31,10 @@
                 </div>
             </div>
         </div>
+        
+        {% if contributors %}
         <div class="col-md-12 col-lg-12 col-sm-12 mb-4">
             <div class="card mb-4">
-
                 <div class="card-body">
                     <h5 class="card-title">People Contributed</h5>
                     <div class="col-md">
@@ -45,17 +46,12 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Have a Question</h5>
-                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @ishty or @pranto by <a href="">Clicking here</a></h6>
-                </div>
-            </div>
         </div>
+        {% endif %}
 
     </div>
 
-    <div class="row">
+    <div class="row mb-3">
         {% if proofs %}
         <h3>Proofs</h3>
         {% for proof in proofs %}
@@ -68,6 +64,14 @@
         {% endif %}
     </div>
 
+     <div class="col-md-12 col-lg-12 col-sm-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Have a Question</h5>
+                <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @ishty or @pranto by <a href="">Clicking here</a></h6>
+            </div>
+        </div>
+    </div>
 
 </section>
 {% endblock %}

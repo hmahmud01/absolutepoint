@@ -20,8 +20,9 @@
                       <tr>                        
                         <th>Order Id</th>
                         <th>Date Ordered</th>
-                        <th>Status</th>
+                        <th>Order Status</th>
                         <th>Payment Status</th>
+                        <th>New</th>
                         <th>Customer Name</th>
                         <th>Method</th>
                         <th>Total</th>                        
@@ -34,6 +35,11 @@
                         <td> {{ order.date_ordered }} </td>
                         <td> {{ order.complete }} </td>
                         <td> {{ order.order_payment }} </td>
+                        {% if order.new_order is True %}
+                        <td> <span class="badge badge-primary-light">New</span> </td>
+                        {% else %}
+                        <td> Old </td>
+                        {% endif %}
                         <td> {{ order.customer }} </td>
                         {% if order.payment.credit_type == "crypto" %}
                         <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span></td>
