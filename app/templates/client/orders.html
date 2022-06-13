@@ -40,7 +40,7 @@
                         {% if order.order_payment %}
                         <td>Payment Success</td>
                         {% else %}
-                        <td>Not Paid Yet</td>
+                        <td>Pending Confirmation</td>
                         {% endif %}
                         <td> {{ order.customer }} </td>
                         {% if order.payment.credit_type == "crypto" %}
