@@ -1360,17 +1360,45 @@ def clientIndex(request):
 def allService(request):
     products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")
     all_products = []
+    all_prods = []
     active_products = products.filter(status=True)
     inactive_products = products.filter(status=False)
     data = cartData(request)
     order = data['order']
     for active in active_products:
         all_products.append(active)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            product = {
+                'product': active,
+                'price': variable.first().price
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': active,
+                'price': 00
+            }
+            all_prods.append(product)
 
     for inactive in inactive_products:
         all_products.append(inactive)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            product = {
+                'product': active,
+                'price': variable.first().price
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': active,
+                'price': 00
+            }
+            all_prods.append(product)
 
     return render(request, "client/allservices.html", {
+                                        "all_products": all_prods,
                                         "products": all_products, "order": order, 
                                         "cat_fb": cat_fb,
                                         "cat_it": cat_it,
@@ -1428,24 +1456,20 @@ def socialServices(request, cid):
     products = serviceProduct.objects.filter(category__id=cid)
     items = []
     for prod in products:
-        print(prod.id)
         variable = variableProductPrice.objects.filter(product__id=prod.id)
         try:
-            # print(variable.first().price)
             product = {
                 'product': prod,
                 'price': variable.first().price
             }
             items.append(product)
-        except:
-            # print(00)            
+        except:   
             product = {
                 'product': prod,
                 'price': 00
             }
             items.append(product)
 
-    print(items)
     return render(request, "client/index-category.html", {
                                         "items": items, "products": products, "cat": cat,
                                         "cat_fb": cat_fb,

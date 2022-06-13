@@ -8,28 +8,26 @@
         <p>Provided Absolute Point</p>
     </div>
 
-    {% for product in products %}
-    {% comment %} {% if product.status %} {% endcomment %}
+    {% for item in all_products %}
     <div class="col-md-6 col-lg-3">
-        <a href="{% url 'clientservicedetail' product.id %}">
+        <a href="{% url 'clientservicedetail' item.product.id %}">
         <div class="card mb-4">
-            {% if product.thumb %}
-            <img class="card-img-top img-fluid" src="/media/{{ product.thumb }}" alt="{{ product.name }}">
+            {% if item.product.thumb %}
+            <img class="card-img-top img-fluid" src="/media/{{ item.product.thumb }}" alt="{{ item.product.name }}">
             {% else %}
-            <img class="card-img-top img-fluid" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ product.name }}">
+            <img class="card-img-top img-fluid" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ item.product.name }}">
             {% endif %}
             <div class="card-body">
-            <p class="lead text-dark text-decoration-none">{{ product.name }}</p> 
-            {% if product.status == False %}
+            <p class="lead text-dark text-decoration-none">{{ item.product.name }}</p> 
+            {% if item.product.status == False %}
             <p class="lead text-dark text-decoration-none">Currently Unavailable</p> 
             {% else %}
-            <p class="card-text text-decoration-none text-dark text-truncate">{{ product.description }}</p>
+            <p class="card-text text-decoration-none text-dark text-truncate">{{ item.price }} $</p>
             {% endif %}
             </div>
         </div>
         </a>    
     </div>
-    {% comment %} {% endif %} {% endcomment %}
     {% endfor %}
 </div>
 {% endblock %}
