@@ -217,6 +217,7 @@ class Order(models.Model):
 class cryptoNetwork(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
     network = models.CharField(max_length=128, null=True, blank=True)
+    payment_hash = models.CharField(max_length=128, null=True, blank=True)
 
     def __str__(self):
         return self.network

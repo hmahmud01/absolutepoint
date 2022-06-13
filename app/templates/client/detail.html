@@ -11,45 +11,51 @@
             <p>Crypto service detail for {{ product.name }}</p>
         </div>
         <div class="col-md-8 col-lg-8 col-sm-6">
-            <div class="card mb-8">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
                     <h6 class="card-subtitle text-muted">Category: {{ product.category.name }}</h6>
                 </div>
-                {% if product.thumb %}
+                {% comment %} {% if product.thumb %}
                 <img src="/media/{{ product.thumb }}"
                     class="shadow" alt="{{ product.name }}">
                 {% else %}
                 <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
                     class="shadow" style="width:200px; height: 200px;" alt="{{ product.name }}">
-                {% endif %}
+                {% endif %} {% endcomment %}
                 <div class="card-body">
                     <p class="card-text">{{ product.ptype }}</p>
                     <p class="card-text">{{ product.description }}</p>
                 </div>
             </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Terms And Conditions</h5>
+                    <ol>
+                        {% for term in terms %}
+                        <li> {{ term.terms }}  </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Have a Question</h5>
+                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @CryptoMsupport by <a href="https://t.me/CryptoMsupport" target="_blank">Clicking here</a></h6>
+                </div>
+            </div>
         </div>
         <div class="col-md-4 col-lg-4 col-sm-6">
+            <div class="card card-inverse text-white mb-4">
+                {% if product.thumb %}
+                <img src="/media/{{ product.thumb }}"
+                    class="shadow card-img img-fluid" alt="{{ product.name }}">
+                {% else %}
+                <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                    class="shadow card-img img-fluid" alt="{{ product.name }}">
+                {% endif %}
+            </div>
             <div class="card mb-4">
-                {% comment %} <form action="">
-                    <div class="card-body">
-                        <h5 class="card-title">Product Price</h5>
-                        <h6 class="card-subtitle text-muted">Select Your Price Option</h6>
-
-                        <div class="col-md">
-                            <label for="state" class="form-label">Options</label>
-                            <select class="form-select" id="product_price" required>
-                                <option value="">Choose...</option>
-                                {% for variable in variables %}
-                                <option value="{{ variable.id }}">{{ variable.measurement }} votes - {{ variable.price }}$</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-outline-secondary" type="button"><i class="fas fa-money me-2"></i>Add To Cart</button>
-                    </div>
-                </form> {% endcomment %}
                 <div class="card-body">
                     <h5 class="card-title">Quantity</h5>
                     <h6 class="card-subtitle text-muted">Select Your Option</h6>
@@ -70,26 +76,7 @@
                     
                     {% if checkout %}
                     <a href="{% url 'checkout' order.id %}" class="btn btn-info" type="button">Checkout</a>
-                    {% comment %} <div class="d-grid gap-2">
-                        <a href="{% url 'checkout' order.id %}" class="btn btn-info" type="button">Checkout</a>
-                    </div> {% endcomment %}
                     {% endif %}
-                </div>
-            </div>
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Terms And Conditions</h5>
-                    <ol>
-                        {% for term in terms %}
-                        <li> {{ term.terms }}  </li>
-                        {% endfor %}
-                    </ol>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Have a Question</h5>
-                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @CryptoMsupport by <a href="https://t.me/CryptoMsupport" target="_blank">Clicking here</a></h6>
                 </div>
             </div>
         </div>

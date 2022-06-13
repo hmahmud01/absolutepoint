@@ -1956,29 +1956,45 @@ def saveCryptoProof(request, oid):
     file_data = request.FILES
     print(post_data)
     print(file_data)
-    order = Order.objects.get(id=oid)
 
-    networks = cryptoNetwork(
-        order=order,
-        network=post_data['network']
-    )
-    networks.save()
+    if post_data['hash'] != '' or file_data.getlist('proof_img') != [] :
+        order = Order.objects.get(id=oid)
 
-    order.complete = True
-    order.order_payment = True
-    order.save()
+        networks = cryptoNetwork(
+            order=order,
+            network=post_data['network'],
+            payment_hash=post_data['hash']
+        )
+        networks.save()
 
-    if file_data:
-        images = file_data.getlist('proof_img')
+        order.complete = True
+        order.order_payment = False
+        order.save()
 
-        for image in images:
-            proofs = cryptoProof(
-                order=order,
-                proof=image
-            )
-            proofs.save()
+        if file_data:
+            images = file_data.getlist('proof_img')
 
-    return redirect('cryptosuccess')
+            for image in images:
+                proofs = cryptoProof(
+                    order=order,
+                    proof=image
+                )
+                proofs.save()
+
+        return redirect('cryptosuccess')
+    else:
+        msg = "You didn't enter any payment proof or proof hash for the successful payment."
+        return render(request, "client/checkout-crypto.html", {
+                                        "oid": oid,
+                                        "msg": msg,
+                                        "cat_fb": cat_fb,   
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+        })
+
+    
 
 def cryptoSuccess(request):
     return render(request, "client/checkout-crypto-proof.html", {
@@ -1993,8 +2009,8 @@ def create_checkout_session(request, oid):
     order = Order.objects.get(id=oid)
     order_name = "ORD - " + str(order.id)
     amount = order.get_cart_total * 100
-    YOUR_DOMAIN = "http://127.0.0.1:8000"
-    # YOUR_DOMAIN = "http://174.138.27.160:8000"
+    # YOUR_DOMAIN = "http://127.0.0.1:8000"
+    YOUR_DOMAIN = "http://174.138.27.160:8000"
     product = stripe.Product.create(name=order_name)
 
     price = stripe.Price.create(
