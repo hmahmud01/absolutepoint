@@ -70,7 +70,9 @@
                     </p>
                 </div>
             </div>
+            
 
+            {% if order.payment.credit_type == "crypto" %}
             <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-heading"> Payment Informationb</h5>
@@ -79,7 +81,7 @@
                     <p class="card-text">Payment hash: {{ order.cryptonetwork.payment_hash }}</p>
                     <p class="card-text">Selected Network: {{ order.cryptonetwork.network }}</p>
                     
-                    <div class="mt-3">
+                    <div class="mt-3 row">
                         {% if proofs %}
                         <h3>Proofs</h3>
                         {% for proof in proofs %}
@@ -93,6 +95,8 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+            
 
         </div>
         <div class="col-md-4 col-lg-4 col-sm-6">

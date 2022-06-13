@@ -1539,11 +1539,20 @@ def orderDetail(request, oid):
     data = ""
     order = Order.objects.get(id=oid)
     orderItems = OrderItems.objects.filter(order_id=oid)
-    context = {'items': orderItems, 'order':order , "cat_fb": cat_fb,
+    if order.payment.credit_type == "crypto":
+        proofs = cryptoProof.objects.filter(order_id=oid)
+        context = {'items': orderItems, 'order':order, 'proofs': proofs, "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,}
+    else:
+        context = {'items': orderItems, 'order':order , "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,}
+    
     return render(request, "client/order_detail.html", context)
 
 # CLIENT DASHBOARD
