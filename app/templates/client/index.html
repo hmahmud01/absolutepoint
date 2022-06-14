@@ -20,7 +20,7 @@
             <div class="container">
                 <h1 class="mb-0">Absolute Point</h1>
                 <p class="lead w-50">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                <a class="btn btn-primary" href="{% url 'allservices' %}">See Our Services</a>
+                <a class="btn btn-primary" href="{% url 'completeservices' %}">See Our Services</a>
             </div>
         </div>
     </div>  
@@ -35,27 +35,8 @@
                 <h1 class="page-heading">Crypto Services</h1>
                 <p>Provided Absolute Point</p>
             </div>
-            {% comment %} <div class="product-slider my-3 px-3"> {% endcomment %}
-                <!-- {% for product in products %}
-                {% if product.status %}
-                <div>
-                    <a href="{% url 'clientservicedetail' product.id %}">
-                        {% if product.thumb %}
-                        <img src="/media/{{ product.thumb }}"
-                            class="img-thumbnail p-1 shadow" style="width:200px; height: 200px;" alt="{{ product.name }}">
-                        {% else %}
-                        <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
-                            class="img-thumbnail p-1 shadow" style="width:200px; height: 200px;" alt="{{ product.name }}">
-                        {% endif %}
-                        <p class="text-center lead text-decoration-none">{{ product.name }}</p>
-                    </a>
-                    
-                </div>
 
-                {% endif %}
-                {% endfor %} -->
-            {% comment %} </div> {% endcomment %}
-            {% for product in products %}
+            <!-- {% for product in products %}
             {% if product.status %}
             <div class="col-md-6 col-lg-3">
                 <a href="{% url 'clientservicedetail' product.id %}">
@@ -73,6 +54,24 @@
                 </a>    
             </div>
             {% endif %}
+            {% endfor %} -->
+
+            {% for item in items %}
+            <div class="col-md-6 col-lg-3">
+                <a href="{% url 'clientservicedetail' item.product.id %}">
+                <div class="card mb-4">
+                    {% if item.product.thumb %}
+                    <img class="card-img-top img-fluid" src="/media/{{ item.product.thumb }}" alt="{{ item.product.name }}">
+                    {% else %}
+                    <img class="card-img-top img-fluid" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ item.product.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                    <p class="lead text-dark text-decoration-none">{{ item.product.name }}</p>
+                    <p class="card-text lead text-decoration-none text-dark">{{ item.price }} $</p>
+                    </div>
+                </div>
+                </a>    
+            </div>
             {% endfor %}
             <div class="text-center mb-3">
                 <!-- <button class="btn btn-lg btn-primary">All Services</button> -->

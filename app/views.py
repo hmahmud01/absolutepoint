@@ -1323,12 +1323,31 @@ def salesExecutiveSalary(request):
 def clientIndex(request):
     data = ""
     products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter").filter(status=True)[:8]
+    items = []
     marketing = serviceProduct.objects.filter(category__name="Marketing")
     facebook = serviceProduct.objects.filter(category__name="Facebook")
     instagram = serviceProduct.objects.filter(category__name="Instagram")
     youtube = serviceProduct.objects.filter(category__name="Youtube")
     tiktok = serviceProduct.objects.filter(category__name="Tiktok")
     twitter = serviceProduct.objects.filter(category__name="Twitter")
+
+    for prod in products:
+        variable = variableProductPrice.objects.filter(product__id=prod.id).order_by('price')
+
+        try:
+            product = {
+                'product': prod,
+                'price': variable.first().price
+            }
+
+            items.append(product)
+        except:
+            product = {
+                'product': prod,
+                'price': 0
+            }
+
+            items.append(product)
 
     cat_fb = productCategory.objects.get(name="Facebook").id
     cat_it = productCategory.objects.get(name="Instagram").id
@@ -1352,6 +1371,7 @@ def clientIndex(request):
         "cat_tt": cat_tt,
         "cat_tw": cat_tw,
         "order": order,
+        "items": items
     }
 
     ctx2 ={"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter}
@@ -1386,6 +1406,39 @@ def allService(request):
         variable = variableProductPrice.objects.filter(product__id=active.id)
         try:
             product = {
+                'product': inactive,
+                'price': variable.first().price
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': inactive,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    return render(request, "client/allservices.html", {
+                                        "all_products": all_prods,
+                                        "products": all_products, "order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,})
+
+def completeService(request):
+    products = serviceProduct.objects.all()
+    all_products = []
+    all_prods = []
+    active_products = products.filter(status=True)
+    inactive_products = products.filter(status=False)
+    data = cartData(request)
+    order = data['order']
+    for active in active_products:
+        all_products.append(active)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            product = {
                 'product': active,
                 'price': variable.first().price
             }
@@ -1397,7 +1450,23 @@ def allService(request):
             }
             all_prods.append(product)
 
-    return render(request, "client/allservices.html", {
+    for inactive in inactive_products:
+        all_products.append(inactive)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            product = {
+                'product': inactive,
+                'price': variable.first().price
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': inactive,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    return render(request, "client/completeservices.html", {
                                         "all_products": all_prods,
                                         "products": all_products, "order": order, 
                                         "cat_fb": cat_fb,
@@ -1483,7 +1552,7 @@ def clientServiceDetail(request, pid):
     data = ""
     checkout = False
     product = serviceProduct.objects.get(id=pid)
-    variables = variableProductPrice.objects.filter(product_id=pid)
+    variables = variableProductPrice.objects.filter(product_id=pid).order_by('measurement')
     terms = productTerms.objects.filter(product_id=pid)
     data = cartData(request)
     order = data['order']

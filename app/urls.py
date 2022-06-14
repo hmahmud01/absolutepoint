@@ -66,6 +66,7 @@ urlpatterns = [
     # CLIENT AREA
     path('', views.clientIndex, name="clientindex"),
     path('allservices/', views.allService, name="allservices"),
+    path('completeservices/', views.completeService, name="completeservices"),
     path('socialservices/<int:cid>', views.socialServices, name="socialservices"),
     path('client/service/detail/<int:pid>/', views.clientServiceDetail, name="clientservicedetail"),
     path('ajax/load-price/', views.loadPrice, name="loadprice"),
