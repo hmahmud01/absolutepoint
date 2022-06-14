@@ -60,15 +60,19 @@
                     <h5 class="card-title">Quantity</h5>
                     <h6 class="card-subtitle text-muted">Select Your Option</h6>
 
-                    <div class="col-md">
+                    <div class="col-md-12 mb-3">
                         <select class="form-select" id="product_price" required>
                             <option value="none">Select</option>
                             {% for variable in variables %}
                             <option value="{{ variable.id }}">{{ variable.measurement }} </option>
                             {% endfor %}
                         </select>
-
-                        <div class="p-3" id="price_content"></div>
+                        <div class="p-1" id="price_content"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="link" class="form-label">Link</label>
+                        <input type="text" class="form-control" name="link" id="link" placeholder="Link"
+                            value="" required>
                     </div>
                 </div>
                 <div class="card-footer">

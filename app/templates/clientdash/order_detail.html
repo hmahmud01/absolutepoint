@@ -20,6 +20,7 @@
                                     <th style="min-width: 300px;">Product</th>
                                     <th>Items</th>
                                     <th>Price</th>
+                                    <th>Link</th>
                                     <th>Ordered QTY</th>
                                     <th class="text-end">Total</th>
                                 </tr>
@@ -43,6 +44,7 @@
                                     </td>
                                     <td>{{ item.variance.measurement }} </td>
                                     <td>${{ item.variance.price }}</td>
+                                    <td><a target="_blank" href="{{ item.link }}">Link</a></td>
                                     <td>{{ item.quantity }}</td>
                                     <td class="text-end">${{ item.get_total }}</td>
                                 </tr>

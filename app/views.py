@@ -1726,6 +1726,8 @@ def updateItem(request):
     productId = data['productId']
     action = data['action']
     price = data['price']
+    link = data['link']
+    print(link)
     print(productId)
 
     if request.user.is_authenticated:
@@ -1737,7 +1739,7 @@ def updateItem(request):
 
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
-    orderItem, created = OrderItems.objects.get_or_create(order=order, product=product, variance=variance)
+    orderItem, created = OrderItems.objects.get_or_create(order=order, product=product, variance=variance, link=link)
 
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
