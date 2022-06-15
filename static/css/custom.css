@@ -14,6 +14,14 @@
 
 }
 
+.bg-crypto{
+    background: rgb(0,75,46);
+    background: radial-gradient(at top, rgba(0,75,46,1) 0%, rgba(2,0,36,1) 57%); 
+}
+
+.text-justify {
+    text-align: justify;
+}
 
 .scrollbar {
     height: 400px !important;

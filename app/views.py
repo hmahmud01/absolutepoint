@@ -1330,6 +1330,7 @@ def clientIndex(request):
     youtube = serviceProduct.objects.filter(category__name="Youtube")
     tiktok = serviceProduct.objects.filter(category__name="Tiktok")
     twitter = serviceProduct.objects.filter(category__name="Twitter")
+    telegram = serviceProduct.objects.filter(category__name="Telegram")
 
     for prod in products:
         variable = variableProductPrice.objects.filter(product__id=prod.id).order_by('price')
@@ -1365,6 +1366,7 @@ def clientIndex(request):
         "youtube": youtube,
         "tiktok": tiktok,
         "twitter": twitter,
+        "telegram": telegram,
         "cat_fb": cat_fb,
         "cat_it": cat_it,
         "cat_yt": cat_yt,
