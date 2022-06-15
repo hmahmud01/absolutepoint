@@ -11,7 +11,7 @@
             </div>            
         </li>
         <div class="dropdown me-2">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 All Services
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -25,12 +25,12 @@
         </div>
         <li class="nav-item dropdown">
             <div class="me-2">
-                <a href="{% url 'portfolio' %}" class="btn btn-outline-primary">Portfolio</a>
+                <a href="{% url 'portfolio' %}" class="btn btn-outline-light">Portfolio</a>
             </div>            
         </li>
         <li class="nav-item dropdown">
             <div class="me-2">
-                <a href="{% url 'contactus' %}" class="btn btn-outline-primary">Contact Us</a>
+                <a href="{% url 'contactus' %}" class="btn btn-outline-light">Contact Us</a>
             </div>            
         </li>
         {% comment %} <li class="nav-item dropdown">
@@ -41,16 +41,16 @@
         <li class="nav-item dropdown">
             <div class="me-2">
                 {% if order.get_cart_items %}
-                <a href="{% url 'cart' %}" class="btn btn-outline-dark">Cart ({{ order.get_cart_items }})</a>
+                <a href="{% url 'cart' %}" class="btn btn-outline-light">Cart ({{ order.get_cart_items }})</a>
                 {% else %}
-                <a href="{% url 'cart' %}" class="btn btn-outline-dark">Cart (0)</a>
+                <a href="{% url 'cart' %}" class="btn btn-outline-light">Cart (0)</a>
                 {% endif %}
             </div>                
         </li>
         {% if request.user.is_authenticated %}
         <li class="nav-item dropdown">
             <div class="me-2">
-                <a href="{% url 'clientorders' %}" class="btn btn-outline-dark">Your Orders</a>
+                <a href="{% url 'clientorders' %}" class="btn btn-outline-light">Your Orders</a>
             </div>                
         </li>
         {% endif %}
