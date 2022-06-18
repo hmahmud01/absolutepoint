@@ -5,15 +5,17 @@
 <section class="mb-3 mb-lg-5">
     <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card-widget h-100">
-                <div class="card-widget-body">
-                    <div class="dot me-3 bg-indigo"></div>
-                    <div class="text">
-                        <h6 class="mb-0">Total Employees</h6><span class="text-gray-500">10 Person</span>
+            <a href="{% url 'noticecreate' %}">
+                <div class="card-widget h-100">
+                    <div class="card-widget-body">
+                        <div class="dot me-3 bg-indigo"></div>
+                        <div class="text">
+                            <h6 class="mb-0">Create Notice</h6><span class="text-gray-500"></span>
+                        </div>
                     </div>
+                    <div class="icon text-white bg-indigo"><i class="fas fa-server"></i></div>
                 </div>
-                <div class="icon text-white bg-indigo"><i class="fas fa-server"></i></div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
             <a href="{% url 'salesservices' %}">
