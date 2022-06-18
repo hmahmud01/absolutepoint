@@ -1355,6 +1355,7 @@ def clientIndex(request):
     cat_yt = productCategory.objects.get(name="Youtube").id
     cat_tt = productCategory.objects.get(name="Tiktok").id
     cat_tw = productCategory.objects.get(name="Twitter").id
+    cat_tg = productCategory.objects.get(name="Telegram").id
 
     data = cartData(request)
     order = data['order']
@@ -1372,6 +1373,7 @@ def clientIndex(request):
         "cat_yt": cat_yt,
         "cat_tt": cat_tt,
         "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
         "order": order,
         "items": items
     }
