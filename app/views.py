@@ -1823,7 +1823,7 @@ def orderDetailDash(request, oid):
         print(proofs)
         context = {'items': orderItems, 'order':order, 'proofs': proofs}
     else:
-        context = {'items': orderItems, 'order':orders}
+        context = {'items': orderItems, 'order':order}
     
     return render(request, "clientdash/order_detail.html", context)
 
