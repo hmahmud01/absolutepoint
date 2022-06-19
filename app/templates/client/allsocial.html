@@ -2,12 +2,133 @@
 {% load static %}
 
 {% block content %}
-<div class="row">
+<div class="row my-3">
     <div class="page-header text-center">
         <h1 class="page-heading">Social Marketing Services</h1>
         <p>Provided by Crypto Marketers</p>
     </div>
 
-    
+    <div class="row my-5">
+        {% if facebook %}
+        <div class="col-lg-4 mb-5">
+            <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
+            <div class="card-status bg-primary"></div>
+                <div class="card-body">
+                    <h2 class="text-primary text-center fw-bold py-3">Facebook</h2>
+                    <hr class="text-muted">
+                    <ul class="fa-ul my-4">
+                        {% for prod in facebook %}
+                        <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_fb %}">See More</a></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if instagram %}
+        <div class="col-lg-4 mb-5">
+            <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
+                <div class="card-status bg-primary"></div>
+                <div class="card-body">
+                    <h2 class="text-primary text-center fw-bold py-3">Instagram</h2>
+                    <hr class="text-muted">
+                    <ul class="fa-ul my-4">
+                        {% for prod in instagram %}
+                        <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_it %}">See More</a></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if youtube %}
+        <div class="col-lg-4 mb-5">
+            <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
+            <div class="card-status bg-primary"></div>
+                <div class="card-body">
+                    <h2 class="text-primary text-center fw-bold py-3">Youtube</h2>
+                    <hr class="text-muted">
+                    <ul class="fa-ul my-4">
+                        {% for prod in youtube %}
+                        <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_yt %}">See More</a></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if tiktok %}
+        <div class="col-lg-4 mb-5">
+            <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
+                <div class="card-status bg-primary"></div>
+                <div class="card-body">
+                    <h2 class="text-primary text-center fw-bold py-3">Tiktok</h2>
+                    <hr class="text-muted">
+                    <ul class="fa-ul my-4">
+                        {% for prod in tiktok %}
+                        <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tt %}">See More</a></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if twitter %}
+        <div class="col-lg-4 mb-5">
+            <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
+            <div class="card-status bg-primary"></div>
+                <div class="card-status bg-primary"></div>
+                <div class="card-body">
+                    <h2 class="text-primary text-center fw-bold py-3">Twitter</h2>
+                    <hr class="text-muted">
+                    <ul class="fa-ul my-4">                        
+                        {% for prod in twitter %}
+                        <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tw %}">See More</a></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if telegram %}
+        <div class="col-lg-4 mb-5">
+            <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
+            <div class="card-status bg-primary"></div>
+                <div class="card-status bg-primary"></div>
+                <div class="card-body">
+                    <h2 class="text-primary text-center fw-bold py-3">Telegram</h2>
+                    <hr class="text-muted">
+                    <ul class="fa-ul my-4">                        
+                        {% for prod in telegram %}
+                        <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tg %}">See More</a></div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

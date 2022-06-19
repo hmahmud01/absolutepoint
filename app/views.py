@@ -1430,6 +1430,43 @@ def allService(request):
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,})
 
+def allSocial(request):
+    marketing = serviceProduct.objects.filter(category__name="Marketing")
+    facebook = serviceProduct.objects.filter(category__name="Facebook")
+    instagram = serviceProduct.objects.filter(category__name="Instagram")
+    youtube = serviceProduct.objects.filter(category__name="Youtube")
+    tiktok = serviceProduct.objects.filter(category__name="Tiktok")
+    twitter = serviceProduct.objects.filter(category__name="Twitter")
+    telegram = serviceProduct.objects.filter(category__name="Telegram")
+
+    cat_fb = productCategory.objects.get(name="Facebook").id
+    cat_it = productCategory.objects.get(name="Instagram").id
+    cat_yt = productCategory.objects.get(name="Youtube").id
+    cat_tt = productCategory.objects.get(name="Tiktok").id
+    cat_tw = productCategory.objects.get(name="Twitter").id
+    cat_tg = productCategory.objects.get(name="Telegram").id
+
+    data = cartData(request)
+    order = data['order']
+
+    context = {
+        "facebook": facebook,
+        "instagram": instagram,
+        "youtube": youtube,
+        "tiktok": tiktok,
+        "twitter": twitter,
+        "telegram": telegram,
+        "cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "order": order
+    }
+
+    return render(request, "client/allsocial.html", context)
+
 def completeService(request):
     products = serviceProduct.objects.all()
     all_products = []
