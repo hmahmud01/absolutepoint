@@ -63,26 +63,26 @@ DEC = 31
 
 HOURS_DELTA = 6
 
-sount = 0
-tcount = 0
+# sount = 0
+# tcount = 0
 
-cat_fb = 0
-cat_it= 0
-cat_yt = 0
-cat_tt = 0
-cat_tw = 0
-cat_tg = 0
+# cat_fb = 0
+# cat_it= 0
+# cat_yt = 0
+# cat_tt = 0
+# cat_tw = 0
+# cat_tg = 0
 
 
-# scount = Services.objects.filter(accepted=False).count()
-# tcount = Ticket.objects.filter(seen=False).count()
+scount = Services.objects.filter(accepted=False).count()
+tcount = Ticket.objects.filter(seen=False).count()
 
-# cat_fb = productCategory.objects.get(name="Facebook").id
-# cat_it = productCategory.objects.get(name="Instagram").id
-# cat_yt = productCategory.objects.get(name="Youtube").id
-# cat_tt = productCategory.objects.get(name="Tiktok").id
-# cat_tw = productCategory.objects.get(name="Twitter").id
-# cat_tg = productCategory.objects.get(name="Telegram").id
+cat_fb = productCategory.objects.get(name="Facebook").id
+cat_it = productCategory.objects.get(name="Instagram").id
+cat_yt = productCategory.objects.get(name="Youtube").id
+cat_tt = productCategory.objects.get(name="Tiktok").id
+cat_tw = productCategory.objects.get(name="Twitter").id
+cat_tg = productCategory.objects.get(name="Telegram").id
 
 
 def login(request):
