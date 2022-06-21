@@ -1820,7 +1820,12 @@ def clientList(request):
 def orderList(request):
     data = ""
     orders = Order.objects.all()
-    return render(request, "clientdash/order_list.html", {"data": data, "orders": orders})
+    crypto_orders = orders.filter(payment__credit_type="crypto")
+    stripe_orders = orders.filter(payment__credit_type="stripe")
+    print(crypto_orders)
+    print(stripe_orders)
+    return render(request, "clientdash/order_list.html", 
+                {"data": data, "orders": orders, "stripe_orders": stripe_orders, "crypto_orders": crypto_orders})
 
 def orderDetailDash(request, oid):
     data = ""
@@ -1848,6 +1853,7 @@ def updateItem(request):
     action = data['action']
     price = data['price']
     link = data['link']
+    reference = data['reference']
     print(link)
     print(productId)
 
@@ -1860,7 +1866,7 @@ def updateItem(request):
 
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
-    orderItem, created = OrderItems.objects.get_or_create(order=order, product=product, variance=variance, link=link)
+    orderItem, created = OrderItems.objects.get_or_create(order=order, product=product, variance=variance, link=link, reference=reference)
 
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
@@ -2077,16 +2083,17 @@ def processOrder(request):
 def confirmCryptoOrder(requet, oid):
     order = Order.objects.get(id=oid)
     billing = Billing.objects.get(order__id=oid)
-    # subject = 'Order Completion'
-    # message = f'Hi {order.customer},\nYour order for {order.id} has been placed as per our communication with you. We appreciate doing business with you.\nThanks\n-Absolute Point.'
-    # email_from = settings.EMAIL_HOST_USER
-    # recipient_list = [billing.email, ]
-    # send_mail( subject, message, email_from, recipient_list )
 
     order.order_payment = True
     order.save()
 
     return redirect('orderlistdetail', oid)
+
+def cancelOrder(request, oid):
+    order = Order.objects.get(id=oid)
+    order.delete()
+
+    return redirect('orderlist')
 
 def stripeCheckout(request, oid):
     return render(request, "client/checkout-stripe.html", {"oid": oid, "cat_fb": cat_fb,
@@ -2137,7 +2144,7 @@ def saveCryptoProof(request, oid):
                 )
                 proofs.save()
 
-        return redirect('cryptosuccess')
+        return redirect('cryptosuccess', oid)
     else:
         msg = "You didn't enter any payment proof or proof hash for the successful payment."
         return render(request, "client/checkout-crypto.html", {
@@ -2152,8 +2159,12 @@ def saveCryptoProof(request, oid):
 
     
 
-def cryptoSuccess(request):
+def cryptoSuccess(request, oid):
+    order = Order.objects.get(id=oid)
+    orderItems = OrderItems.objects.filter(order_id=order.id)
     return render(request, "client/checkout-crypto-proof.html", {
+                                        "order": order,
+                                        "items": orderItems,
                                         "cat_fb": cat_fb,   
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
@@ -2166,7 +2177,8 @@ def create_checkout_session(request, oid):
     order_name = "ORD - " + str(order.id)
     amount = order.get_cart_total * 100
     # YOUR_DOMAIN = "http://127.0.0.1:8000"
-    YOUR_DOMAIN = "http://174.138.27.160:8000"
+    # YOUR_DOMAIN = "http://174.138.27.160:8000"
+    YOUR_DOMAIN = "http://cryptomarketers.net/"
     product = stripe.Product.create(name=order_name)
 
     price = stripe.Price.create(

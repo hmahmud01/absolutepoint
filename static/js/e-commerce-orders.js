@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
+
     // Add Bulk Actions Select & Bootstrap styles to the elements
     // in the header
     dataTable.on("datatable.init", function () {
@@ -33,8 +34,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // dataTableContainer.classList.add("border-0");
     });
 
+
     // Fade in after init
     dataTable.on("datatable.init", function (args) {
         document.getElementById("ordersDatatable").closest(".preload-wrapper").classList.add("opacity-10");
     });
+
 });
