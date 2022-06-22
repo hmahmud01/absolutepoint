@@ -240,6 +240,36 @@
                 </div>
             </div>
         </div>
+
+        <div class="row py-3 product-slider">
+
+            <div class="page-header text-center">
+                <h1 class="page-heading">Reviews</h1>
+                <p>Provided by Crypto Marketer Clients</p>
+            </div>
+            <!-- <div class="product-slider"> -->
+                {% for review in reviews %}
+                <div class="card mb-3 col-md-4 h-100">
+                    <div class="row g-0">
+                        <!-- <div class="col-md-4">
+                            {% if review.product.thumb %}
+                            <img src="/media/{{ review.product.thumb }}" class="img-fluid rounded-start" alt="{{ review.product.name }}">
+                            {% else %}
+                            <img class="img-fluid rounded-start" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ review.product.name }}">
+                            {% endif %}
+                        </div> -->
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ review.product.name }}</h5>
+                                <p class="card-text">{{ review.review }}</p>
+                                <p class="card-text"><small class="text-muted">{{ review.date_created }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            <!-- </div> -->
+        </div>
     </div>
 </section>
 {% endblock %}
@@ -252,7 +282,7 @@
 <script>
     $(document).ready(function () {
         $('.product-slider').slick({
-            slidesToShow: 6,
+            slidesToShow: 3,
             slidesToScroll: 1,
             autoplay: true,
             autoplaySpeed: 2000,

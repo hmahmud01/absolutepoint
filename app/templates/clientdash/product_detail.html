@@ -101,6 +101,38 @@
             </div>
             
         </div>
+
+        <div class="col-md-12 col-sm-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Reviews</h5>
+                    <h6 class="card-subtitle text-muted"></h6>
+                    <ul class="list-group mt-3">
+                        {% for review in reviews %}
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">{{ review.review }}</h6>
+                                {% if review.user %}
+                                <small class="text-muted"> by {{ review.user.username }}</small>
+                                {% else %}
+                                <small class="text-muted"> by Anonymous</small>
+                                {% endif %}
+                                
+                            </div>
+                            <div class="float-end">
+                                {% if review.status %}
+                                <button class="btn btn-sm btn-outline-secondary">Accepted</button>
+                                {% else %}
+                                <a class="btn btn-sm btn-outline-success" href="{% url 'reviewaccept' review.id %}">Accept</a>
+                                {% endif %}
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'reviewdecline' review.id %}">Delete</a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="variableprice" data-bs-backdrop="static"

@@ -1371,6 +1371,8 @@ def clientIndex(request):
     data = cartData(request)
     order = data['order']
 
+    reviews = Review.objects.filter(status=True)
+
     context = {
         "products": products,
         "facebook": facebook,
@@ -1386,7 +1388,8 @@ def clientIndex(request):
         "cat_tw": cat_tw,
         "cat_tg": cat_tg,
         "order": order,
-        "items": items
+        "items": items,
+        "reviews": reviews,
     }
 
     ctx2 ={"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter}
@@ -1606,6 +1609,7 @@ def clientServiceDetail(request, pid):
     product = serviceProduct.objects.get(id=pid)
     variables = variableProductPrice.objects.filter(product_id=pid).order_by('measurement')
     terms = productTerms.objects.filter(product_id=pid)
+    reviews = Review.objects.filter(product_id=pid).filter(status=True)
     data = cartData(request)
     order = data['order']
     items = data['items']
@@ -1614,7 +1618,7 @@ def clientServiceDetail(request, pid):
         if item.product.id == pid:
             checkout = True
 
-    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order, "terms": terms,
+    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order, "terms": terms, "reviews": reviews,
                                         "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
@@ -1750,7 +1754,9 @@ def productDetail(request, pid):
     active = "active"
     variables = variableProductPrice.objects.filter(product_id=pid)
     terms = productTerms.objects.filter(product_id=pid)
-    return render(request, "clientdash/product_detail.html", {"product": product, "inactive": inactive, "active": active, "variables": variables, "terms": terms})
+    reviews = Review.objects.filter(product_id=pid)
+    print(reviews)
+    return render(request, "clientdash/product_detail.html", {"product": product, "inactive": inactive, "active": active, "variables": variables, "terms": terms, "reviews": reviews})
 
 def saveVariablePrice(request):
     data = ""
@@ -1801,6 +1807,20 @@ def saveUpdatedVariablePrice(request):
 
     return redirect('productdetail', variable.product.id)
 
+def reviewAccept(request, rid):
+    review = Review.objects.get(id=rid)
+    pid = review.product.id
+    review.status = True
+    review.save()
+
+    return redirect('productdetail', pid)
+
+def reviewDecline(request, rid):
+    review = Review.objects.get(id=rid)
+    pid = review.product.id
+    review.delete()
+
+    return redirect('productdetail', pid)
 
 def productAct(request, pid, act):
     product = serviceProduct.objects.get(id=pid)
@@ -1842,6 +1862,28 @@ def orderDetailDash(request, oid):
         context = {'items': orderItems, 'order':order}
     
     return render(request, "clientdash/order_detail.html", context)
+
+
+def submitReview(request, pid):
+    product = serviceProduct.objects.get(id=pid)
+
+    post_data = request.POST
+    if request.user.is_authenticated:
+        review = Review(
+            product=product,
+            review=post_data['review'],
+            user=request.user,
+        )
+
+        review.save()
+    else:
+        review = Review(
+            product=product,
+            review=post_data['review']
+        )
+        review.save()
+
+    return redirect('clientservicedetail', pid)
 
 
 def updateItem(request):

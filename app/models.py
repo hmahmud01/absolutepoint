@@ -283,4 +283,13 @@ class Ticket(models.Model):
 
     def __str__(self):
         return self.subject
-    
+
+class Review(models.Model):
+    product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
+    review = models.TextField(null=True, blank=True)
+    status = models.BooleanField(default=False)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    date_created = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.product.name

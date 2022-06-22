@@ -17,8 +17,7 @@
                     <h6 class="card-subtitle text-muted">Category: {{ product.category.name }}</h6>
                 </div>
                 {% comment %} {% if product.thumb %}
-                <img src="/media/{{ product.thumb }}"
-                    class="shadow" alt="{{ product.name }}">
+                <img src="/media/{{ product.thumb }}" class="shadow" alt="{{ product.name }}">
                 {% else %}
                 <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
                     class="shadow" style="width:200px; height: 200px;" alt="{{ product.name }}">
@@ -33,7 +32,7 @@
                     <h5 class="card-title">Terms And Conditions</h5>
                     <ol>
                         {% for term in terms %}
-                        <li> {{ term.terms }}  </li>
+                        <li> {{ term.terms }} </li>
                         {% endfor %}
                     </ol>
                 </div>
@@ -41,15 +40,15 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Have a Question</h5>
-                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @CryptoMsupport by <a href="https://t.me/CryptoMsupport" target="_blank">Clicking here</a></h6>
+                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @CryptoMsupport by <a
+                            href="https://t.me/CryptoMsupport" target="_blank">Clicking here</a></h6>
                 </div>
             </div>
         </div>
         <div class="col-md-4 col-lg-4 col-sm-6">
             <div class="card card-inverse text-white mb-4">
                 {% if product.thumb %}
-                <img src="/media/{{ product.thumb }}"
-                    class="shadow card-img img-fluid" alt="{{ product.name }}">
+                <img src="/media/{{ product.thumb }}" class="shadow card-img img-fluid" alt="{{ product.name }}">
                 {% else %}
                 <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
                     class="shadow card-img img-fluid" alt="{{ product.name }}">
@@ -71,21 +70,54 @@
                     </div>
                     <div class="col-md-12">
                         <label for="link" class="form-label">Link</label>
-                        <input type="text" class="form-control" name="link" id="link" placeholder="Link"
-                            value="" required>
+                        <input type="text" class="form-control" name="link" id="link" placeholder="Link" value=""
+                            required>
                     </div>
                     <div class="col-md-12">
                         <label for="reference" class="form-label">Reference(Optional)</label>
-                        <input type="text" class="form-control" name="reference" id="reference" placeholder="Reference (Optional)"
-                            value="">
+                        <input type="text" class="form-control" name="reference" id="reference"
+                            placeholder="Reference (Optional)" value="">
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary update-cart" type="button"><i class="fas fa-money me-2"></i>Add To Cart</button>
-                    
+                    <button data-product="{{ product.id }}" data-action="add"
+                        class="btn btn-outline-secondary update-cart" type="button"><i class="fas fa-money me-2"></i>Add
+                        To Cart</button>
+
                     {% if checkout %}
                     <a href="{% url 'checkout' order.id %}" class="btn btn-info" type="button">Checkout</a>
                     {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-sm-6">
+            <div class="card overflow-hidden mb-4">
+                <div class="card-header">
+                    <h5 class="card-title">Review</h5>
+                    <form action="{% url 'submitreview' product.id %}" method="POST">{% csrf_token %}
+                        <div class="input-group">
+                            <input class="form-control" name="review" type="text" placeholder="Review">
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="fa fa-paper-plane"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="list-group rounded-0">
+                    {% for review in reviews %}
+                    <div class="list-group-item border-start-0 border-end-0 py-5">
+                        <div class="d-flex">
+                            <div class="flex-grow-1 ps-3">
+                                {% if review.user %}
+                                <h5 class="fw-bold">{{ review.user.username }}</h5>
+                                {% else %}
+                                <h5 class="fw-bold">Anonymous</h5>
+                                {% endif %}
+                                <div class="text-muted text-sm"> {{ review.review }} </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -102,8 +134,8 @@
 <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script>
     var product_id = "{{ product.id }}"
-    
-    $("#product_price").change(function() {
+
+    $("#product_price").change(function () {
         var url = '/ajax/load-price/';
         var price_id = $(this).val();
 
@@ -116,7 +148,7 @@
                 'price_id': price_id,
                 'product_id': product_id
             },
-            success: function(data){
+            success: function (data) {
                 $("#price_content").html(data);
             }
         });
