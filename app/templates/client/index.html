@@ -241,6 +241,8 @@
             </div>
         </div>
 
+
+        {% if reviews %}
         <div class="page-header text-center py-3">
             <h1 class="page-heading">Reviews</h1>
             <p>Provided by Crypto Marketer Clients</p>
@@ -270,6 +272,8 @@
                 {% endfor %}
             <!-- </div> -->
         </div>
+
+        {% endif %}
     </div>
 </section>
 {% endblock %}
