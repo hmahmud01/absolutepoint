@@ -98,7 +98,7 @@
                     <form action="{% url 'submitreview' product.id %}" method="POST">{% csrf_token %}
                         <div class="input-group">
                             <input class="form-control" name="review" type="text" placeholder="Review">
-                            <button class="btn btn-outline-secondary" type="button">
+                            <button class="btn btn-outline-secondary" type="submit">
                                 <i class="fa fa-paper-plane"></i></button>
                         </div>
                     </form>

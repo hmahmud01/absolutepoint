@@ -34,10 +34,9 @@
                                             src="/media/{{ item.product.thumb }}"
                                             alt="" width="80">
                                         <span class="card-table-text">
-                                            <a class="text-reset text-decoration-none" href="">
+                                            <a class="text-reset text-decoration-none" href="{% url 'clientservicedetail' item.product.id %}">
                                                 <strong>{{ item.product.name }}</strong><br>
-                                                <span class="text-muted">{{ item.product.ptype }} -
-                                                    {{ item.product.category.name }}</span><br>
+                                                <span class="text-muted">{{ item.product.category.name }}</span><br>
                                                 <div aria-label="Button Outlined">
                                                     {% comment %} <button type="button" data-product="{{ item.product.id }}" data-action="add" class="btn btn-sm btn-outline-primary update-cart">Add</button> {% endcomment %}
                                                     <a href="{% url 'removecartitem' item.id %}" class="btn btn-sm btn-outline-danger update-cart">Delete</a>
@@ -73,10 +72,6 @@
                             <tr class="text-muted">
                                 <th class="fw-normal">Total</th>
                                 <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
-                            </tr>
-                            <tr class="text-muted">
-                                <th class="fw-normal">Shipping Fee</th>
-                                <td class="text-end">$0.00</td>
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Sales Tax</th>
