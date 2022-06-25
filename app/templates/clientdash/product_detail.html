@@ -61,7 +61,7 @@
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">{{ variable.price }}</h6>
-                                {% if variable.title is not None %}
+                                {% if variable.title %}
                                 <small class="text-muted"> for {{ variable.title }} measurement</small>
                                 {% else %}
                                 <small class="text-muted"> for {{ variable.measurement }} measurement</small>

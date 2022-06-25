@@ -63,7 +63,7 @@
                         <select class="form-select" id="product_price" required>
                             <option value="none">Select</option>
                             {% for variable in variables %}
-                            {% if variable.title is not None %}
+                            {% if variable.title %}
                             <option value="{{ variable.id }}">{{ variable.title }} </option>
                             {% else %}
                             <option value="{{ variable.id }}">{{ variable.measurement }} </option>
