@@ -74,10 +74,10 @@
                             <h3 class="my-2">Popular Services</h3>
                             <a class="text-decoration-none lead text-dark" href="">Upvote Services</a><br>
                             <a class="text-decoration-none lead text-dark" href="">Trending Services</a><br>
-                            <a class="text-decoration-none lead text-dark" href="">Twitter</a><br>
-                            <a class="text-decoration-none lead text-dark" href="">Instagram</a><br>
-                            <a class="text-decoration-none lead text-dark" href="">Telegram</a><br>
-                            <a class="text-decoration-none lead text-dark" href="">Tiktok</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_tw %}">Twitter</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_it %}">Instagram</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_tg %}">Telegram</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_tt %}">Tiktok</a><br>
                         </div>
                         <div class="col-md-4 p-5">
                             <h3 class="m-2">Social</h3>
@@ -85,9 +85,12 @@
                             <a class="text-decoration-none lead text-dark" href="">Discord Chat Activity</a><br>
                             <a class="text-decoration-none lead text-dark" href="">Website Development</a><br>
                             <a class="text-decoration-none lead text-dark" href="">Discord Mods</a><br> -->
-                            <i class="fab fa-telegram-plane fa-2x mx-2"></i>
-                            <i class="fab fa-facebook-square fa-2x mx-2"></i>
-                            <i class="fab fa-instagram fa-2x mx-2"></i>
+                            <a href="https://t.me/CryptoMsupport" target="_blank"><i class="fab fa-telegram-plane fa-2x mx-2 text-info"></i></a>
+                            <a href="https://www.facebook.com/thecryptomarketers" target="_blank"><i class="fab fa-facebook-square fa-2x mx-2 text-primary"></i></a>
+                            <a href="https://www.instagram.com/crypto_marketers/" target="_blank"><i class="fab fa-instagram fa-2x mx-2 insta-icon"></i></a>
+                            <!-- <i class="fab fa-telegram-plane fa-2x mx-2 text-info"></i>
+                            <i class="fab fa-facebook-square fa-2x mx-2 text-primary"></i>
+                            <i class="fab fa-instagram fa-2x mx-2 insta-icon"></i> -->
                             <!-- <i class="fab fa-twitter fa-2x mx-2"></i> -->
                         </div>
                     </div>

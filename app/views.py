@@ -1442,7 +1442,8 @@ def allService(request):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
 def allSocial(request):
     marketing = serviceProduct.objects.filter(category__name="Marketing")
@@ -1528,7 +1529,8 @@ def completeService(request):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
 def contactUs(request):
     data = cartData(request)
@@ -1538,7 +1540,8 @@ def contactUs(request):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
 def saveRequest(request):
     post_data = request.POST
@@ -1601,6 +1604,7 @@ def socialServices(request, cid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
                                          })
 
 def clientServiceDetail(request, pid):
@@ -1624,6 +1628,7 @@ def clientServiceDetail(request, pid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
                                         "checkout": checkout})
 
 def loadPrice(request):
@@ -1678,7 +1683,8 @@ def clientOrders(request):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
 def allOrders(request):
     data = ""
@@ -1694,13 +1700,15 @@ def orderDetail(request, oid):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,}
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,}
     else:
         context = {'items': orderItems, 'order':order , "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,}
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,}
     
     return render(request, "client/order_detail.html", context)
 
@@ -1934,7 +1942,8 @@ def cart(request):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,}
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,}
     return render(request, "client/cart.html", context)
 
 def removeCartItem(request, iid):
@@ -1965,7 +1974,8 @@ def checkout(request, oid):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
 
 # <QueryDict: {'csrfmiddlewaretoken': ['Ka4Nh9QauQ361lj7sH5F09KVFkGptdqV8IUl8IgoDvbUOBvM5Yi25xqXx7tM0xwz'], 
@@ -2041,7 +2051,8 @@ def processOrder(request):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
             appuser = AppUser(
                 user = user,
@@ -2119,7 +2130,8 @@ def processOrder(request):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
       
 
 def confirmCryptoOrder(requet, oid):
@@ -2142,7 +2154,8 @@ def stripeCheckout(request, oid):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
 def cryptoCheckout(request, oid):
     
@@ -2153,7 +2166,7 @@ def cryptoCheckout(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-    })
+                                        "cat_tg": cat_tg,})
 
 def saveCryptoProof(request, oid):
     
@@ -2197,7 +2210,7 @@ def saveCryptoProof(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-        })
+                                        "cat_tg": cat_tg,})
 
     
 
@@ -2212,7 +2225,7 @@ def cryptoSuccess(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-    })
+                                        "cat_tg": cat_tg,})
 
 def create_checkout_session(request, oid):
     order = Order.objects.get(id=oid)
@@ -2276,7 +2289,7 @@ def success(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-    })
+                                        "cat_tg": cat_tg,})
 
 def cancel(request):
     return  render(request, 'client/cancel.html', {
@@ -2285,7 +2298,7 @@ def cancel(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-    })
+                                        "cat_tg": cat_tg,})
 
 def createPortfolio(request):
     users = DashboardUser.objects.all()
@@ -2342,7 +2355,8 @@ def portfolio(request):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
 def portfolioDetail(request, pid):
     portfolio = Portfolio.objects.get(id=pid)
@@ -2355,7 +2369,8 @@ def portfolioDetail(request, pid):
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
-                                        "cat_tw": cat_tw,})
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
 
 def people(request):
     people = DashboardUser.objects.all()
