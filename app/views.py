@@ -20,6 +20,7 @@ from pip import main
 import stripe
 from .models import *
 from .utils import cartData
+import random
 
 stripe.api_key = "sk_test_51HhxVlEfJWhMuLjgUFtwqRpA9iGwTip8o2QuIq7BwYzbBysGhQCLXCt8TNZZMF4zcSUAhhfR0axTQKHEuMorCilV009353SShi"
 
@@ -1694,6 +1695,7 @@ def orderDetail(request, oid):
     data = ""
     order = Order.objects.get(id=oid)
     orderItems = OrderItems.objects.filter(order_id=oid)
+    order.get_cart_items = 0
     if order.payment.credit_type == "crypto":
         proofs = cryptoProof.objects.filter(order_id=oid)
         context = {'items': orderItems, 'order':order, 'proofs': proofs, "cat_fb": cat_fb,
