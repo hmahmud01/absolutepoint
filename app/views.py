@@ -1912,7 +1912,9 @@ def updateItem(request):
     if request.user.is_authenticated:
         customer = request.user.username
     else:
-        customer = "Anonymous"
+        n = random.random()
+        customer = "Anonymous" + str(n)
+        # customer = "Anonymous"
     product = serviceProduct.objects.get(id=productId)
     variance  = variableProductPrice.objects.get(id=price)
 
