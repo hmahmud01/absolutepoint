@@ -46,7 +46,12 @@
                                             </a>
                                         </span>
                                     </td>
+                                    {% if item.variance.title is not None %}
+                                    <td>{{ item.variance.title }} </td>
+                                    {% else %}
                                     <td>{{ item.variance.measurement }} </td>
+                                    {% endif %}
+                                    {% comment %} <td>{{ item.variance.measurement }} </td> {% endcomment %}
                                     <td>${{ item.variance.price }}</td>
                                     <td><a target="_blank" href="{{ item.link }}">Link</a></td>
                                     <td>{{ item.quantity }}</td>

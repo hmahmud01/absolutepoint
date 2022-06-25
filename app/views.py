@@ -1775,6 +1775,7 @@ def saveVariablePrice(request):
     variable = variableProductPrice(
         product=product,
         measurement=post_data['measurement'],
+        title=post_data['title'],
         price=post_data['price']
     )
     variable.save()

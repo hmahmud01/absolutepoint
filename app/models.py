@@ -153,6 +153,7 @@ class serviceProduct(models.Model):
 class variableProductPrice(models.Model):
     product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
     measurement = models.IntegerField(null=True, blank=True)
+    title = models.CharField(max_length=128, null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     def __str__(self):
         return self.product.name

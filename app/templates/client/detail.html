@@ -63,7 +63,13 @@
                         <select class="form-select" id="product_price" required>
                             <option value="none">Select</option>
                             {% for variable in variables %}
+                            {% if variable.title is not None %}
+                            <option value="{{ variable.id }}">{{ variable.title }} </option>
+                            {% else %}
                             <option value="{{ variable.id }}">{{ variable.measurement }} </option>
+                            {% endif %}
+                            
+                            {% comment %} <option value="{{ variable.id }}">{{ variable.measurement }} </option> {% endcomment %}
                             {% endfor %}
                         </select>
                         <div class="p-1" id="price_content"></div>

@@ -61,7 +61,11 @@
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">{{ variable.price }}</h6>
+                                {% if variable.title is not None %}
+                                <small class="text-muted"> for {{ variable.title }} measurement</small>
+                                {% else %}
                                 <small class="text-muted"> for {{ variable.measurement }} measurement</small>
+                                {% endif %}
                             </div>
                             
                             {% comment %} <span class="text-muted">${{ variable.price }}</span> {% endcomment %}
@@ -151,7 +155,13 @@
                         <div class="row mb-3">
                             <label class="col-md-3 form-label">Measurement Qty</label>
                             <div class="col-md-9">
-                                <input class="form-control" name="measurement" type="number" placeholder="Measurement Quantity">
+                                <input class="form-control" name="measurement" type="number" placeholder="Measurement Quantity" value="0">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Measurement For Trending</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="title" type="text" placeholder="Measurement Fore Trending">
                             </div>
                         </div>
                         <div class="row mb-3">
