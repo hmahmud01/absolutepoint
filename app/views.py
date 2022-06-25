@@ -1913,8 +1913,8 @@ def updateItem(request):
         customer = request.user.username
     else:
         n = random.random()
-        customer = "Anonymous" + str(n)
-        # customer = "Anonymous"
+        # customer = "Anonymous" + str(n)
+        customer = "Anonymous"
     product = serviceProduct.objects.get(id=productId)
     variance  = variableProductPrice.objects.get(id=price)
 
