@@ -911,7 +911,6 @@ def accountsIndex(request):
     sales = []
     services = Services.objects.all()
 
-
     monthly_data = Services.objects.annotate(month = TruncMonth('date')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
 
     for month in monthly_data:
@@ -920,7 +919,6 @@ def accountsIndex(request):
         print(month['month'].strftime('%B'), month['total'])
 
     print(monthly_data)
-
 
     for service in services:
         print(service.date)
