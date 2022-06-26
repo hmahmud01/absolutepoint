@@ -1376,22 +1376,25 @@ def clientIndex(request):
 
     for review in reviews:
         user = review.user
-        try:
-            app_user = AppUser.objects.get(user_id=user.id)
-            username = app_user.fname + " " + app_user.lname
-            print(username)
-        except:
-            username = user.username
-            print(username)
+        if user is None:
+            username = "Anonymous"
+            data = {
+                "review" : review,
+                "username" : username
+            }
+        else:
+            try:
+                app_user = AppUser.objects.get(user_id=user.id)
+                username = app_user.fname + " " + app_user.lname
+            except:
+                username = user.username
 
-        data = {
-            "review" : review,
-            "username" : username
-        }
+            data = {
+                "review" : review,
+                "username" : username
+            }
 
         review_items.append(data)
-
-    print(review_items)
 
     context = {
         "products": products,
@@ -1642,17 +1645,23 @@ def clientServiceDetail(request, pid):
 
     for review in reviews:
         user = review.user
-        user = review.user
-        try:
-            app_user = AppUser.objects.get(user_id=user.id)
-            username = app_user.fname + " " + app_user.lname
-        except:
-            username = user.username
+        if user is None:
+            username = "Anonymous"
+            data = {
+                "review" : review,
+                "username" : username
+            }
+        else:
+            try:
+                app_user = AppUser.objects.get(user_id=user.id)
+                username = app_user.fname + " " + app_user.lname
+            except:
+                username = user.username
 
-        data = {
-            "review" : review,
-            "username" : username
-        }
+            data = {
+                "review" : review,
+                "username" : username
+            }
 
         review_items.append(data)
 
