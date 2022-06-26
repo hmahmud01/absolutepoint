@@ -47,7 +47,8 @@ def cartData(request):
         cartItems = order.get_cart_items
         # print(cartItems)
     else:
-        customer = "Anonymous"
+		# session = request.session.session_key
+        customer = request.session.session_key
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitems_set.all()
         cartItems = order.get_cart_items

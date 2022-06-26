@@ -250,7 +250,8 @@
 
         <div class="row py-3 product-slider">
             <!-- <div class="product-slider"> -->
-                {% for review in reviews %}
+                {% comment %} {% for review in reviews %} {% endcomment %}
+                {% for item in review_items %}
                 <div class="card mb-3 col-md-4 h-100 mx-2">
                     <div class="row g-0 h-100">
                         <!-- <div class="col-md-4">
@@ -262,13 +263,14 @@
                         </div> -->  
                         <div class="col-md-12">
                             <div class="card-body">
-                                <h5 class="card-title">{{ review.product.name }}</h5>
-                                <p class="card-text">{{ review.review }}</p>
-                                <p class="card-text"><small class="text-muted">Provided by - {{ review.user.username }} in {{ review.date_created }}</small></p>
+                                <h5 class="card-title">{{ item.review.product.name }}</h5>
+                                <p class="card-text">{{ item.review.review }}</p>
+                                <p class="card-text"><small class="text-muted">Provided by - {{ item.username }} in {{ item.review.date_created }}</small></p>
                             </div>
                         </div>
                     </div>
                 </div>
+                
                 {% endfor %}
             <!-- </div> -->
         </div>

@@ -110,16 +110,17 @@
                     </form>
                 </div>
                 <div class="list-group rounded-0">
-                    {% for review in reviews %}
+                    {% comment %} {% for review in reviews %} {% endcomment %}
+                    {% for item in review_items %}
                     <div class="list-group-item border-start-0 border-end-0 py-5">
                         <div class="d-flex">
                             <div class="flex-grow-1 ps-3">
-                                {% if review.user %}
-                                <h5 class="fw-bold">{{ review.user.username }}</h5>
+                                {% if item.username %}
+                                <h5 class="fw-bold">{{ item.username }}</h5>
                                 {% else %}
                                 <h5 class="fw-bold">Anonymous</h5>
                                 {% endif %}
-                                <div class="text-muted text-sm"> {{ review.review }} </div>
+                                <div class="text-muted text-sm"> {{ item.review.review }} </div>
                             </div>
                         </div>
                     </div>

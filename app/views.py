@@ -1374,6 +1374,27 @@ def clientIndex(request):
 
     reviews = Review.objects.filter(status=True)
 
+    review_items = []
+
+    for review in reviews:
+        user = review.user
+        try:
+            app_user = AppUser.objects.get(user_id=user.id)
+            username = app_user.fname + " " + app_user.lname
+            print(username)
+        except:
+            username = user.username
+            print(username)
+
+        data = {
+            "review" : review,
+            "username" : username
+        }
+
+        review_items.append(data)
+
+    print(review_items)
+
     context = {
         "products": products,
         "facebook": facebook,
@@ -1391,6 +1412,7 @@ def clientIndex(request):
         "order": order,
         "items": items,
         "reviews": reviews,
+        "review_items": review_items,
     }
 
     ctx2 ={"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter}
@@ -1610,6 +1632,7 @@ def socialServices(request, cid):
 
 def clientServiceDetail(request, pid):
     data = ""
+    review_items = []
     checkout = False
     product = serviceProduct.objects.get(id=pid)
     variables = variableProductPrice.objects.filter(product_id=pid).order_by('measurement')
@@ -1619,11 +1642,30 @@ def clientServiceDetail(request, pid):
     order = data['order']
     items = data['items']
 
+    for review in reviews:
+        user = review.user
+        user = review.user
+        try:
+            app_user = AppUser.objects.get(user_id=user.id)
+            username = app_user.fname + " " + app_user.lname
+        except:
+            username = user.username
+
+        data = {
+            "review" : review,
+            "username" : username
+        }
+
+        review_items.append(data)
+
+
     for item in items:
         if item.product.id == pid:
             checkout = True
 
-    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order, "terms": terms, "reviews": reviews,
+    print(review_items)
+
+    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order, "terms": terms, "reviews": reviews, "review_items": review_items,
                                         "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
@@ -1846,7 +1888,8 @@ def productAct(request, pid, act):
 
 def clientList(request):
     data = ""
-    return render(request, "clientdash/client_list.html", {"data": data})
+    users = AppUser.objects.all()
+    return render(request, "clientdash/client_list.html", {"data": data, "users": users})
 
 def orderList(request):
     data = ""
@@ -1880,6 +1923,7 @@ def submitReview(request, pid):
 
     post_data = request.POST
     if request.user.is_authenticated:
+
         review = Review(
             product=product,
             review=post_data['review'],
@@ -1915,7 +1959,12 @@ def updateItem(request):
     else:
         n = random.random()
         # customer = "Anonymous" + str(n)
-        customer = "Anonymous"
+        if not request.session.session_key:
+            request.session.save()
+
+        session = request.session.session_key
+        print(session)
+        customer = session
     product = serviceProduct.objects.get(id=productId)
     variance  = variableProductPrice.objects.get(id=price)
 
@@ -2139,7 +2188,7 @@ def processOrder(request):
                                         "cat_tg": cat_tg,})
       
 
-def confirmCryptoOrder(requet, oid):
+def confirmCryptoOrder(request, oid):
     order = Order.objects.get(id=oid)
     billing = Billing.objects.get(order__id=oid)
 
