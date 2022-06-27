@@ -209,7 +209,6 @@
         {% else %}
         <span class="sidebar-link-title">Ticket List</span>
         {% endif %}
-        
       </a>
     </li>
     <li class="sidebar-list-item">
@@ -226,6 +225,22 @@
           <use xlink:href="/static/icons/orion-svg-sprite.svg#new-window-1"></use>
         </svg>
         <span class="sidebar-link-title">Create Portfolio</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'createnews' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#new-window-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Create News</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'listnews' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#new-window-1"></use>
+        </svg>
+        <span class="sidebar-link-title">News List</span>
       </a>
     </li>
   </ul>

@@ -118,6 +118,13 @@ urlpatterns = [
     path('ticketlist/', views.listTickets, name="ticketlist"),
     path('ticketdetail/<int:tid>', views.ticketDetail, name="ticketdetail"),
     path('ticketseen/<int:tid>', views.ticketSeen, name="ticketseen"),
+    path('createnews/', views.createNews, name="createnews"),
+    path('savenews/', views.saveNews, name="savenews"),
+    path('listnews/', views.listNews, name="listnews"),
+    path('detailnews/<int:nid>', views.detailNews, name="detailnews"),
+    path('newslist/', views.newsList, name="newslist"),
+    path('newsdetail/<int:nid>', views.newsDetail, name="newsdetail"), 
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

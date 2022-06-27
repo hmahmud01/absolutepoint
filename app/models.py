@@ -294,3 +294,13 @@ class Review(models.Model):
 
     def __str__(self):
         return self.product.name
+
+class News(models.Model):
+    title = models.CharField(max_length=128, null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    msg_2 = models.TextField(null=True, blank=True)
+    thumb = models.ImageField('news_thumbs', upload_to='news_thumbs', null=True, blank=True)
+    date_created = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.title

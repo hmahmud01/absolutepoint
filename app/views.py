@@ -2448,3 +2448,48 @@ def peopleDetail(request, pid):
     portfolios = PortfolioContributors.objects.filter(contributor_id=pid)
 
     return render(request, "client/people_detail.html", {"dashuser": dashuser, "portfolios": portfolios})
+
+def createNews(request):
+    return render(request, "clientdash/create_news.html")
+
+def saveNews(request):
+    post_data = request.POST
+    file_data = request.FILES
+    news = News(
+        title = post_data['title'],
+        message = post_data['message'],
+        msg_2 = post_data['msg_2'],
+        thumb = file_data['thumb']
+    )
+
+    news.save()
+    return redirect('listnews')
+
+def listNews(request):
+    news = News.objects.all()
+    return render(request, "clientdash/news_list.html", {"news": news})
+
+def detailNews(request, nid):
+    news = News.objects.get(id=nid)
+    return render(request, "clientdash/news_detail.html", {"news": news})
+
+
+def newsList(request):
+    news = News.objects.all()
+    return render(request, "client/newslist.html", {"news": news, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})
+
+def newsDetail(request, nid):
+    news = News.objects.get(id=nid)
+    return render(request, "client/newsdetail.html", {"news": news, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,           
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,})

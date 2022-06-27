@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">News Detail</h1>
+        </div>
+        <div class="col-md-12 col-lg-12 col-sm-12 mb-5">
+            <div class="card mb-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ news.title }}</h5>
+                </div>
+                {% if news.thumb %}
+                <img class="img-fluid"
+                    src="/media/{{ news.thumb }}"
+                    alt="Card image cap">
+                {% else %}
+                <img class="img-fluid"
+                    src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                    alt="Card image cap">
+                {% endif %}
+                <div class="card-body">
+                    <p class="card-text">{{ news.message }}</p>
+                    {% if news.msg_2 %}
+                    <p class="card-text">{{ news.msg_2 }}</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <p class="card-text">Date Published : {{ news.date_created }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/cart.js"></script>
+{% endblock %}

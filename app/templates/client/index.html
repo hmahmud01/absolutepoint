@@ -196,7 +196,7 @@
         <div class="row py-3">
             <div class="col-md-12">
                 <div class="d-flex align-items-center h-100">
-                    <div class="card mb-5 border-0 text-white dark-overlay shadow-lg">
+                    <div class="card mb-5 border-0 text-white dark-overlay shadow">
                         <img class="card-img" src="/static/img/photos/why.png" alt="">
                         <a class="tile-link" href=""> </a>
                         <div class="card-img-overlay d-flex align-items-center w-100">
@@ -261,7 +261,7 @@
             </div> -->
             <div class="col-md-12">
                 <div class="d-flex align-items-center h-100">
-                    <div class="card mb-5 border-0 text-white dark-overlay shadow-lg">
+                    <div class="card mb-5 border-0 text-white dark-overlay shadow">
                         <img class="card-img" src="/static/img/photos/SMM.png" alt="">
                         <a class="tile-link" href=""> </a>
                         <div class="card-img-overlay d-flex align-items-center w-100">
@@ -292,7 +292,7 @@
             <!-- <div class="product-slider"> -->
                 {% comment %} {% for review in reviews %} {% endcomment %}
                 {% for item in review_items %}
-                <div class="card mb-3 col-md-4 h-100 mx-2">
+                <div class="card mb-3 col-md-4 col-sm-12 h-100 mx-2">
                     <div class="row g-0 h-100">
                         <!-- <div class="col-md-4">
                             {% if review.product.thumb %}
@@ -301,7 +301,7 @@
                             <img class="img-fluid rounded-start" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ review.product.name }}">
                             {% endif %}
                         </div> -->  
-                        <div class="col-md-12">
+                        <div class="col-md-12 col-sm-3">
                             <div class="card-body">
                                 <h5 class="card-title">{{ item.review.product.name }}</h5>
                                 <p class="card-text">{{ item.review.review }}</p>
