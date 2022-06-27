@@ -1867,6 +1867,10 @@ def saveUpdatedVariablePrice(request):
 
     return redirect('productdetail', variable.product.id)
 
+def reviewList(request):
+    reviews = Review.objects.all()
+    return render(request, "clientdash/review_list.html", {"reviews": reviews})
+
 def reviewAccept(request, rid):
     review = Review.objects.get(id=rid)
     pid = review.product.id
@@ -1897,6 +1901,7 @@ def clientList(request):
     data = ""
     users = AppUser.objects.all()
     return render(request, "clientdash/client_list.html", {"data": data, "users": users})
+
 
 def orderList(request):
     data = ""

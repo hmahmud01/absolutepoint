@@ -85,6 +85,7 @@ urlpatterns = [
     path('savebaseprice/', views.saveBasePrice, name="savebaseprice"),
     path('updatevariableprice/<int:vid>/', views.updateVariablePrice, name="updatevariableprice"),
     path('saveupdatedvariableprice/', views.saveUpdatedVariablePrice, name="saveupdatedvariableprice"),
+    path('reviews/', views.reviewList, name="reviews"),
     path('reviewaccept/<int:rid>/', views.reviewAccept, name="reviewaccept"),
     path('reviewdecline/<int:rid>/',views.reviewDecline, name="reviewdecline"),
     path('orderlist/', views.orderList, name="orderlist"),
