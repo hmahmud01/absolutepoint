@@ -2025,7 +2025,7 @@ def checkout(request, oid):
     response = requests.get('http://api.coinlayer.com/live', params=params)
     
     crypto_data = response.json()
-    rates = crypto_data['rates']
+    # rates = crypto_data['rates']
     
     order = Order.objects.get(id=oid)
     order_items = OrderItems.objects.filter(order_id=oid)
@@ -2035,7 +2035,7 @@ def checkout(request, oid):
     if request.user.is_authenticated:
         auth_status = True
         
-    return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "cat_fb": cat_fb,
+    return render(request, "client/checkout.html", {"data": data, 'order': order, 'order_items': order_items, "auth_status": auth_status, "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
