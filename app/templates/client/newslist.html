@@ -33,6 +33,8 @@
         </div> 
         {% endfor %} {% endcomment %}
         {% for new in news %}
+        
+        
         <div class="card mb-3 g-0">
             <div class="row g-0">
                 <div class="col-md-4 col-sm-4">
@@ -42,15 +44,14 @@
                 <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" class="img-fluid" alt="...">
                 {% endif %}
 
-                
                 </div>
                 <div class="col-md-8 col-sm-8">
-                <div class="card-body">
-                    <h5 class="card-title">{{ new.title }}</h5>
-                    <p class="card-text">{{ new.message }}</p>
-                    <a class="card-link" href="{% url 'newsdetail' new.id %}">Detail</a>
-                    <p class="card-text"><small class="text-muted">{{ new.date_created }}</small></p>
-                </div>
+                    <div class="card-body">
+                        <a class="card-link" href="{% url 'newsdetail' new.id %}"><h5 class="card-title">{{ new.title }}</h5></a>
+                        <p class="card-text trunc-c">{{ new.message }}</p>
+                        {% comment %} <a class="card-link" href="{% url 'newsdetail' new.id %}">Detail</a> {% endcomment %}
+                        <p class="card-text"><small class="text-muted">{{ new.date_created }}</small></p>
+                    </div>
                 </div>
             </div>
         </div>

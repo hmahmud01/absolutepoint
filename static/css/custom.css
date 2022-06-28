@@ -37,3 +37,13 @@
     background-clip: text;
     -webkit-background-clip: text;
   }
+
+  .trunc-c {
+    text-decoration: none;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    /* not needed even though some documentation says it is
+    text-overflow: ellipsis; */
+}
