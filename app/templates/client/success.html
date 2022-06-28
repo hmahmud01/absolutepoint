@@ -8,6 +8,12 @@
         <h1 class="page-heading">Order Success</h1>
         <p> Your Order detail for the id of ORD - {{ order.id }}</p>
     </div>
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <p>Thank You</p>
+            <p>Your order has been place successfully in our system. If you have any queries regarding your order and our services kindly contact us. In case of any quries from our side, we will reache out to you.</p>
+        </div>
+    </div>
     <div class="col-md-8 col-lg-8 col-sm-6">
         <div class="card mb-3">
             <div class="card-body">
@@ -81,10 +87,6 @@
                         <tr class="text-muted">
                             <th class="fw-normal">Total</th>
                             <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
-                        </tr>
-                        <tr class="text-muted">
-                            <th class="fw-normal">Shipping Fee</th>
-                            <td class="text-end">$0.00</td>
                         </tr>
                         <tr class="text-muted">
                             <th class="fw-normal">Sales Tax</th>

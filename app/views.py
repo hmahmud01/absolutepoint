@@ -352,7 +352,6 @@ def serviceCreate(request):
 
     today_updated = updated_time.date()
 
-    # print(today_now)
     today_date = today_updated.strftime("%m/%d/%Y")
 
     if request.user.is_superuser:
@@ -1744,7 +1743,7 @@ def orderDetail(request, oid):
     data = ""
     order = Order.objects.get(id=oid)
     orderItems = OrderItems.objects.filter(order_id=oid)
-    order.get_cart_items = 0
+    # order.get_cart_items = 0
     if order.payment.credit_type == "crypto":
         proofs = cryptoProof.objects.filter(order_id=oid)
         context = {'items': orderItems, 'order':order, 'proofs': proofs, "cat_fb": cat_fb,
@@ -2081,6 +2080,14 @@ def processOrder(request):
         if post_data['credit_type'] == "crypto":
             order.complete = True
             order.trx_id = "ORDER - " + str(order.id)
+            timedate = datetime.datetime.now()
+            updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+            updated_time = timedate + updated_timedate
+
+            today_updated = updated_time.date()
+
+            today_date = today_updated.strftime("%m/%d/%Y")
+            order.date_ordered = today_updated
             order.save()
             return redirect('cryptocheckout', order.id)
         else:
@@ -2167,6 +2174,14 @@ def processOrder(request):
             if post_data['credit_type'] == "crypto":
                 order.complete = True
                 order.trx_id = "ORDER - " + str(order.id)
+                timedate = datetime.datetime.now()
+                updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+                updated_time = timedate + updated_timedate
+
+                today_updated = updated_time.date()
+
+                today_date = today_updated.strftime("%m/%d/%Y")
+                order.date_ordered = today_updated
                 order.save()
                 return redirect('cryptocheckout', order.id)
             else:
@@ -2205,6 +2220,14 @@ def confirmCryptoOrder(request, oid):
     billing = Billing.objects.get(order__id=oid)
 
     order.order_payment = True
+    timedate = datetime.datetime.now()
+    updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+    updated_time = timedate + updated_timedate
+
+    today_updated = updated_time.date()
+
+    today_date = today_updated.strftime("%m/%d/%Y")
+    order.date_ordered = today_updated
     order.save()
 
     return redirect('orderlistdetail', oid)
@@ -2333,6 +2356,14 @@ def success(request):
     order.complete = True
     order.trx_id = checkout_id
     order.order_payment = True
+    timedate = datetime.datetime.now()
+    updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+    updated_time = timedate + updated_timedate
+
+    today_updated = updated_time.date()
+
+    today_date = today_updated.strftime("%m/%d/%Y")
+    order.date_ordered = today_updated
     order.save()
 
     try:
