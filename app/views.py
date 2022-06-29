@@ -1766,7 +1766,7 @@ def orderDetail(request, oid):
 
 def createProduct(request):
     data = ""
-    categories = productCategory.objects.all()
+    categories = productCategory.objects.filter(catstatus__status=True)
     return render(request, "clientdash/create_product.html", {"data": data, "categories": categories})
 
 def saveProduct(request):
@@ -1798,6 +1798,41 @@ def saveCategory(request):
 
     return redirect('createproduct')
 
+def categoryList(request):
+    categorys = productCategory.objects.all()
+
+    return render(request, "clientdash/category_list.html", {"categorys": categorys})
+
+def activateCategory(request, cid):
+    cat = productCategory.objects.get(id=cid)
+
+    try:
+        cat.catstatus.status = True
+        cat.catstatus.save()
+    except:
+        stat = catstatus(
+            cat = cat,
+            status = True
+        )
+        stat.save()
+
+    # if cat.catstatus:
+    #     cat.catstatus.status = True
+    #     cat.catstatus.save()
+    # else:
+    #     stat = catstatus(
+    #         cat = cat,
+    #         status = True
+    #     )
+    #     stat.save()
+    return redirect('categorylist')
+
+def deactivateCategory(request, cid):
+    cat = productCategory.objects.get(id=cid)
+    cat.catstatus.status = False
+    cat.catstatus.save()
+    return redirect('categorylist')
+
 def productList(request):
     data = ""
     products = serviceProduct.objects.all()
@@ -1815,6 +1850,15 @@ def productDetail(request, pid):
     reviews = Review.objects.filter(product_id=pid)
     print(reviews)
     return render(request, "clientdash/product_detail.html", {"product": product, "inactive": inactive, "active": active, "variables": variables, "terms": terms, "reviews": reviews})
+
+def updateDetail(request):
+    post_data = request.POST
+    product = serviceProduct.objects.get(id=post_data['pid'])
+
+    product.description = post_data['description']
+    product.save()
+
+    return redirect('productdetail', post_data['pid'])
 
 def saveVariablePrice(request):
     data = ""
@@ -2026,6 +2070,11 @@ def checkout(request, oid):
     
     crypto_data = response.json()
     # rates = crypto_data['rates']
+
+    try:
+        billing = Billing.objects.get(order_id=oid)
+    except:
+        billing = False
     
     order = Order.objects.get(id=oid)
     order_items = OrderItems.objects.filter(order_id=oid)
@@ -2035,7 +2084,8 @@ def checkout(request, oid):
     if request.user.is_authenticated:
         auth_status = True
         
-    return render(request, "client/checkout.html", {"data": data, 'order': order, 'order_items': order_items, "auth_status": auth_status, "cat_fb": cat_fb,
+    return render(request, "client/checkout.html", {"data": data, 'order': order, 'order_items': order_items, "auth_status": auth_status, "billing": billing,
+                                        "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
@@ -2053,32 +2103,38 @@ def processOrder(request):
         data = ""
         post_data = request.POST
         order = Order.objects.get(id=post_data['order'])
+        
+        try:
+            billing = Billing.objects.get(order_id=order.id)
+        except:
+            billing = Billing(
+                order = order,
+                firstname = post_data['firstname'],
+                lastname = post_data['lastname'],
+                username = post_data['username'],
+                email = post_data['email'],
+                address = post_data['address'],
+                address2 = post_data['address2'],
+                country = post_data['country'],
+                state = post_data['state'],
+                zipcode = post_data['zipcode']
+            )
 
-        billing = Billing(
-            order = order,
-            firstname = post_data['firstname'],
-            lastname = post_data['lastname'],
-            username = post_data['username'],
-            email = post_data['email'],
-            address = post_data['address'],
-            address2 = post_data['address2'],
-            country = post_data['country'],
-            state = post_data['state'],
-            zipcode = post_data['zipcode']
-        )
+            billing.save()
 
-        billing.save()
+        try:
+            payment = Payment.objects.get(order_id=order.id)
+        except:
+            payment = Payment(
+                order = order,
+                credit_type = post_data['credit_type'],
+                total = order.get_cart_total
+            )
 
-        payment = Payment(
-            order = order,
-            credit_type = post_data['credit_type'],
-            total = order.get_cart_total
-        )
-
-        payment.save()
+            payment.save()
 
         if post_data['credit_type'] == "crypto":
-            order.complete = True
+            order.complete = False
             order.trx_id = "ORDER - " + str(order.id)
             timedate = datetime.datetime.now()
             updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
@@ -2247,8 +2303,9 @@ def stripeCheckout(request, oid):
                                         "cat_tg": cat_tg,})
 
 def cryptoCheckout(request, oid):
-    
+    order = Order.objects.get(id=oid)
     return render(request, "client/checkout-crypto.html", {
+                                        "order": order,
                                         "oid": oid,
                                         "cat_fb": cat_fb,   
                                         "cat_it": cat_it,

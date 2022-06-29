@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Products</h1>
+            <p>Crypto Service Product List</p>
+        </div>
+        <div class="col-md-12">
+            <div class="card card-table mb-4">
+            <div class="card-body">
+              <div class="preload-wrapper">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0" id="ordersDatatable">
+                    <thead>
+                      <tr>                        
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Action</th>     
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for cat in categorys %}
+                        <tr class="align-middle">
+                            <td>{{ cat.name }}</td>
+                            <td>{{ cat.catstatus.status }} </td>
+                            {% if cat.catstatus.status is True %}
+                            <td><a class="btn btn-sm btn-outline-danger" href="{% url 'deactivatecategory' cat.id %}">De Activated</a></span></td>
+                            {% else %}
+                            <td><a class="btn btn-sm btn-outline-success" href="{% url 'activatecategory' cat.id %}">Activate</a></span></td>
+                            {% endif %}
+                          </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Data Tables-->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script src="/static/js/e-commerce-orders.js"></script>
+{% endblock %}

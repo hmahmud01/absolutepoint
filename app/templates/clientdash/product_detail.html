@@ -33,6 +33,7 @@
                     {% else %}
                     <a class="btn btn-sm btn-outline-success" href="{% url 'productact' product.id active %}">Inactive</a>
                     {% endif %}
+                    <a class="btn btn-sm btn-outline-info" href="" data-bs-toggle="modal" data-bs-target="#updateDetail"><i class="fas fa-money me-2"></i>Update Product Detail</a>
                 </div>
             </div>
             <div class="card mb-4">
@@ -135,6 +136,36 @@
                         {% endfor %}
                     </ul>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateDetail" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Update Description </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{% url 'updatedetail' %}" method="post">{% csrf_token %}
+                    <div class="modal-body">   
+                        <input class="form-control" name="pid" type="number" value="{{ product.id }}" hidden>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Product Description</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>                                            
             </div>
         </div>
     </div>

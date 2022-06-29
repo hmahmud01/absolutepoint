@@ -135,6 +135,13 @@ class productCategory(models.Model):
     def __str__(self):
         return self.name
 
+class catstatus(models.Model):
+    cat = models.OneToOneField(productCategory, on_delete=models.CASCADE)
+    status = models.BooleanField(default=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.cat.name
+
 class serviceProduct(models.Model):
     name = models.CharField(max_length=128, null=True, blank=True)
     ptype = models.CharField(max_length=128, null=True, blank=True)
