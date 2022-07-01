@@ -17,11 +17,13 @@
     <img class="bg-image text-white dark-overlay" src="/static/img/photos/main.png" alt="">
     <div class="card-img-overlay d-flex align-items-center">
         <div class="overlay-content">
-            <div class="container w-50">
-                <h1 class="mb-0">Crypto Marketers</h1>
-                <p class="lead">A prime agency for Crypto marketing where we take our client’s cryptocurrency reach the sky and more to a new limit of excellence.</p>
-                <div class="">
-                    <a class="btn btn-primary" href="{% url 'completeservices' %}">See Our Services</a>
+            <div class="container-fluid">
+                <div class="w-50 px-5">
+                    <h1 class="mb-0">Crypto Marketers</h1>
+                    <p class="lead d-none d-lg-block d-md-block">A prime agency for Crypto marketing where we take our client’s cryptocurrency reach the sky and more to a new limit of excellence.</p>
+                    <div class="">
+                        <a class="btn btn-primary" href="{% url 'completeservices' %}">See Our Services</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -290,7 +292,7 @@
             <p>Provided by Crypto Marketer Clients</p>
         </div>
 
-        <div class="row py-3 product-slider">
+        <div class="row py-3 product-slider d-none d-lg-block d-md-block">
             <!-- <div class="product-slider"> -->
                 {% comment %} {% for review in reviews %} {% endcomment %}
                 {% for item in review_items %}
@@ -315,6 +317,10 @@
                 
                 {% endfor %}
             <!-- </div> -->
+        </div>
+
+        <div class="d-lg-none d-md-none d-flex justify-content-center">
+            <a class="btn btn-primary" href="{% url 'completeservices' %}">See Reviews</a>    
         </div>
 
         {% endif %}

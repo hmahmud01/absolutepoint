@@ -47,3 +47,16 @@
     /* not needed even though some documentation says it is
     text-overflow: ellipsis; */
 }
+
+@media (max-width:976) { 
+    .container { 
+        max-width: 80% !important;
+        padding: 5px !important;
+        margin-right:  auto !important;
+        margin-left:  0;
+    }
+
+    .w-50{
+        width: 100%;
+    }
+}
