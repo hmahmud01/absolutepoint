@@ -7,13 +7,18 @@
                 alt="Crypto Marketers">
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
             aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon text-white"></span>
+            <span class="navbar-toggler-icon text-white">
+                <svg class="svg-icon svg-icon-md me-3">
+                    <use xlink:href="/static/icons/orion-svg-sprite.svg#menu-1"> </use>
+                </svg>
+                {% comment %} <svg class="theme-line-2"><use xlink:href="#menu-1"></use></svg> {% endcomment %}
+            </span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-            <ul class="navbar-nav ms-auto d-flex align-items-center list-unstyled mb-0">
+            <ul class="navbar-nav ms-auto d-flex list-unstyled mb-0">
                 <li class="nav-item dropdown">
                     <div class="me-2">
                         <a href="{% url 'clientindex' %}" class="btn btn-primary">Home</a>
@@ -74,7 +79,28 @@
                 {% endif %}
     
     
-                <li class="nav-item dropdown ms-auto"><a class="nav-link pe-0" id="userInfo" href="#"
+                <li class="nav-item dropdown">
+                    {% if user.is_authenticated %}
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ user.username }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{% url 'resetpassword'  %}">Reset Password</a></li>
+                        <li><a class="dropdown-item" href="{% url 'logout'  %}">Logout</a></li>
+                    </ul>
+                    {% else %}
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        User
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{% url 'login'  %}">login</a></li>
+                    </ul>
+                    {% endif %}
+                </li>
+                {% comment %} <li class="nav-item dropdown">
+                    <a class="nav-link pe-0" id="userInfo" href="#"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="avatar p-1"
                             src="/static/img/axe2.jpg" alt="Jason Doe"></a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated" aria-labelledby="userInfo">
@@ -89,7 +115,7 @@
                         <a class="dropdown-item" href="{% url 'login'  %}">Login</a>
                         {% endif %}
                     </div>
-                </li>
+                </li> {% endcomment %}
             </ul>
         </div>
         

@@ -48,6 +48,16 @@
     text-overflow: ellipsis; */
 }
 
+/* .navbar-toggler {
+    padding: 0.25rem 0.75rem;
+    font-size: 1.125rem;
+    line-height: 1;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 1.25rem;
+    transition: box-shadow 0.15s ease-in-out;
+  } */
+
 @media (max-width:976) { 
     .container { 
         max-width: 80% !important;
