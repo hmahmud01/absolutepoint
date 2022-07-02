@@ -14,7 +14,7 @@ import json
 import requests
 # from datetime import datetime, date
 import datetime
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Min
 from django.db.models.functions import TruncMonth, TruncWeek
 from pip import main
 import stripe
@@ -1489,9 +1489,10 @@ def allService(request):
         all_products.append(active)
         variable = variableProductPrice.objects.filter(product__id=active.id)
         try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
             product = {
                 'product': active,
-                'price': variable.first().price
+                'price': price_filter[1]
             }
             all_prods.append(product)
         except:
@@ -1505,9 +1506,10 @@ def allService(request):
         all_products.append(inactive)
         variable = variableProductPrice.objects.filter(product__id=active.id)
         try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
             product = {
                 'product': inactive,
-                'price': variable.first().price
+                'price': price_filter[1]
             }
             all_prods.append(product)
         except:
@@ -1667,9 +1669,10 @@ def socialServices(request, cid):
     for prod in products:
         variable = variableProductPrice.objects.filter(product__id=prod.id)
         try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
             product = {
                 'product': prod,
-                'price': variable.first().price
+                'price': price_filter[1]
             }
             items.append(product)
         except:   
@@ -1875,15 +1878,6 @@ def activateCategory(request, cid):
         )
         stat.save()
 
-    # if cat.catstatus:
-    #     cat.catstatus.status = True
-    #     cat.catstatus.save()
-    # else:
-    #     stat = catstatus(
-    #         cat = cat,
-    #         status = True
-    #     )
-    #     stat.save()
     return redirect('categorylist')
 
 def deactivateCategory(request, cid):
@@ -2615,6 +2609,11 @@ def saveNews(request):
 def listNews(request):
     news = News.objects.all()
     return render(request, "clientdash/news_list.html", {"news": news})
+
+def newsDelete(request, nid):
+    news = News.objects.get(id=nid)
+    news.delete()
+    return redirect('listnews')
 
 def detailNews(request, nid):
     news = News.objects.get(id=nid)

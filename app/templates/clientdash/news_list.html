@@ -21,6 +21,7 @@
                                         <th>News Id</th>
                                         <th>Date</th>
                                         <th>title</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -29,6 +30,7 @@
                                         <td><a href="{% url 'detailnews' new.id %}">{{ new.id }}</a></td>
                                         <td>{{ new.date_created }}</td>
                                         <td>{{ new.title }}</td>
+                                        <td><a class="btn btn-sm btn-outline-danger float-end" href="{% url 'newsdelete' new.id %}">Delete</a></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
