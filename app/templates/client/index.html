@@ -18,16 +18,17 @@
     <div class="card-img-overlay d-flex align-items-center">
         <div class="overlay-content">
             <div class="container-fluid">
-                <div class="w-50 px-5">
-                    <h1 class="mb-0">Crypto Marketers</h1>
-                    <p class="lead d-none d-lg-block d-md-block">A prime agency for Crypto marketing where we take our client’s cryptocurrency reach the sky and more to a new limit of excellence.</p>
-                    <div class="">
-                        <a class="btn btn-primary" href="{% url 'completeservices' %}">See Our Services</a>
-                    </div>
+                <h1 class="mb-2 px-2">Crypto Marketers</h1>
+                <div class="w-50 px-2">
+                    <p class="lead d-none d-lg-block d-md-block">A prime agency for Crypto marketing where we take our
+                        client’s cryptocurrency reach the sky and more to a new limit of excellence.</p>
+                </div>
+                <div class="px-2">
+                    <a class="btn btn-primary" href="{% url 'completeservices' %}">See Our Services</a>
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 </div>
 {% endblock %}
 
@@ -43,18 +44,21 @@
             {% for item in items %}
             <div class="col-md-6 col-lg-3">
                 <a href="{% url 'clientservicedetail' item.product.id %}">
-                <div class="card mb-4">
-                    {% if item.product.thumb %}
-                    <img class="card-img-top img-fluid" src="/media/{{ item.product.thumb }}" alt="{{ item.product.name }}">
-                    {% else %}
-                    <img class="card-img-top img-fluid" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ item.product.name }}">
-                    {% endif %}
-                    <div class="card-body">
-                    <p class="lead text-dark text-decoration-none fw-bold">{{ item.product.name }}</p>
-                    <p class="card-text lead text-decoration-none text-dark fw-bold">$ {{ item.price }}</p>
+                    <div class="card mb-4">
+                        {% if item.product.thumb %}
+                        <img class="card-img-top img-fluid" src="/media/{{ item.product.thumb }}"
+                            alt="{{ item.product.name }}">
+                        {% else %}
+                        <img class="card-img-top img-fluid"
+                            src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                            alt="{{ item.product.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <p class="lead text-dark text-decoration-none fw-bold">{{ item.product.name }}</p>
+                            <p class="card-text lead text-decoration-none text-dark fw-bold">$ {{ item.price }}</p>
+                        </div>
                     </div>
-                </div>
-                </a>    
+                </a>
             </div>
             {% endfor %}
             <div class="text-center mb-3">
@@ -63,7 +67,7 @@
             </div>
         </div>
 
-        
+
         <div class="page-header text-center mt-5">
             <h1 class="page-heading fw-bold">Social Media Marketing</h1>
             <p>Provided by Crypto Marketers</p>
@@ -74,23 +78,25 @@
             {% if facebook %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
-                <div class="card-status bg-primary"></div>
+                    <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="text-primary text-center fw-bold py-3">Facebook</h2>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
                             {% for prod in facebook %}
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i
+                                        class="fas fa-check"></i></span>{{ prod.name }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_fb %}">See More</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary"
+                                href="{% url 'socialservices' cat_fb %}">See More</a></div>
                     </div>
                 </div>
             </div>
             {% endif %}
-            
+
             {% if instagram %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
@@ -100,12 +106,14 @@
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
                             {% for prod in instagram %}
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i
+                                        class="fas fa-check"></i></span>{{ prod.name }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_it %}">See More</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary"
+                                href="{% url 'socialservices' cat_it %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -113,18 +121,20 @@
             {% if youtube %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 shadow h-100">
-                <div class="card-status bg-primary"></div>
+                    <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="text-primary text-center fw-bold py-3">Youtube</h2>
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
                             {% for prod in youtube %}
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i
+                                        class="fas fa-check"></i></span>{{ prod.name }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_yt %}">See More</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary"
+                                href="{% url 'socialservices' cat_yt %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -139,12 +149,14 @@
                         <hr class="text-muted">
                         <ul class="fa-ul my-4">
                             {% for prod in tiktok %}
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i
+                                        class="fas fa-check"></i></span>{{ prod.name }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tt %}">See More</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary"
+                                href="{% url 'socialservices' cat_tt %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -153,19 +165,21 @@
             {% if twitter %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
-                <div class="card-status bg-primary"></div>
+                    <div class="card-status bg-primary"></div>
                     <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="text-primary text-center fw-bold py-3">Twitter</h2>
                         <hr class="text-muted">
-                        <ul class="fa-ul my-4">                        
+                        <ul class="fa-ul my-4">
                             {% for prod in twitter %}
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i
+                                        class="fas fa-check"></i></span>{{ prod.name }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tw %}">See More</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary"
+                                href="{% url 'socialservices' cat_tw %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -174,19 +188,21 @@
             {% if telegram %}
             <div class="col-lg-4 mb-5">
                 <div class="card mb-5 mb-lg-0 border-0 card-highlight shadow-lg overflow-hidden h-100">
-                <div class="card-status bg-primary"></div>
+                    <div class="card-status bg-primary"></div>
                     <div class="card-status bg-primary"></div>
                     <div class="card-body">
                         <h2 class="text-primary text-center fw-bold py-3">Telegram</h2>
                         <hr class="text-muted">
-                        <ul class="fa-ul my-4">                        
+                        <ul class="fa-ul my-4">
                             {% for prod in telegram %}
-                            <li class="mb-3"><span class="fa-li text-primary"><i class="fas fa-check"></i></span>{{ prod.name }}</li>
+                            <li class="mb-3"><span class="fa-li text-primary"><i
+                                        class="fas fa-check"></i></span>{{ prod.name }}</li>
                             {% endfor %}
                         </ul>
                     </div>
                     <div class="card-footer">
-                        <div class="text-center"><a class="btn btn-outline-primary" href="{% url 'socialservices' cat_tg %}">See More</a></div>
+                        <div class="text-center"><a class="btn btn-outline-primary"
+                                href="{% url 'socialservices' cat_tg %}">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -207,9 +223,28 @@
                             <div class="">
                                 <div class="overlay-content w-50">
                                     <div class="d-flex align-items-center h-100">
-                                        <div class="p-5">
+                                        <div class="p-5 content-pad">
                                             <h1 class="py-2">Why Cryptocurrency ?</h1>
-                                            <p class="lead text-justify">The birth of Cryptocurrency has revolutionized how we think of currency and how the whole infrastructure of global economy may be seen on a different touch. Since it’s inception cryptocurrency has changed the life of many and has attracted buyers and investors globally to invest heavily on Cryptocurrency and many more new coins are launched almost every day. Crypto Marketers can deal with all the promotional activities you need starting from upvotes, listing and posts. When it comes to Upvotes we can provide it in most of the prominent gemsites. Starting from 500 votes to any desired number to take you to Top 1 or Hot 1 of the list. Like we have mentioned, when you are on Top of the list it will bring you hundreds of new investors in a day. We know that is exactly what you want.</p>
+                                            <div class="d-none d-lg-block d-md-block d-xl-block d-xxl-block">
+                                                <p class="lead text-justify">The birth of Cryptocurrency has revolutionized
+                                                    how we think of currency and how the whole infrastructure of global
+                                                    economy may be seen on a different touch. Since it’s inception
+                                                    cryptocurrency has changed the life of many and has attracted buyers and
+                                                    investors globally to invest heavily on Cryptocurrency and many more new
+                                                    coins are launched almost every day. Crypto Marketers can deal with all
+                                                    the promotional activities you need starting from upvotes, listing and
+                                                    posts. When it comes to Upvotes we can provide it in most of the
+                                                    prominent gemsites. Starting from 500 votes to any desired number to
+                                                    take you to Top 1 or Hot 1 of the list. Like we have mentioned, when you
+                                                    are on Top of the list it will bring you hundreds of new investors in a
+                                                    day. We know that is exactly what you want.</p>
+                                            </div>
+                                            
+                                            <div class="d-lg-none d-md-none d-xl-none d-xxl-none">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#whycrypto">
+                                                    See More
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -218,51 +253,39 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-md-6">
-                <div class="d-flex align-items-center h-100">
-                    <div>
-                        <h1 class="py-2">Why Cryptocurrency ?</h1>
-                        <p class="lead text-justify">The birth of Cryptocurrency has revolutionized how we think of currency and how the whole infrastructure of global economy may be seen on a different touch. Since it’s inception cryptocurrency has changed the life of many and has attracted buyers and investors globally to invest heavily on Cryptocurrency and many more new coins are launched almost every day. Crypto Marketers can deal with all the promotional activities you need starting from upvotes, listing and posts. When it comes to Upvotes we can provide it in most of the prominent gemsites. Starting from 500 votes to any desired number to take you to Top 1 or Hot 1 of the list. Like we have mentioned, when you are on Top of the list it will bring you hundreds of new investors in a day. We know that is exactly what you want.</p>
+
+            <div class="modal fade" id="whycrypto" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Why Cryptocurrency ?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body modal-dialog-centered modal-dialog-scrollable">
+                            <p class="lead text-justify">The birth of Cryptocurrency has revolutionized
+                                how we think of currency and how the whole infrastructure of global
+                                economy may be seen on a different touch. Since it’s inception
+                                cryptocurrency has changed the life of many and has attracted buyers and
+                                investors globally to invest heavily on Cryptocurrency and many more new
+                                coins are launched almost every day. Crypto Marketers can deal with all
+                                the promotional activities you need starting from upvotes, listing and
+                                posts. When it comes to Upvotes we can provide it in most of the
+                                prominent gemsites. Starting from 500 votes to any desired number to
+                                take you to Top 1 or Hot 1 of the list. Like we have mentioned, when you
+                                are on Top of the list it will bring you hundreds of new investors in a
+                                day. We know that is exactly what you want.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
-                
             </div>
-            <div class="col-lg-6">
-                <div class="d-flex align-items-center h-100">
-                    <div class="card mb-5 border-0 text-white dark-overlay shadow-lg"><img class="card-img" src="/static/img/photos/why.png" alt=""><a class="tile-link" href="category.html"> </a>
-                        <div class="card-img-overlay d-flex align-items-center">
-                            {% comment %} <div class="w-100 overlay-content">
-                                <h2 class="text-center mb-0">INFO</h2>
-                            </div> {% endcomment %}
-                        </div>
-                    </div>  
-                </div>
-            </div> -->
+
         </div>
 
         <div class="row py-3">
-            <!-- <div class="col-md-6 order-last">
-                <div class="d-flex align-items-center h-100">
-                    <div>
-                        <h1 class="py-2">Highlights of Social Media Marketing</h1>
-                        <p class="lead text-justify">We are spending our time on Social Medias more than ever and as a result we ourselves have created sectors like the e-commerce, f-commerce and the branches in aspect to it. We provide all the key services in Social Media Platforms like Facebook, Instagram, YouTube, Twitter and Tiktok. We have the most skilled pool of Social Media Managers to help you provide the most demanding services in these platforms. Starting from likes, followers in Facebook, Instagram  to views and subscribers to YouTube we can get you covered in no time.</p>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex align-items-center h-100">
-                    <div class="card mb-5 border-0 text-white dark-overlay shadow-lg">
-                        <img class="card-img" src="/static/img/photos/SMM.png" alt="">
-                        <a class="tile-link" href=""> </a>
-                        <div class="card-img-overlay d-flex align-items-center">
-                            {% comment %} <div class="w-100 overlay-content">
-                                <h2 class="text-center mb-0">INFO</h2>
-                            </div> {% endcomment %}
-                        </div>
-                    </div>
-                </div>
-            </div> -->
             <div class="col-md-12">
                 <div class="d-flex align-items-center h-100">
                     <div class="card mb-5 border-0 text-white dark-overlay shadow">
@@ -272,13 +295,54 @@
                             <div class="d-flex align-items-end flex-column">
                                 <div class="overlay-content w-50">
                                     <div class="d-flex align-items-center h-100">
-                                        <div class="p-5">
+                                        <div class="p-5 content-pad">
                                             <h1 class="py-2">Highlights of Social Media Marketing</h1>
-                                            <p class="lead text-justify">We are spending our time on Social Medias more than ever and as a result we ourselves have created sectors like the e-commerce, f-commerce and the branches in aspect to it. We provide all the key services in Social Media Platforms like Facebook, Instagram, YouTube, Twitter and Tiktok. We have the most skilled pool of Social Media Managers to help you provide the most demanding services in these platforms. Starting from likes, followers in Facebook, Instagram  to views and subscribers to YouTube we can get you covered in no time.</p>
+                                            <div class="d-none d-lg-block d-md-block d-xl-block d-xxl-block">
+                                                <p class="lead text-justify">We are spending our time on Social Medias more
+                                                    than ever and as a result we ourselves have created sectors like the
+                                                    e-commerce, f-commerce and the branches in aspect to it. We provide all
+                                                    the key services in Social Media Platforms like Facebook, Instagram,
+                                                    YouTube, Twitter and Tiktok. We have the most skilled pool of Social
+                                                    Media Managers to help you provide the most demanding services in these
+                                                    platforms. Starting from likes, followers in Facebook, Instagram to
+                                                    views and subscribers to YouTube we can get you covered in no time.</p>
+                                            </div>
+                                            
+
+                                            <div class="d-lg-none d-md-none d-xl-none d-xxl-none">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#socialhighlights">
+                                                    See More
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="socialhighlights" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Highlights of Social Media Marketing</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body modal-dialog-centered modal-dialog-scrollable">
+                            <p class="lead text-justify">We are spending our time on Social Medias more
+                                than ever and as a result we ourselves have created sectors like the
+                                e-commerce, f-commerce and the branches in aspect to it. We provide all
+                                the key services in Social Media Platforms like Facebook, Instagram,
+                                YouTube, Twitter and Tiktok. We have the most skilled pool of Social
+                                Media Managers to help you provide the most demanding services in these
+                                platforms. Starting from likes, followers in Facebook, Instagram to
+                                views and subscribers to YouTube we can get you covered in no time.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -293,34 +357,25 @@
         </div>
 
         <div class="row py-3 product-slider d-none d-lg-block d-md-block">
-            <!-- <div class="product-slider"> -->
-                {% comment %} {% for review in reviews %} {% endcomment %}
-                {% for item in review_items %}
-                <div class="card mb-3 col-md-4 col-sm-12 h-100 mx-2">
-                    <div class="row g-0 h-100">
-                        <!-- <div class="col-md-4">
-                            {% if review.product.thumb %}
-                            <img src="/media/{{ review.product.thumb }}" class="img-fluid rounded-start" alt="{{ review.product.name }}">
-                            {% else %}
-                            <img class="img-fluid rounded-start" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ review.product.name }}">
-                            {% endif %}
-                        </div> -->  
-                        <div class="col-md-12 col-sm-3">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ item.review.product.name }}</h5>
-                                <p class="card-text">{{ item.review.review }}</p>
-                                <p class="card-text"><small class="text-muted">Provided by - {{ item.username }} in {{ item.review.date_created }}</small></p>
-                            </div>
+            {% for item in review_items %}
+            <div class="card mb-3 col-md-4 col-sm-12 h-100 mx-2">
+                <div class="row g-0 h-100">
+                    <div class="col-md-12 col-sm-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.review.product.name }}</h5>
+                            <p class="card-text">{{ item.review.review }}</p>
+                            <p class="card-text"><small class="text-muted">Provided by - {{ item.username }} in
+                                    {{ item.review.date_created }}</small></p>
                         </div>
                     </div>
                 </div>
-                
-                {% endfor %}
-            <!-- </div> -->
+            </div>
+
+            {% endfor %}
         </div>
 
         <div class="d-lg-none d-md-none d-flex justify-content-center">
-            <a class="btn btn-primary" href="{% url 'completeservices' %}">See Reviews</a>    
+            <a class="btn btn-primary" href="{% url 'reviews' %}">See Reviews</a>
         </div>
 
         {% endif %}

@@ -67,6 +67,19 @@
     }
 
     .w-50{
-        width: 100%;
+        width: 100% !important;
+    }
+    .w-mod {
+        width: 100% !important;
+    }
+}
+
+@media (max-width:412px) {
+    .content-pad {
+        padding: 0.1rem !important;
+    }
+
+    h1 {
+        font-size: calc(1.25rem + 0vw);
     }
 }

@@ -65,6 +65,9 @@ urlpatterns = [
 
     # CLIENT AREA
     path('', views.clientIndex, name="clientindex"),
+    path('reviews/', views.reviews, name="reviews"),
+    path('terms/', views.terms, name="terms"),
+    path('policy/', views.policy, name="policy"),
     path('allservices/', views.allService, name="allservices"),
     path('allsocial', views.allSocial, name="allsocial"),
     path('completeservices/', views.completeService, name="completeservices"),

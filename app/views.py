@@ -1418,6 +1418,65 @@ def clientIndex(request):
     ctx2 ={"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter}
     return render(request, "client/index.html",context)
 
+def reviews(request):
+    reviews = Review.objects.filter(status=True)
+
+    data = cartData(request)
+    order = data['order']
+
+    review_items = []
+
+    for review in reviews:
+        user = review.user
+        if user is None:
+            username = "Anonymous"
+            data = {
+                "review" : review,
+                "username" : username
+            }
+        else:
+            try:
+                app_user = AppUser.objects.get(user_id=user.id)
+                username = app_user.fname + " " + app_user.lname
+            except:
+                username = user.username
+
+            data = {
+                "review" : review,
+                "username" : username
+            }
+
+        review_items.append(data)
+    return render(request, "client/reviews.html", {"review_items": review_items, "cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "order": order,})
+
+def terms(request):
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/terms.html", {"cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "order": order,})
+
+def policy(request):
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/policy.html", {"cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "order": order,})
+
 def allService(request):
     products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")
     all_products = []
