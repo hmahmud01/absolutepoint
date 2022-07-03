@@ -1478,7 +1478,7 @@ def policy(request):
         "order": order,})
 
 def allService(request):
-    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter")
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter").exclude(category__name="Telegram")
     all_products = []
     all_prods = []
     active_products = products.filter(status=True)
