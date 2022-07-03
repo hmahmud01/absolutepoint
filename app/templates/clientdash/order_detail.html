@@ -154,7 +154,7 @@
                         </table>
                     </div>
                 </div>
-                {% if order.order_payment == False %}
+                {% if order.order_payment == False and order.cancelled == False %}
                 <div class="card-footer">
                     <a href="{% url 'confirmcryptoorder' order.id %}" class="btn btn-sm btn-outline-success">Confirm Payment</a>
                     <a href="{% url 'cancelorder' order.id %}" class="btn btn-sm btn-outline-danger">Cancel Order</a>
