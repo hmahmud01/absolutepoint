@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Profile Detail</h1>
+        </div>
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="card-heading">{{ client.fname }}  {{ client.lname }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">User</label>
+                                <p class="lead">{{ client.user }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">TGID</label>
+                                <p class="lead">{{ client.telid }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">Email address</label>
+                                <p class="lead">{{ client.email }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">First Name</label>
+                                <p class="lead">{{ client.fname }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">Last Name</label>
+                                <p class="lead">{{ client.lname }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">Address</label>
+                                <p class="lead">{{ client.address }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">City</label>
+                                <p class="lead">{{ client.state }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">ZIP</label>
+                                <p class="lead">{{ client.zipcode }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label class="form-label">Country</label>
+                                <p class="lead">{{ client.country }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <p class="lead">Created At: {{ client.created_at }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Data Tables-->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script src="/static/js/e-commerce-orders.js"></script>
+{% endblock %}

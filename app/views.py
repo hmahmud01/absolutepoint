@@ -1786,10 +1786,11 @@ def loadPrice(request):
 
 def clientOrders(request):
     data = ""
-    orders = Order.objects.filter(customer=request.user.username)
+    orders = Order.objects.filter(customer=request.user.username).filter(cancelled=False)
+    cancelled_orders = Order.objects.filter(customer=request.user.username).filter(cancelled=True)
     data = cartData(request)
     order = data['order']
-    return render(request, "client/orders.html", {"data": data, "orders": orders, "order": order,
+    return render(request, "client/orders.html", {"data": data, "orders": orders, "order": order,"cancelled_orders": cancelled_orders,
                                         "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
@@ -1997,6 +1998,10 @@ def clientList(request):
     data = ""
     users = AppUser.objects.all()
     return render(request, "clientdash/client_list.html", {"data": data, "users": users})
+
+def clientDetail(request, cid):
+    client = AppUser.objects.get(id=cid)
+    return render(request, "clientdash/client_detail.html", {"client": client})
 
 
 def orderList(request):
@@ -2343,8 +2348,9 @@ def confirmCryptoOrder(request, oid):
 
 def cancelOrder(request, oid):
     order = Order.objects.get(id=oid)
-    order.delete()
-
+    order.cancelled = True
+    # order.delete()
+    order.save()
     return redirect('orderlist')
 
 def stripeCheckout(request, oid):

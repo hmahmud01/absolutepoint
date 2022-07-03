@@ -199,6 +199,7 @@ class Order(models.Model):
     trx_id = models.CharField(max_length=128, null=True, blank=True)
     order_payment = models.BooleanField(default=False, null=True, blank=True)
     new_order = models.BooleanField(default=True)
+    cancelled = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return str(self.id)

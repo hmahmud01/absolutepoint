@@ -100,6 +100,7 @@ urlpatterns = [
     path('confirmcryptoorder/<int:oid>/', views.confirmCryptoOrder, name="confirmcryptoorder"),
     path('cancelorder/<int:oid>/', views.cancelOrder, name="cancelorder"),
     path('clientlist/', views.clientList, name="clientlist"),
+    path('clientdetail/<int:cid>/', views.clientDetail, name="clientdetail"),
     path('cart/', views.cart, name="cart"),
     path('removecartitem/<int:iid>/', views.removeCartItem, name="removecartitem"),
     path('submitreview/<int:pid>/', views.submitReview, name="submitreview"),

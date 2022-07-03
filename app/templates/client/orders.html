@@ -12,51 +12,108 @@
         </div>
         <div class="col-md-12">
             <div class="card card-table mb-4">
-            <div class="card-body">
-              <div class="preload-wrapper">
-                <div class="table-responsive">
-                  <table class="table table-hover mb-0" id="ordersDatatable">
-                    <thead>
-                      <tr>                        
-                        <th>Order Id</th>
-                        <th>Date Ordered</th>
-                        <th>Status</th>
-                        <th>Payment Status</th>
-                        <th>Customer Name</th>
-                        <th>Method</th>
-                        <th>Total</th>                        
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for order in orders %}
-                       <tr class="align-middle">
-                        <td><a href="{% url 'orderdetail' order.id %}">ORD - {{ order.id }}</a></td>
-                        <td> {{ order.date_ordered }} </td>
-                        {% if order.complete %}
-                        <td>Successful</td>
-                        {% else %}
-                        <td>Not Completed</td>
-                        {% endif %}
-                        {% if order.order_payment %}
-                        <td>Payment Success</td>
-                        {% else %}
-                        <td>Pending Confirmation</td>
-                        {% endif %}
-                        <td> {{ order.customer }} </td>
-                        {% if order.payment.credit_type == "crypto" %}
-                        <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span></td>
-                        {% else %}
-                        <td><span class="badge badge-success-light">{{ order.payment.credit_type }}</span></td>
-                        {% endif %}
-                        <td> {{ order.get_cart_total }} </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+                <div class="card-header">
+                    <h4 class="card-heading">Successful Orders</h4>
                 </div>
-              </div>
+                <div class="card-body">
+                    <div class="preload-wrapper">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="ordersDatatable">
+                                <thead>
+                                    <tr>
+                                        <th>Order Id</th>
+                                        <th>Date Ordered</th>
+                                        <th>Status</th>
+                                        <th>Payment Status</th>
+                                        <th>Customer Name</th>
+                                        <th>Method</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                    <tr class="align-middle">
+                                        <td><a href="{% url 'orderdetail' order.id %}">ORD - {{ order.id }}</a></td>
+                                        <td> {{ order.date_ordered }} </td>
+                                        {% if order.complete %}
+                                        <td>Successful</td>
+                                        {% else %}
+                                        <td>Not Completed</td>
+                                        {% endif %}
+                                        {% if order.order_payment %}
+                                        <td>Payment Success</td>
+                                        {% else %}
+                                        <td>Pending Confirmation</td>
+                                        {% endif %}
+                                        <td> {{ order.customer }} </td>
+                                        {% if order.payment.credit_type == "crypto" %}
+                                        <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span>
+                                        </td>
+                                        {% else %}
+                                        <td><span
+                                                class="badge badge-success-light">{{ order.payment.credit_type }}</span>
+                                        </td>
+                                        {% endif %}
+                                        <td> {{ order.get_cart_total }} </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <div class="card card-table mb-4">
+                <div class="card-header">
+                    <h4 class="card-heading">Cancelled Orders</h4>
+                </div>
+                <div class="card-body">
+                    <div class="preload-wrapper">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="cancelled_table">
+                                <thead>
+                                    <tr>
+                                        <th>Order Id</th>
+                                        <th>Date Ordered</th>
+                                        <th>Status</th>
+                                        <th>Payment Status</th>
+                                        <th>Customer Name</th>
+                                        <th>Method</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in cancelled_orders %}
+                                    <tr class="align-middle">
+                                        <td><a href="{% url 'orderdetail' order.id %}">ORD - {{ order.id }}</a></td>
+                                        <td> {{ order.date_ordered }} </td>
+                                        
+                                        <td>Cancelled</td>
+                                        
+                                        {% if order.order_payment %}
+                                        <td>Payment Success</td>
+                                        {% else %}
+                                        <td>Pending Confirmation</td>
+                                        {% endif %}
+                                        <td> {{ order.customer }} </td>
+                                        {% if order.payment.credit_type == "crypto" %}
+                                        <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span>
+                                        </td>
+                                        {% else %}
+                                        <td><span
+                                                class="badge badge-success-light">{{ order.payment.credit_type }}</span>
+                                        </td>
+                                        {% endif %}
+                                        <td> {{ order.get_cart_total }} </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -69,4 +126,18 @@
 <!-- Data Tables-->
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
 <script src="/static/js/e-commerce-orders.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const cancelledTable = new simpleDatatables.DataTable("#cancelled_table", {
+        columns: [],
+    });
+
+
+    cancelledTable.on("datatable.init", function () {});
+
+    cancelledTable.on("datatable.init", function (args) {
+        document.getElementById("cancelled_table").closest(".preload-wrapper").classList.add("opacity-10");
+    });
+});
+</script>
 {% endblock %}
