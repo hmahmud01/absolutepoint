@@ -1859,6 +1859,12 @@ def saveCategory(request):
 
     category.save()
 
+    stat = catstatus(
+        cat = category,
+        status = True
+    )
+    stat.save()
+
     return redirect('createproduct')
 
 def categoryList(request):
@@ -2659,5 +2665,5 @@ def removeData(request):
     Billing.objects.all().delete()
     Payment.objects.all().delete()
     Review.objects.all().delete()
-    
+
     return redirect('home')
