@@ -2645,3 +2645,19 @@ def newsDetail(request, nid):
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
                                         "cat_tg": cat_tg,})
+
+def removeData(request):
+    productCategory.objects.all().delete()
+    catstatus.objects.all().delete()
+    serviceProduct.objects.all().delete()
+    variableProductPrice.objects.all().delete()
+    productTerms.objects.all().delete()
+    Order.objects.all().delete()
+    cryptoNetwork.objects.all().delete()
+    cryptoProof.objects.all().delete()
+    OrderItems.objects.all().delete()
+    Billing.objects.all().delete()
+    Payment.objects.all().delete()
+    Review.objects.all().delete()
+    
+    return redirect('home')

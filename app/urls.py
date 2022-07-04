@@ -133,6 +133,7 @@ urlpatterns = [
     path('newslist/', views.newsList, name="newslist"),
     path('newsdetail/<int:nid>', views.newsDetail, name="newsdetail"), 
     path('newsdelete/<int:nid>', views.newsDelete, name="newsdelete"), 
+    path('removedata', views.removeData, name="removedata"),
 
 ]
 
