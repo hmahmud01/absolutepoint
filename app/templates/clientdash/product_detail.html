@@ -27,7 +27,7 @@
                 {% endif %}
                 <div class="card-body">
                     <p class="card-text">{{ product.category.name }}</p>
-                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">{{ product.description|linebreaksbr }}</p>
                     {% if product.status is True %}
                     <a class="btn btn-sm btn-outline-danger" href="{% url 'productact' product.id inactive %}">Activated</a>
                     {% else %}
@@ -143,7 +143,7 @@
     <div class="modal fade" id="updateDetail" data-bs-backdrop="static"
         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Update Description </h5>
@@ -156,7 +156,7 @@
                         <div class="row mb-3">
                             <label class="col-md-3 form-label">Product Description</label>
                             <div class="col-md-9">
-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                <textarea class="form-control" id="description" name="description" rows="10">{{ product.description|linebreaksbr }}</textarea>
                             </div>
                         </div>
                     </div>
