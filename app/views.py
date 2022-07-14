@@ -78,12 +78,12 @@ HOURS_DELTA = 6
 scount = Services.objects.filter(accepted=False).count()
 tcount = Ticket.objects.filter(seen=False).count()
 
-cat_fb = productCategory.objects.get(name="Facebook").id
-cat_it = productCategory.objects.get(name="Instagram").id
-cat_yt = productCategory.objects.get(name="Youtube").id
-cat_tt = productCategory.objects.get(name="Tiktok").id
-cat_tw = productCategory.objects.get(name="Twitter").id
-cat_tg = productCategory.objects.get(name="Telegram").id
+cat_fb = productCategory.objects.get(name="Facebook Services").id
+cat_it = productCategory.objects.get(name="Instagram Services").id
+cat_yt = productCategory.objects.get(name="Youtube Services").id
+cat_tt = productCategory.objects.get(name="Tiktok Services").id
+cat_tw = productCategory.objects.get(name="Twitter Services").id
+cat_tg = productCategory.objects.get(name="Telegram Services").id
 
 
 def login(request):
@@ -1331,15 +1331,15 @@ def salesExecutiveSalary(request):
 # CLIENT AREA
 def clientIndex(request):
     data = ""
-    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter").filter(status=True)[:8]
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook Services").exclude(category__name="Instagram Services").exclude(category__name="Youtube Services").exclude(category__name="Tiktok Services").exclude(category__name="Twitter Services").exclude(category__name="Telegram Services").filter(status=True)[:8]
     items = []
-    marketing = serviceProduct.objects.filter(category__name="Marketing")
-    facebook = serviceProduct.objects.filter(category__name="Facebook")
-    instagram = serviceProduct.objects.filter(category__name="Instagram")
-    youtube = serviceProduct.objects.filter(category__name="Youtube")
-    tiktok = serviceProduct.objects.filter(category__name="Tiktok")
-    twitter = serviceProduct.objects.filter(category__name="Twitter")
-    telegram = serviceProduct.objects.filter(category__name="Telegram")
+    marketing = serviceProduct.objects.filter(category__name="Marketing Services")
+    facebook = serviceProduct.objects.filter(category__name="Facebook Services")
+    instagram = serviceProduct.objects.filter(category__name="Instagram Services")
+    youtube = serviceProduct.objects.filter(category__name="Youtube Services")
+    tiktok = serviceProduct.objects.filter(category__name="Tiktok Services")
+    twitter = serviceProduct.objects.filter(category__name="Twitter Services")
+    telegram = serviceProduct.objects.filter(category__name="Telegram Services")
 
     for prod in products:
         variable = variableProductPrice.objects.filter(product__id=prod.id).order_by('price')
@@ -1359,12 +1359,12 @@ def clientIndex(request):
 
             items.append(product)
 
-    cat_fb = productCategory.objects.get(name="Facebook").id
-    cat_it = productCategory.objects.get(name="Instagram").id
-    cat_yt = productCategory.objects.get(name="Youtube").id
-    cat_tt = productCategory.objects.get(name="Tiktok").id
-    cat_tw = productCategory.objects.get(name="Twitter").id
-    cat_tg = productCategory.objects.get(name="Telegram").id
+    cat_fb = productCategory.objects.get(name="Facebook Services").id
+    cat_it = productCategory.objects.get(name="Instagram Services").id
+    cat_yt = productCategory.objects.get(name="Youtube Services").id
+    cat_tt = productCategory.objects.get(name="Tiktok Services").id
+    cat_tw = productCategory.objects.get(name="Twitter Services").id
+    cat_tg = productCategory.objects.get(name="Telegram Services").id
 
     data = cartData(request)
     order = data['order']
@@ -1478,7 +1478,7 @@ def policy(request):
         "order": order,})
 
 def allService(request):
-    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook").exclude(category__name="Instagram").exclude(category__name="Youtube").exclude(category__name="Tiktok").exclude(category__name="Twitter").exclude(category__name="Telegram")
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook Services").exclude(category__name="Instagram Services").exclude(category__name="Youtube Services").exclude(category__name="Tiktok Services").exclude(category__name="Twitter Services").exclude(category__name="Telegram Services")
     all_products = []
     all_prods = []
     active_products = products.filter(status=True)
@@ -1531,19 +1531,19 @@ def allService(request):
 
 def allSocial(request):
     marketing = serviceProduct.objects.filter(category__name="Marketing")
-    facebook = serviceProduct.objects.filter(category__name="Facebook")
-    instagram = serviceProduct.objects.filter(category__name="Instagram")
-    youtube = serviceProduct.objects.filter(category__name="Youtube")
-    tiktok = serviceProduct.objects.filter(category__name="Tiktok")
-    twitter = serviceProduct.objects.filter(category__name="Twitter")
-    telegram = serviceProduct.objects.filter(category__name="Telegram")
+    facebook = serviceProduct.objects.filter(category__name="Facebook Services")
+    instagram = serviceProduct.objects.filter(category__name="Instagram Services")
+    youtube = serviceProduct.objects.filter(category__name="Youtube Services")
+    tiktok = serviceProduct.objects.filter(category__name="Tiktok Services")
+    twitter = serviceProduct.objects.filter(category__name="Twitter Services")
+    telegram = serviceProduct.objects.filter(category__name="Telegram Services")
 
-    cat_fb = productCategory.objects.get(name="Facebook").id
-    cat_it = productCategory.objects.get(name="Instagram").id
-    cat_yt = productCategory.objects.get(name="Youtube").id
-    cat_tt = productCategory.objects.get(name="Tiktok").id
-    cat_tw = productCategory.objects.get(name="Twitter").id
-    cat_tg = productCategory.objects.get(name="Telegram").id
+    cat_fb = productCategory.objects.get(name="Facebook Services").id
+    cat_it = productCategory.objects.get(name="Instagram Services").id
+    cat_yt = productCategory.objects.get(name="Youtube Services").id
+    cat_tt = productCategory.objects.get(name="Tiktok Services").id
+    cat_tw = productCategory.objects.get(name="Twitter Services").id
+    cat_tg = productCategory.objects.get(name="Telegram Services").id
 
     data = cartData(request)
     order = data['order']

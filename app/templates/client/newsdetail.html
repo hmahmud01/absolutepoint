@@ -21,9 +21,9 @@
                     alt="Card image cap">
                 {% endif %}
                 <div class="card-body">
-                    <p class="card-text">{{ news.message }}</p>
+                    <p class="card-text">{{ news.message|linebreaksbr }}</p>
                     {% if news.msg_2 %}
-                    <p class="card-text">{{ news.msg_2 }}</p>
+                    <p class="card-text">{{ news.msg_2|linebreaksbr }}</p>
                     {% endif %}
                 </div>
                 <div class="card-footer">
