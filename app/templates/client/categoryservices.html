@@ -1,0 +1,38 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="page-header text-center">
+        <h1 class="page-heading fw-bold">{{ cat.name }}</h1>
+        <p>Provided by Crypto Marketers</p>
+    </div>
+
+    {% for item in all_products %}
+    <div class="col-md-6 col-lg-3">
+        {% if item.product.status == False %}
+        <a href="{% url 'allservices' %}">
+        {% else %}
+        <a href="{% url 'clientservicedetail' item.product.id %}">
+        {% endif %}
+        
+        <div class="card mb-4">
+            {% if item.product.thumb %}
+            <img class="card-img-top img-fluid" src="/media/{{ item.product.thumb }}" alt="{{ item.product.name }}">
+            {% else %}
+            <img class="card-img-top img-fluid" src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" alt="{{ item.product.name }}">
+            {% endif %}
+            <div class="card-body">
+            <p class="lead text-dark text-decoration-none fw-bold">{{ item.product.name }}</p> 
+            {% if item.product.status == False %}
+            <p class="lead text-dark text-decoration-none">Currently Unavailable</p> 
+            {% else %}
+            <p class="lead card-text text-decoration-none text-dark fw-bold">{{ item.price }} $ </p>
+            {% endif %}
+            </div>
+        </div>
+        </a>    
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

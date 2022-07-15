@@ -72,8 +72,9 @@
                         </div>
                         <div class="col-md-4 p-5">
                             <h3 class="my-2">Popular Services</h3>
-                            <a class="text-decoration-none lead text-dark" href="">Upvote Services</a><br>
-                            <a class="text-decoration-none lead text-dark" href="">Trending Services</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'categoryservices' cat_upvote %}">Upvote Services</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'categoryservices' cat_watchlist %}">Watchlist Services</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'categoryservices' cat_trending %}">Trending Services</a><br>
                             <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_tw %}">Twitter</a><br>
                             <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_it %}">Instagram</a><br>
                             <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_tg %}">Telegram</a><br>

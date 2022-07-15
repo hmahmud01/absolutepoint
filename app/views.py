@@ -85,6 +85,10 @@ cat_tt = productCategory.objects.get(name="Tiktok Services").id
 cat_tw = productCategory.objects.get(name="Twitter Services").id
 cat_tg = productCategory.objects.get(name="Telegram Services").id
 
+cat_upvote = productCategory.objects.get(name="Upvote Services").id
+cat_watchlist = productCategory.objects.get(name="Watchlist Services").id
+cat_trending = productCategory.objects.get(name="Trending Services").id
+
 
 def login(request):
     data = ""
@@ -1409,6 +1413,9 @@ def clientIndex(request):
         "cat_tt": cat_tt,
         "cat_tw": cat_tw,
         "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
         "order": order,
         "items": items,
         "reviews": reviews,
@@ -1453,6 +1460,9 @@ def reviews(request):
         "cat_tt": cat_tt,
         "cat_tw": cat_tw,
         "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
         "order": order,})
 
 def terms(request):
@@ -1464,6 +1474,9 @@ def terms(request):
         "cat_tt": cat_tt,
         "cat_tw": cat_tw,
         "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
         "order": order,})
 
 def policy(request):
@@ -1475,6 +1488,9 @@ def policy(request):
         "cat_tt": cat_tt,
         "cat_tw": cat_tw,
         "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
         "order": order,})
 
 def allService(request):
@@ -1527,6 +1543,66 @@ def allService(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,
+                                        "cat_tg": cat_tg,})
+
+def categoryservices(request, cid):
+    cat = productCategory.objects.get(id=cid)
+    products = serviceProduct.objects.filter(category__id=cid)
+    all_products = []
+    all_prods = []
+    active_products = products.filter(status=True)
+    inactive_products = products.filter(status=False)
+    data = cartData(request)
+    order = data['order']
+    for active in active_products:
+        all_products.append(active)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
+            product = {
+                'product': active,
+                'price': price_filter[1]
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': active,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    for inactive in inactive_products:
+        all_products.append(inactive)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
+            product = {
+                'product': inactive,
+                'price': price_filter[1]
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': inactive,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    return render(request, "client/categoryservices.html", {
+                                        "cat": cat,
+                                        "all_products": all_prods,
+                                        "products": all_products, "order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,
                                         "cat_tg": cat_tg,})
 
 def allSocial(request):
@@ -1561,6 +1637,9 @@ def allSocial(request):
         "cat_tt": cat_tt,
         "cat_tw": cat_tw,
         "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
         "order": order
     }
 
@@ -1614,7 +1693,10 @@ def completeService(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def contactUs(request):
     data = cartData(request)
@@ -1625,7 +1707,10 @@ def contactUs(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def saveRequest(request):
     post_data = request.POST
@@ -1690,6 +1775,9 @@ def socialServices(request, cid):
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
                                         "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,
                                          })
 
 def clientServiceDetail(request, pid):
@@ -1740,6 +1828,9 @@ def clientServiceDetail(request, pid):
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
                                         "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,
                                         "checkout": checkout})
 
 def loadPrice(request):
@@ -1796,7 +1887,10 @@ def clientOrders(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def allOrders(request):
     data = ""
@@ -1814,14 +1908,20 @@ def orderDetail(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,}
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,}
     else:
         context = {'items': orderItems, 'order':order , "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,}
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,}
     
     return render(request, "client/order_detail.html", context)
 
@@ -2116,7 +2216,10 @@ def cart(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,}
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,}
     return render(request, "client/cart.html", context)
 
 def removeCartItem(request, iid):
@@ -2154,7 +2257,10 @@ def checkout(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 
 # <QueryDict: {'csrfmiddlewaretoken': ['Ka4Nh9QauQ361lj7sH5F09KVFkGptdqV8IUl8IgoDvbUOBvM5Yi25xqXx7tM0xwz'], 
@@ -2245,7 +2351,10 @@ def processOrder(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
             appuser = AppUser(
                 user = user,
@@ -2332,7 +2441,10 @@ def processOrder(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
       
 
 def confirmCryptoOrder(request, oid):
@@ -2365,7 +2477,10 @@ def stripeCheckout(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def cryptoCheckout(request, oid):
     order = Order.objects.get(id=oid)
@@ -2377,7 +2492,10 @@ def cryptoCheckout(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def saveCryptoProof(request, oid):
     
@@ -2421,7 +2539,10 @@ def saveCryptoProof(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
     
 
@@ -2436,7 +2557,10 @@ def cryptoSuccess(request, oid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def create_checkout_session(request, oid):
     order = Order.objects.get(id=oid)
@@ -2508,7 +2632,10 @@ def success(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def cancel(request):
     return  render(request, 'client/cancel.html', {
@@ -2517,7 +2644,10 @@ def cancel(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def createPortfolio(request):
     users = DashboardUser.objects.all()
@@ -2575,7 +2705,10 @@ def portfolio(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def portfolioDetail(request, pid):
     portfolio = Portfolio.objects.get(id=pid)
@@ -2589,7 +2722,10 @@ def portfolioDetail(request, pid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def people(request):
     people = DashboardUser.objects.all()
@@ -2640,7 +2776,10 @@ def newsList(request):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def newsDetail(request, nid):
     news = News.objects.get(id=nid)
@@ -2650,7 +2789,10 @@ def newsDetail(request, nid):
                                         "cat_yt": cat_yt,
                                         "cat_tt": cat_tt,
                                         "cat_tw": cat_tw,
-                                        "cat_tg": cat_tg,})
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def removeData(request):
     productCategory.objects.all().delete()

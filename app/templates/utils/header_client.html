@@ -30,7 +30,12 @@
                         All Services
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="{% url 'allservices' %}">Crypto Services</a></li>
+                        {% comment %} <li><a class="dropdown-item" href="{% url 'allservices' %}">Crypto Services</a></li> {% endcomment %}
+                        {% comment %} <li><p class="dropdown-item g-0 m-0">Crypto Services</p></li> {% endcomment %}
+                        <li><a class="dropdown-item" href="{% url 'categoryservices' cat_upvote %}">Upvote Services</a></li>
+                        <li><a class="dropdown-item" href="{% url 'categoryservices' cat_watchlist %}">Watchlist Services</a></li>
+                        <li><a class="dropdown-item" href="{% url 'categoryservices' cat_trending %}">Trending Services</a></li>
+                        <hr class="g-0 m-0">
                         <li><a class="dropdown-item" href="{% url 'socialservices' cat_fb %}">Facebook Services</a></li>
                         <li><a class="dropdown-item" href="{% url 'socialservices' cat_it %}">Instagram Services</a></li>
                         <li><a class="dropdown-item" href="{% url 'socialservices' cat_yt %}">Youtube Services</a></li>
