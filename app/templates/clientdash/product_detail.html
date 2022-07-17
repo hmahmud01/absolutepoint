@@ -46,6 +46,9 @@
                             <div>
                                 <h6 class="my-0">{{ term.terms }}</h6>
                             </div>
+                            <div>
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'deleteterms' term.id product.id %}">Delete</a>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>

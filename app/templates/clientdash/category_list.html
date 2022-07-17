@@ -29,9 +29,15 @@
                             <td>{{ cat.name }}</td>
                             <td>{{ cat.catstatus.status }} </td>
                             {% if cat.catstatus.status is True %}
-                            <td><a class="btn btn-sm btn-outline-danger" href="{% url 'deactivatecategory' cat.id %}">De Activated</a></span></td>
+                            <td>
+                              <a class="btn btn-sm btn-outline-danger" href="{% url 'deactivatecategory' cat.id %}">De Activated</a>
+                              <a class="btn btn-sm btn-outline-warning" href="{% url 'deletecategory' cat.id %}">Delete</a>
+                            </td>
                             {% else %}
-                            <td><a class="btn btn-sm btn-outline-success" href="{% url 'activatecategory' cat.id %}">Activate</a></span></td>
+                            <td>
+                              <a class="btn btn-sm btn-outline-success" href="{% url 'activatecategory' cat.id %}">Activate</a>
+                              <a class="btn btn-sm btn-outline-warning" href="{% url 'deletecategory' cat.id %}">Delete</a>
+                            </td>
                             {% endif %}
                           </tr>
                         {% endfor %}

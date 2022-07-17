@@ -1993,12 +1993,18 @@ def deactivateCategory(request, cid):
     cat.catstatus.save()
     return redirect('categorylist')
 
+def deleteCategory(request, cid):
+    cat = productCategory.objects.get(id=cid)
+    cat.delete()
+    return redirect('categorylist')
+
 def productList(request):
     data = ""
     products = serviceProduct.objects.all()
     inactive = "inactive"
     active = "active"
-    return render(request, "clientdash/product_list.html", {"data": data, "products": products, "inactive": inactive, "active": active})
+    delete = "delete"
+    return render(request, "clientdash/product_list.html", {"data": data, "products": products, "inactive": inactive, "active": active, "delete": delete})
 
 def productDetail(request, pid):
     data = ""
@@ -2043,6 +2049,12 @@ def saveTerms(request):
 
     terms.save()
     return redirect('productdetail', post_data['pid'])
+
+def deleteterms(request, tid, pid):
+    terms = productTerms.objects.get(id=tid)
+    terms.delete()
+
+    return redirect('productdetail', pid)
 
 def saveBasePrice(request):
     data = ""
@@ -2097,6 +2109,8 @@ def productAct(request, pid, act):
     elif act == "inactive":
         product.status = False
         product.save()
+    elif act == "delete":
+        product.delete()
 
     return redirect('productlist')
 
