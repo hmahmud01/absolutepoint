@@ -22,6 +22,8 @@ from .models import *
 from .utils import cartData
 import random
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 stripe.api_key = "sk_test_51HhxVlEfJWhMuLjgUFtwqRpA9iGwTip8o2QuIq7BwYzbBysGhQCLXCt8TNZZMF4zcSUAhhfR0axTQKHEuMorCilV009353SShi"
 
 BASE_SALARY = 10000
@@ -2769,7 +2771,7 @@ def saveNews(request):
     return redirect('listnews')
 
 def listNews(request):
-    news = News.objects.all()
+    news = News.objects.all().order_by('-id')
     return render(request, "clientdash/news_list.html", {"news": news})
 
 def newsDelete(request, nid):
@@ -2783,8 +2785,20 @@ def detailNews(request, nid):
 
 
 def newsList(request):
-    news = News.objects.all()
-    return render(request, "client/newslist.html", {"news": news, 
+    news = News.objects.all().order_by('-id')
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(news, 10)
+
+    try:
+        newss = paginator.page(page)
+    except PageNotAnInteger:
+        newss = paginator.page(1)
+    except EmptyPage:
+        newss = paginator.page(paginator.num_pages)
+
+    return render(request, "client/newslist.html", {"news": newss, 
                                         "cat_fb": cat_fb,
                                         "cat_it": cat_it,
                                         "cat_yt": cat_yt,
