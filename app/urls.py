@@ -67,6 +67,7 @@ urlpatterns = [
     path('', views.clientIndex, name="clientindex"),
     path('reviewlist/', views.reviews, name="reviewlist"),
     path('terms/', views.terms, name="terms"),
+    path('privacy-policy/', views.privacy, name="privacy"),
     path('faq/', views.policy, name="policy"),
     path('allservices/', views.allService, name="allservices"),
     path('categoryservices/<int:cid>/', views.categoryservices, name="categoryservices"),

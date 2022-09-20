@@ -1495,6 +1495,20 @@ def policy(request):
         "cat_trending": cat_trending,
         "order": order,})
 
+def privacy(request):
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/privacy.html", {"cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
+        "order": order,})
+
 def allService(request):
     products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook Services").exclude(category__name="Instagram Services").exclude(category__name="Youtube Services").exclude(category__name="Tiktok Services").exclude(category__name="Twitter Services").exclude(category__name="Telegram Services")
     all_products = []
