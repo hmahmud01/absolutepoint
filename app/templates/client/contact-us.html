@@ -1,0 +1,93 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4 px-5">
+            <div class="page-header mt-5">
+                <h1 class="mb-3">Connect with Us</h1>
+                <p class="my-4 fs-4">Provide any feedbak or queries regarding our services and what we need to provide. Let us start working today to make your tomorrow better!</p>
+                <div class="card-widget my-4">
+                    <div class="card-widget-body">
+                        <div class="icon text-white bg-green"><i class="far fa-comment-alt"></i></div>
+                        <div class="text mx-2">
+                            <h6 class="mb-0">Write Us on Telegram</h6><span class=""><a href="https://t.me/CryptoMsupport" target="_blank">@CryptoMsupport</a></span>
+                        </div>
+                    </div>
+                </div>
+                {% comment %} <div class="card-widget my-4">
+                    <div class="card-widget-body">
+                        <div class="icon text-white bg-green"><i class="far fa-envelope"></i></div>
+                        <div class="text mx-2">
+                            <h6 class="mb-0">Email Us</h6><span class="">hello@cryptomarketers.com</span>
+                        </div>
+                    </div>
+                </div> {% endcomment %}
+            </div>
+        </div>
+        <div class="col-md-8 px-5">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-heading fw-bold">Request A Quote</h4>
+                </div>
+                <div class="card-body">
+                    <p>Kindly fill in the details and submit your request</p>
+                    <form method="post" action="{% url 'saverequest' %}">{% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input class="form-control" name="fname" type="text" placeholder="First Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input class="form-control" name="lname" type="text" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telegram Username</label>
+                                    <input class="form-control" name="telid" type="text" placeholder="@telegram">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Subject</label>
+                                    <input class="form-control" name="subject" type="text" placeholder="Ex. Growth package">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Socials(Website/twitter etc)</label>
+                                    <input class="form-control" name="social" type="text" placeholder="yourproject.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Estimated Budget($)</label>
+                                    <input class="form-control" name="budget" type="number" placeholder="4500">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Message</label>
+                                    <!-- <input class="form-control" type="text" placeholder="4500 USD"> -->
+                                    <textarea class="form-control" name="message" id="" rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">     
+                            <button class="btn btn-primary" type="submit">Make A Request</button>  
+                            <!-- <a class="btn btn-primary" href="{% url 'requestconfirm' %}">Make A Request</a> -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

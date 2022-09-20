@@ -8,12 +8,18 @@
     <div class="row">
         <div class="page-header">
             <h1 class="page-heading">Checkout</h1>
-            <p>Absolute Point</p>
+            <p>Crypto Marketers</p>
 
             <div class="container">
                 <main>
                     <div class="py-5">
                         <p class="lead">Provide all the information for your Order Confirmation and payment.</p>
+                        {% if msg %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Warning!</strong> {{ msg }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="row g-5">
@@ -60,7 +66,7 @@
                                             <div class="col-sm-6">
                                                 <label for="firstName" class="form-label">First name</label>
                                                 <input type="text" class="form-control" name="firstname" id="firstName" placeholder=""
-                                                    value="" required>
+                                                    value="{{ billing.firstname }}" required>
                                                 <div class="invalid-feedback">
                                                     Valid first name is required.
                                                 </div>
@@ -69,7 +75,7 @@
                                             <div class="col-sm-6">
                                                 <label for="lastName" class="form-label">Last name</label>
                                                 <input type="text" class="form-control" name="lastname" id="lastName" placeholder=""
-                                                    value="" required>
+                                                    value="{{ billing.lastname }}" required>
                                                 <div class="invalid-feedback">
                                                     Valid last name is required.
                                                 </div>
@@ -80,7 +86,7 @@
                                                 <div class="input-group has-validation">
                                                     <span class="input-group-text">@</span>
                                                     <input type="text" class="form-control" name="username" id="Username"
-                                                        placeholder="Telegram Username" required>
+                                                       value="{{ billing.username }}" placeholder="Telegram Username" required>
                                                     <div class="invalid-feedback">
                                                         Your username is required.
                                                     </div>
@@ -89,7 +95,7 @@
 
                                             <div class="col-12">
                                                 <label for="email" class="form-label">Email</label>
-                                                <input type="email" class="form-control" name="email" id="email"
+                                                <input type="email" class="form-control" name="email" id="email" value="{{ billing.email }}"
                                                     placeholder="you@example.com" requred>
                                                 <div class="invalid-feedback">
                                                     Please enter a valid email address for shipping updates.
@@ -98,7 +104,7 @@
 
                                             <div class="col-12">
                                                 <label for="address" class="form-label">Address</label>
-                                                <input type="text" class="form-control" name="address" id="address"
+                                                <input type="text" class="form-control" name="address" id="address" value="{{ billing.address }}"
                                                     placeholder="1234 Main St" required>
                                                 <div class="invalid-feedback">
                                                     Please enter your shipping address.
@@ -114,7 +120,7 @@
 
                                             <div class="col-md-5">
                                                 <label for="country" class="form-label">Country</label>
-                                                <input type="text" class="form-control" name="country" id="country" placeholder="Country"
+                                                <input type="text" class="form-control" name="country" value="{{ billing.country }}" id="country" placeholder="Country"
                                                     required>
                                                 <div class="invalid-feedback">
                                                     Please select a valid country.
@@ -123,7 +129,7 @@
 
                                             <div class="col-md-4">
                                                 <label for="state" class="form-label">State</label>
-                                                <input type="text" class="form-control" name="state" id="state" placeholder="State"
+                                                <input type="text" class="form-control" name="state" id="state" value="{{ billing.state }}" placeholder="State"
                                                     required>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid state.
@@ -132,7 +138,7 @@
 
                                             <div class="col-md-3">
                                                 <label for="zip" class="form-label">Zip</label>
-                                                <input type="text" class="form-control" name="zipcode" id="zip" placeholder="Zip"
+                                                <input type="text" class="form-control" name="zipcode" value="{{ billing.zipcode }}" id="zip" placeholder="Zip"
                                                     required>
                                                 <div class="invalid-feedback">
                                                     Zip code required.
@@ -142,42 +148,54 @@
 
                                         <hr class="my-4">
 
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="save-info">
-                                            <label class="form-check-label" for="save-info">Save this information for
-                                                next
-                                                time</label>
+                                        {% if auth_status == False %}
+
+                                        <h4 class="mb-3">Profile Create</h4>
+
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="state" class="form-label">Password</label>
+                                                <input type="password" class="form-control" name="pass" id="pass" placeholder="Password"
+                                                    required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid state.
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="state" class="form-label">Confirm Password</label>
+                                                <input type="password" class="form-control" name="conf_pass" id="conf_pass" placeholder="Confirm Password"
+                                                    required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid state.
+                                                </div>
+                                            </div>
+
+                                            <p class="lead">You do not have any account in this system yet. Please provide your preferred password to create an account with the email you have provided in billing information. After successful checkout please login to the system to see your orders. </p>
+
                                         </div>
 
                                         <hr class="my-4">
+
+                                        {% endif %}
 
                                         <h4 class="mb-3">Payment</h4>
 
                                         <div class="my-3">
                                             <div class="form-check">
-                                                <input id="credit" name="credit_type" name="paymentMethod" type="radio"
-                                                    class="form-check-input" checked required>
+                                                <input id="credit" name="credit_type" type="radio" value="crypto"
+                                                    class="form-check-input" required>
                                                 <label class="form-check-label" for="credit">Crypto</label>
                                             </div>
-                                            <div class="form-check">
-                                                <input id="credit" name="credit_type" name="paymentMethod" type="radio"
-                                                    class="form-check-input">
+                                            {% comment %} <div class="form-check">
+                                                <input id="credit" name="credit_type" type="radio" value="stripe"
+                                                    class="form-check-input" required>
                                                 <label class="form-check-label" for="credit">Stripe</label>
-                                            </div>
+                                            </div> {% endcomment %}
                                         </div>
 
                                         <div class="row gy-3">
-                                            <div class="col-md-12">
-                                                <label for="currency" class="form-label">Currency</label>
-                                                <select class="form-select" id="currency" name="currency" required>
-                                                    <option value="">Choose...</option>
-                                                    {% for key, value in rates.items %}
-                                                    <option value='{"{{key}}" : "{{value}}"}'>{{ key }} - {{ value }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                                <div class="invalid-feedback">
-                                                    Please provide a valid state.
-                                                </div>
+                                            <div>
+                                                <p class="lead" id="show-payment-msg"></p>
                                             </div>
                                         </div>
 
@@ -195,4 +213,139 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+const stripe = Stripe("pk_test_51HhxVlEfJWhMuLjgh14bha3VhsgRfqiGwrZ2isRneRqJcguiEnMFimEZCQ9QHoRAiFLCtiF8ApplE8iHWx7UAjYg00zCFU6vaE");
+
+
+const items = [{ id: "absolutepoint-order" }];
+
+let elements;
+
+initialize();
+checkStatus();
+
+document
+  .querySelector("#payment-form")
+  .addEventListener("submit", handleSubmit);
+
+// Fetches a payment intent and captures the client secret
+async function initialize() {
+  const response = await fetch("/create-payment-intent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ items }),
+  });
+  const { clientSecret } = await response.json();
+
+  const appearance = {
+    theme: 'stripe',
+  };
+  elements = stripe.elements({ appearance, clientSecret });
+
+  const paymentElement = elements.create("payment");
+  paymentElement.mount("#payment-element");
+}
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  setLoading(true);
+
+  const { error } = await stripe.confirmPayment({
+    elements,
+    confirmParams: {
+      // Make sure to change this to your payment completion page
+      return_url: "http://localhost:4242/checkout.html",
+    },
+  });
+
+  // This point will only be reached if there is an immediate error when
+  // confirming the payment. Otherwise, your customer will be redirected to
+  // your `return_url`. For some payment methods like iDEAL, your customer will
+  // be redirected to an intermediate site first to authorize the payment, then
+  // redirected to the `return_url`.
+  if (error.type === "card_error" || error.type === "validation_error") {
+    showMessage(error.message);
+  } else {
+    showMessage("An unexpected error occured.");
+  }
+
+  setLoading(false);
+}
+
+// Fetches the payment intent status after payment submission
+async function checkStatus() {
+  const clientSecret = new URLSearchParams(window.location.search).get(
+    "payment_intent_client_secret"
+  );
+
+  if (!clientSecret) {
+    return;
+  }
+
+  const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);
+
+  switch (paymentIntent.status) {
+    case "succeeded":
+      showMessage("Payment succeeded!");
+      break;
+    case "processing":
+      showMessage("Your payment is processing.");
+      break;
+    case "requires_payment_method":
+      showMessage("Your payment was not successful, please try again.");
+      break;
+    default:
+      showMessage("Something went wrong.");
+      break;
+  }
+}
+
+// ------- UI helpers -------
+
+function showMessage(messageText) {
+  const messageContainer = document.querySelector("#payment-message");
+
+  messageContainer.classList.remove("hidden");
+  messageContainer.textContent = messageText;
+
+  setTimeout(function () {
+    messageContainer.classList.add("hidden");
+    messageText.textContent = "";
+  }, 4000);
+}
+
+// Show a spinner on payment submission
+function setLoading(isLoading) {
+  if (isLoading) {
+    // Disable the button and show a spinner
+    document.querySelector("#submit").disabled = true;
+    document.querySelector("#spinner").classList.remove("hidden");
+    document.querySelector("#button-text").classList.add("hidden");
+  } else {
+    document.querySelector("#submit").disabled = false;
+    document.querySelector("#spinner").classList.add("hidden");
+    document.querySelector("#button-text").classList.remove("hidden");
+  }
+}
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $('input[name=credit_type]').on('change', function(){
+            var val = $(this).val();
+            switch(val){
+                case "crypto":
+                    $('#show-payment-msg').html("You Have Selected Crypto Payment Method. Your order will be registered in our System.");
+                    break;
+                case "stripe":
+                    $('#show-payment-msg').html("You have Selected Stripe Payment Method. You will be redirected to Stripe Payment page for the order completion as soon as you Complete the Checkout here.")
+                    break;
+            }
+        });
+    })
+</script>
 {% endblock %}

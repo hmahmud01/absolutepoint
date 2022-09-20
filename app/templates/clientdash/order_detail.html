@@ -20,6 +20,8 @@
                                     <th style="min-width: 300px;">Product</th>
                                     <th>Items</th>
                                     <th>Price</th>
+                                    <th>Link</th>
+                                    <th>Referenc</th>
                                     <th>Ordered QTY</th>
                                     <th class="text-end">Total</th>
                                 </tr>
@@ -30,7 +32,7 @@
                                 <tr class="align-middle">
                                     <td>
                                         <img class="card-table-img img-fluid me-3"
-                                            src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                                            src="/media/{{ item.product.thumb }}"
                                             alt="" width="80">
                                         <span class="card-table-text">
                                             <a class="text-reset text-decoration-none" href="">
@@ -43,6 +45,8 @@
                                     </td>
                                     <td>{{ item.variance.measurement }} </td>
                                     <td>${{ item.variance.price }}</td>
+                                    <td><a target="_blank" href="{{ item.link }}">Link</a></td>
+                                    <td>{{ item.reference }}</td>
                                     <td>{{ item.quantity }}</td>
                                     <td class="text-end">${{ item.get_total }}</td>
                                 </tr>
@@ -103,16 +107,20 @@
                     <div class="table-responsive">
                         <table class="table table-borderless card-text">
                             <tr class="text-muted">
-                                <th class="fw-normal">Credit Type</th>
-                                <td class="text-end">{{ order.payment.credit_type }}</td>
+                                <th class="fw-normal">Payment Method</th>
+                                {% if order.payment.credit_type == "crypto" %}
+                                <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span></td>
+                                {% else %}
+                                <td><span class="badge badge-success-light">{{ order.payment.credit_type }}</span></td>
+                                {% endif %}
                             </tr>
-                            <tr class="text-muted">
+                            {% comment %} <tr class="text-muted">
                                 <th class="fw-normal">Currency Type</th>
                                 <td class="text-end">{{ order.payment.currency_key }}</td>
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Currency Value</th>
-                                <td class="text-end">{{ order.payment.currency_value }}</td>
+                                <td class="text-end">{{ order.payment.currency_value }}</td> {% endcomment %}
                             </tr>
                         </table>
                     </div>
@@ -133,7 +141,7 @@
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Payment Status</th>
-                                <td class="text-end">{{ order.complete }}</td>
+                                <td class="text-end">{{ order.order_payment }}</td>
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Order Customer</th>
@@ -146,11 +154,41 @@
                         </table>
                     </div>
                 </div>
+                {% if order.order_payment == False and order.cancelled == False %}
+                <div class="card-footer">
+                    <a href="{% url 'confirmcryptoorder' order.id %}" class="btn btn-sm btn-outline-success">Confirm Payment</a>
+                    <a href="{% url 'cancelorder' order.id %}" class="btn btn-sm btn-outline-danger">Cancel Order</a>
+                </div>
+                {% endif %}
             </div>
         </div>
-
     </div>
 
-
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-heading"> Payment Information</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Payment hash: {{ order.cryptonetwork.payment_hash }}</p>
+                    <p class="card-text">Selected Network: {{ order.cryptonetwork.network }}</p>
+                    
+                    <div class="row mt-3">
+                        {% if proofs %}
+                        <h3>Proofs</h3>
+                        {% for proof in proofs %}
+                        <div class="col-md-3">
+                            <div class="card my-3">
+                                <img src="/media/{{ proof.proof }}" alt="">
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}

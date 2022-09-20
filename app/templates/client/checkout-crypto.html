@@ -1,0 +1,78 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+
+    <div class="col-md-12 col-lg-12 col-sm-6">
+        {% if msg %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Warning!</strong> {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        <!-- <div class="card mb-3 p-5">
+            <p class="lead">Your Order Has been Placed in our system. We will contact in your telegram shortly for the order conpletion and
+                    other queries.</p>
+        </div> -->
+    </div>
+    <div class="col-md-6 col-lg-6 col-sm-6">
+        <div class="card mb-3">
+            <div class="card-body">
+                <p class="lead">0xeE5DB618C91a1e11ed70dB51b6719fbe5bc64C5d</p>
+                <img style="width:50%" src="/static/logo/Screenshot_1.jpg" alt="absolute Point qr">
+            </div>
+        </div>
+    </div> 
+    <div class="col-md-6 col-lg-6 col-sm-6">
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3>Payment Option</h3>
+                </div>
+                <div class="mx-2">
+                    <form action="{% url 'savecryptoproof' oid %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                        <input type="hidden" name="oid" value="{{ oid }}">
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Network</label>
+                            <div class="col-md-9 select">
+                                <select class="form-control" name="network" required>
+                                    <option value="BNB(BEP-20)">BNB(BEP-20)</option>
+                                    <option value="BUSD(BEP-20)">BUSD(BEP-20)</option>
+                                    <option value="USDT(BEP-20)">USDT(BEP-20)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="lastName" class="form-label col-md-3">Transaction Hash</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" minlength="30" name="hash" id="hash" placeholder="" onerror="Please provide appropriate hashcode">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Payment Proofs</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="proof_img" type="file" placeholder="Image" multiple>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-5">
+            <p>
+                Conctact here for any help. <br>
+                <a href="{% url 'clientorders' %}">Check your Orders from here</a>.<br>
+            </p>
+        </div>
+    </div>  
+</div>
+
+
+{% endblock %}

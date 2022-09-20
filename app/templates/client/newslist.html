@@ -1,0 +1,75 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>    
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">Crypto News</h1>
+            <p>Provided by Crypto Marketers</p>
+        </div>
+        {% for new in news %}
+        
+        
+        <div class="card mb-3 g-0">
+            <div class="row g-0">
+                <div class="col-md-4 col-sm-4">
+                {% if new.thumb %}
+                <img src="/media/{{ new.thumb }}" class="img-fluid" alt="...">
+                {% else %}
+                <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE=" class="img-fluid" alt="...">
+                {% endif %}
+
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <div class="card-body">
+                        <a class="card-link" href="{% url 'newsdetail' new.id %}"><h5 class="card-title">{{ new.title }}</h5></a>
+                        <p class="card-text trunc-c">{{ new.message }}</p>
+                        {% comment %} <a class="card-link" href="{% url 'newsdetail' new.id %}">Detail</a> {% endcomment %}
+                        <p class="card-text"><small class="text-muted">{{ new.date_created }}</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if news.has_other_pages %}
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                {% if news.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ news.previews_page_number }}" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                {% endif %}
+                {% for i in news.paginator.page_range %}
+                {% if news.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if news.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ news.next_page_number }}" tabindex="-1" aria-disabled="true">Next</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+    </div>
+
+
+</section>
+{% endblock %}

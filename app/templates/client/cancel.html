@@ -1,0 +1,12 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block content %}
+
+<p>
+      Your Transaction was not complete Due some issues. <br>
+      <a href="mailto:example@example.com">example@example.com</a>.<br>
+      <a href="{% url 'clientindex' %}">return to home</a>.<br>
+    </p>
+
+{% endblock %}

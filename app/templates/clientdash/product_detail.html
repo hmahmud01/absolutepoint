@@ -11,22 +11,47 @@
             <p>Crypto Service Product List</p>
         </div>
         <div class="col-md-8 col-lg-8 col-sm-6">
-            <div class="card mb-8">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
                     <h6 class="card-subtitle text-muted">{{ product.ptype }}</h6>
                 </div>
+                {% if product.thumb %}
+                <img class="img-fluid service-img"
+                    src="/media/{{ product.thumb }}"
+                    alt="{{ product.name }}">
+                {% else %}
                 <img class="img-fluid service-img"
                     src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
                     alt="Card image cap">
+                {% endif %}
                 <div class="card-body">
                     <p class="card-text">{{ product.category.name }}</p>
-                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">{{ product.description|linebreaksbr }}</p>
                     {% if product.status is True %}
                     <a class="btn btn-sm btn-outline-danger" href="{% url 'productact' product.id inactive %}">Activated</a>
                     {% else %}
                     <a class="btn btn-sm btn-outline-success" href="{% url 'productact' product.id active %}">Inactive</a>
                     {% endif %}
+                    <a class="btn btn-sm btn-outline-info" href="" data-bs-toggle="modal" data-bs-target="#updateDetail"><i class="fas fa-money me-2"></i>Update Product Detail</a>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Product</h5>
+                    <h6 class="card-subtitle text-muted">Terms And Conditions</h6>
+                    <ol class="list-group mt-3">
+                        {% for term in terms %}
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">{{ term.terms }}</h6>
+                            </div>
+                            <div>
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'deleteterms' term.id product.id %}">Delete</a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -39,10 +64,18 @@
                         {% for variable in variables %}
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
-                                <h6 class="my-0">{{ variable.measurement }}</h6>
-                                <small class="text-muted">Qty</small>
+                                <h6 class="my-0">{{ variable.price }}</h6>
+                                {% if variable.title %}
+                                <small class="text-muted"> for {{ variable.title }} measurement</small>
+                                {% else %}
+                                <small class="text-muted"> for {{ variable.measurement }} measurement</small>
+                                {% endif %}
                             </div>
-                            <span class="text-muted">${{ variable.price }}</span>
+                            
+                            {% comment %} <span class="text-muted">${{ variable.price }}</span> {% endcomment %}
+                            <div class="float-end">
+                                <a class="btn btn-sm btn-outline-warning" href="{% url 'updatevariableprice' variable.id %}">Edit</a>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>
@@ -50,6 +83,92 @@
                 <div class="card-footer">
                     <a class="btn btn-outline-secondary" href="" data-bs-toggle="modal" data-bs-target="#variableprice"><i class="fas fa-money me-2"></i>Add price Measurement</a>
                 </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Product</h5>
+                    <h6 class="card-subtitle text-muted">Base Price for quantity</h6>
+                    <ul class="list-group mt-3">
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">{{ product.base_price }}</h6>
+                                <small class="text-muted"> for {{ product.base_qty }} measurement</small>
+                            </div>
+                            
+                            <div class="float-end">
+                                {% comment %} <a class="btn btn-sm btn-outline-warning" href="{% url 'updatevariableprice' variable.id %}">Edit</a> {% endcomment %}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-outline-secondary mb-1" href="" data-bs-toggle="modal" data-bs-target="#baseprice"><i class="fas fa-money me-2"></i>Update Product Base Pricing</a>
+                    <a class="btn btn-outline-primary btn-block" href="" data-bs-toggle="modal" data-bs-target="#saveterms"><i class="fas fa-money me-2"></i>Add Terms And conditions</a>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="col-md-12 col-sm-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Reviews</h5>
+                    <h6 class="card-subtitle text-muted"></h6>
+                    <ul class="list-group mt-3">
+                        {% for review in reviews %}
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">{{ review.review }}</h6>
+                                {% if review.user %}
+                                <small class="text-muted"> by {{ review.user.username }}</small>
+                                {% else %}
+                                <small class="text-muted"> by Anonymous</small>
+                                {% endif %}
+                                
+                            </div>
+                            <div class="float-end">
+                                {% if review.status %}
+                                <button class="btn btn-sm btn-outline-secondary">Accepted</button>
+                                {% else %}
+                                <a class="btn btn-sm btn-outline-success" href="{% url 'reviewaccept' review.id %}">Accept</a>
+                                {% endif %}
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'reviewdecline' review.id %}">Delete</a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateDetail" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Update Description </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{% url 'updatedetail' %}" method="post">{% csrf_token %}
+                    <div class="modal-body">   
+                        <input class="form-control" name="pid" type="number" value="{{ product.id }}" hidden>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Product Description</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" id="description" name="description" rows="10">{{ product.description|linebreaksbr }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>                                            
             </div>
         </div>
     </div>
@@ -70,13 +189,85 @@
                         <div class="row mb-3">
                             <label class="col-md-3 form-label">Measurement Qty</label>
                             <div class="col-md-9">
-                                <input class="form-control" name="measurement" type="number" placeholder="Measurement Quantity">
+                                <input class="form-control" name="measurement" type="number" placeholder="Measurement Quantity" value="0">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Measurement For Trending</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="title" type="text" placeholder="Measurement Fore Trending">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label class="col-md-3 form-label">Measurement Price</label>
                             <div class="col-md-9">
                                 <input class="form-control" name="price" type="number" placeholder="Measurement price" step="any">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>                                            
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="baseprice" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Set Product Base Price</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{% url 'savebaseprice' %}" method="post">{% csrf_token %}
+                    <div class="modal-body">   
+                        <input class="form-control" name="pid" type="number" value="{{ product.id }}" hidden>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Base Price</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="base_price" type="number" placeholder="Base price" step="any">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Base Qty</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="base_qty" type="number" placeholder="Base Quantity">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>                                            
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="saveterms" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Product Terms And Conditions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{% url 'saveterms' %}" method="post">{% csrf_token %}
+                    <div class="modal-body">   
+                        <input class="form-control" name="pid" type="number" value="{{ product.id }}" hidden>
+                        <div class="row mb-3">
+                            <label class="col-md-3 form-label">Terms And Conditions</label>
+                            <div class="col-md-9">
+                                <input class="form-control" name="terms" type="text" placeholder="Terms And Conditions">
                             </div>
                         </div>
                     </div>

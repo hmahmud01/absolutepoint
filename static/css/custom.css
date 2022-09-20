@@ -14,10 +14,72 @@
 
 }
 
+.bg-crypto{
+    background: rgb(0,75,46);
+    background: radial-gradient(at top, rgba(0,75,46,1) 0%, rgba(2,0,36,1) 57%); 
+}
+
+.text-justify {
+    text-align: justify;
+}
 
 .scrollbar {
     height: 400px !important;
     overflow-y: scroll;
     scrollbar-width: thin;
     scrollbar-color: indigo lightsalmon;
+}
+
+.insta-icon {
+    color: transparent;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background: -webkit-radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+
+  .trunc-c {
+    text-decoration: none;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    /* not needed even though some documentation says it is
+    text-overflow: ellipsis; */
+}
+
+/* .navbar-toggler {
+    padding: 0.25rem 0.75rem;
+    font-size: 1.125rem;
+    line-height: 1;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 1.25rem;
+    transition: box-shadow 0.15s ease-in-out;
+  } */
+
+@media (max-width:976) { 
+    .container { 
+        max-width: 80% !important;
+        padding: 5px !important;
+        margin-right:  auto !important;
+        margin-left:  0;
+    }
+
+    .w-50{
+        width: 100% !important;
+    }
+    .w-mod {
+        width: 100% !important;
+    }
+}
+
+@media (max-width:412px) {
+    .content-pad {
+        padding: 0.1rem !important;
+    }
+
+    h1 {
+        font-size: calc(1.25rem + 0vw);
+    }
 }

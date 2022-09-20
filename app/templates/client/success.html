@@ -1,0 +1,175 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+    <div class="page-header">
+        <h1 class="page-heading">Order Success</h1>
+        <p> Your Order detail for the id of ORD - {{ order.id }}</p>
+    </div>
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <p>Thank You</p>
+            <p>Your order has been place successfully in our system. If you have any queries regarding your order and our services kindly contact us. In case of any quries from our side, we will reache out to you.</p>
+        </div>
+    </div>
+    <div class="col-md-8 col-lg-8 col-sm-6">
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-borderless mb-0">
+                        <thead class="light">
+                            <tr>
+                                <th style="min-width: 300px;">Product</th>
+                                <th>Items</th>
+                                <th>Price</th>
+                                <th>Ordered QTY</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for item in items %}
+                            <tr class="align-middle">
+                                <td>
+                                    <img class="card-table-img img-fluid me-3"
+                                        src="/media/{{ item.product.thumb }}"
+                                        alt="" width="80">
+                                    <span class="card-table-text">
+                                        <a class="text-reset text-decoration-none" href="">
+                                            <strong>{{ item.product.name }}</strong><br>
+                                            <span class="text-muted">{{ item.product.ptype }} -
+                                                {{ item.product.category.name }}</span><br>
+
+                                        </a>
+                                    </span>
+                                </td>
+                                <td>{{ item.variance.measurement }} </td>
+                                <td>${{ item.variance.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td class="text-end">${{ item.get_total }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-heading"> Shipping address</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text text-muted">
+                    {{ order.billing.firstname }} {{ order.billing.lastname }} <br>
+                    Telegram id: {{ order.billing.username }}<br>
+                    email: {{ order.billing.email }}<br>
+                    address: {{ order.billing.address }}<br>
+                    address2: {{ order.billing.address2 }}<br>
+                    <strong>{{ order.billing.country }}</strong><br>
+                    {{ order.billing.state }}<br>
+                    {{ order.billing.zipcode }}
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-4 col-lg-4 col-sm-6">
+        <div class="card card-table mb-3">
+            <div class="card-header">
+                <h5 class="card-heading">Order Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive my-3">
+                    <table class="table table-borderless card-text">
+                        <tr class="text-muted">
+                            <th class="fw-normal">Total</th>
+                            <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
+                        </tr>
+                        <tr class="text-muted">
+                            <th class="fw-normal">Sales Tax</th>
+                            <td class="text-end">$0.00</td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="table-responsive">
+                    <table class="table table-borderless card-text">
+                        <tr class="text-muted">
+                            <th class="fw-normal">Payment Method</th>
+                            {% if order.payment.credit_type == "crypto" %}
+                            <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span></td>
+                            {% else %}
+                            <td><span class="badge badge-success-light">{{ order.payment.credit_type }}</span></td>
+                            {% endif %}
+                        </tr>
+                        {% comment %} <tr class="text-muted">
+                            <th class="fw-normal">Currency Type</th>
+                            <td class="text-end">{{ order.payment.currency_key }}</td>
+                        </tr>
+                        <tr class="text-muted">
+                            <th class="fw-normal">Currency Value</th>
+                            <td class="text-end">{{ order.payment.currency_value }}</td> {% endcomment %}
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card card-table mb-3">
+            <div class="card-header">
+                <h5 class="card-heading">Order Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive my-3">
+                    <table class="table table-borderless card-text">
+                        <tr class="text-muted">
+                            <th class="fw-normal">Order Status</th>
+                            {% if order.complete %}
+                            <td class="text-end">Order Successful</td>
+                            {% else %}
+                            <td class="text-end">Order Not completed yet</td>
+                            {% endif %}
+                            {% comment %} <td class="text-end">{{ order.complete }}</td> {% endcomment %}
+                        </tr>
+                        <tr class="text-muted">
+                            <th class="fw-normal">Payment Status</th>
+                            {% if order.order_payment %}
+                            <td class="text-end">Payment Success</td>
+                            {% else %}
+                            <td class="text-end">Not Paid Yet</td>
+                            {% endif %}
+                            {% comment %} <td class="text-end"></td> {% endcomment %}
+                        </tr>
+                        <tr class="text-muted">
+                            <th class="fw-normal">Order Customer</th>
+                            <td class="text-end">{{ order.customer }}</td>
+                        </tr>
+                        <tr class="text-muted">
+                            <th class="fw-normal">Order trx_id</th>
+                            <td class="text-end">{{ order.trx_id }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card p-5">
+            <p>For any help please contact here</p>
+            <p><a href="https://t.me/CryptoMsupport" target="_blank">@CryptoMsupport on Telegram</a></p>
+            <a href="{% url 'clientindex' %}">return to home</a>.<br>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

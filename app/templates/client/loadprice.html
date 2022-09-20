@@ -1,0 +1,5 @@
+{% if data.base is not None %}
+<p class="lead">Price: <span class="text-decoration-line-through">{{ data.base }} $</span> <strong> {{ data.main }}$ </strong></p>
+{% else %}
+<p class="lead">Price: <strong> {{ data.main }}$ </strong></p>
+{% endif %}

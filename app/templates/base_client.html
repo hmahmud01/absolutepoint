@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Absolute Point</title>
+    <title>Crypto Marketers | Crypto Promotions and Social Media Marketing (SMM)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -20,8 +20,11 @@
     <link rel="stylesheet" href="/static/css/style.default.css" id="theme-stylesheet">
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="/static/css/custom.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <link rel="shortcut icon" href="/static/logo/favx.png">
+    <script src="//code.jivosite.com/widget/cflZ8X7jrJ" async></script>
+    <script src="https://js.stripe.com/v3/"></script>
     <script type="text/javascript">
         var user = '{{ request.user }}'
         function getToken(name) {
@@ -48,19 +51,61 @@
 <body>
     <!-- navbar-->
     {% include 'utils/header_client.html' %}
+    {% block cover %}
+    {% endblock %}
 
     <div class="d-flex align-items-stretch">
 
-        <div class="page-holder bg-gray-100">
-            <div class="container-fluid px-lg-4 px-xl-5">
+        <div class="page-holder bg-white">
+            <div class="container-fluid px-lg-4 px-xl-5 my-5 py-5">
                 {% block content %}
                 {% endblock %}
             </div>
-            <footer class="footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
+            <footer class="footer bg-white-100 shadow align-self-end py-3 px-xl-5 w-100">
                 <div class="container-fluid">
                     <div class="row">
+                        <div class="col-md-4 p-5">
+                            <h3 class="my-2">Crypto Marketers</h3>
+                            {% comment %} <img src="/static/logo/crypto_logo.png" style="height: 100px;" class="py-3" alt="Crypto Marketers"> {% endcomment %}
+                            <p class="text-justify">We will provide you efficient level of services in the sector of Cryptocurrency. Starting from listings, voting to Top lists, we can be your all time assistant, just one knock away. With our expert pool of crypto experts we will start delivering results right away!</p>
+                            <p>Please contact <a href="https://t.me/CryptoMsupport" target="_blank">@CryptoMsupport on Telegram</a></p>
+                        </div>
+                        <div class="col-md-4 p-5">
+                            <h3 class="my-2">Popular Services</h3>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'categoryservices' cat_upvote %}">Upvote Services</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'categoryservices' cat_watchlist %}">Watchlist Services</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'categoryservices' cat_trending %}">Trending Services</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_tw %}">Twitter</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_it %}">Instagram</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_tg %}">Telegram</a><br>
+                            <a class="text-decoration-none lead text-dark" href="{% url 'socialservices' cat_yt %}">Youtube</a><br>
+                        </div>
+                        <div class="col-md-4 p-5">
+                            <h3 class="m-2">Our Socials</h3>
+                            <!-- <a class="text-decoration-none lead text-dark" href="">Reddit Marketing</a><br>
+                            <a class="text-decoration-none lead text-dark" href="">Discord Chat Activity</a><br>
+                            <a class="text-decoration-none lead text-dark" href="">Website Development</a><br>
+                            <a class="text-decoration-none lead text-dark" href="">Discord Mods</a><br> -->
+                            <a href="https://t.me/CryptoMsupport" target="_blank"><i class="fab fa-telegram-plane fa-2x mx-2 text-info"></i></a>
+                            <a href="https://www.facebook.com/thecryptomarketers" target="_blank"><i class="fab fa-facebook-square fa-2x mx-2 text-primary"></i></a>
+                            <a href="https://www.instagram.com/crypto_marketers/" target="_blank"><i class="fab fa-instagram fa-2x mx-2 insta-icon"></i></a>
+                            <!-- <i class="fab fa-telegram-plane fa-2x mx-2 text-info"></i>
+                            <i class="fab fa-facebook-square fa-2x mx-2 text-primary"></i>
+                            <i class="fab fa-instagram fa-2x mx-2 insta-icon"></i> -->
+                            <!-- <i class="fab fa-twitter fa-2x mx-2"></i> -->
+
+                            <div class="mx-2">
+                                <h3 class="my-3">Helpful Links</h3>
+                                <a class="text-decoration-none lead text-dark" href="{% url 'terms' %}">Terms & Conditions</a><br>
+                                <a class="text-decoration-none lead text-dark" href="{% url 'privacy' %}">Privacy And Policy</a><br>
+                                <a class="text-decoration-none lead text-dark" href="{% url 'policy' %}">FAQ</a><br>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row px-5">
                         <div class="col-md-6 text-center text-md-start fw-bold">
-                            <p class="mb-2 mb-md-0 fw-bold">Absolute Point &copy; 2021</p>
+                            <p class="mb-2 mb-md-0 fw-bold">Copyright &copy; Cryptomarketers 2022 | Designed by Absolute Point</p>
                         </div>
                         <div class="col-md-6 text-center text-md-end text-gray-400">
                             <p class="mb-0">Version 1.1.0</p>
@@ -77,7 +122,7 @@
     <!-- Data Tables-->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
     <!-- CMS Category JS-->
-    <script src="/static/js/e-commerce-orders.js">    </script>
+    <script src="/static/js/e-commerce-orders.js"></script>
     <script src="/static/js/theme.js"></script>
     <!-- Prism for syntax highlighting-->
     <script src="/static/vendor/prismjs/prism.js"></script>

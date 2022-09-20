@@ -5,69 +5,125 @@
 
 
 <section>
-    <div class="row">
+    <div class="row mb-3">
         <div class="page-header">
-            <h1 class="page-heading">Crypto Service Detail</h1>
-            <p>Crypto service detail for {{ product.name }}</p>
+            <h1 class="page-heading">{{ product.category.name }} Detail</h1>
         </div>
         <div class="col-md-8 col-lg-8 col-sm-6">
-            <div class="card mb-8">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
-                    <h6 class="card-subtitle text-muted">{{ product.ptype }}</h6>
+                    <h6 class="card-subtitle text-muted">Category: {{ product.category.name }}</h6>
                 </div>
-                <img class="img-fluid service-img"
-                    src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
-                    alt="Card image cap">
+                {% comment %} {% if product.thumb %}
+                <img src="/media/{{ product.thumb }}" class="shadow" alt="{{ product.name }}">
+                {% else %}
+                <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                    class="shadow" style="width:200px; height: 200px;" alt="{{ product.name }}">
+                {% endif %} {% endcomment %}
                 <div class="card-body">
-                    <p class="card-text">{{ product.category.name }}</p>
-                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">{{ product.ptype }}</p>
+                    <p class="card-text">{{ product.description|linebreaksbr }}</p>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 col-lg-4 col-sm-6">
-            <div class="card mb-4">
-                {% comment %} <form action="">
-                    <div class="card-body">
-                        <h5 class="card-title">Product Price</h5>
-                        <h6 class="card-subtitle text-muted">Select Your Price Option</h6>
-
-                        <div class="col-md">
-                            <label for="state" class="form-label">Options</label>
-                            <select class="form-select" id="product_price" required>
-                                <option value="">Choose...</option>
-                                {% for variable in variables %}
-                                <option value="{{ variable.id }}">{{ variable.measurement }} votes - {{ variable.price }}$</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-outline-secondary" type="button"><i class="fas fa-money me-2"></i>Add To Cart</button>
-                    </div>
-                </form> {% endcomment %}
+            <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Product Price</h5>
-                    <h6 class="card-subtitle text-muted">Select Your Price Option</h6>
-
-                    <div class="col-md">
-                        <label for="state" class="form-label">Options</label>
-                        <select class="form-select" id="product_price" required>
-                            <option value="">Choose...</option>
-                            {% for variable in variables %}
-                            <option value="{{ variable.id }}">{{ variable.measurement }} votes - {{ variable.price }}$</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary update-cart" type="button"><i class="fas fa-money me-2"></i>Add To Cart</button>
+                    <h5 class="card-title">Terms And Conditions</h5>
+                    <ol>
+                        {% for term in terms %}
+                        <li> {{ term.terms }} </li>
+                        {% endfor %}
+                    </ol>
                 </div>
             </div>
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Have a Question</h5>
-                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @ishty or @pranto by <a href="">Clicking here</a></h6>
+                    <h5 class="card-title">Have any Question?</h5>
+                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @CryptoMsupport by <a
+                            href="https://t.me/CryptoMsupport" target="_blank">Clicking here</a></h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-6">
+            <div class="card card-inverse text-white mb-4">
+                {% if product.thumb %}
+                <img src="/media/{{ product.thumb }}" class="shadow card-img img-fluid" alt="{{ product.name }}">
+                {% else %}
+                <img src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                    class="shadow card-img img-fluid" alt="{{ product.name }}">
+                {% endif %}
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Quantity</h5>
+                    <h6 class="card-subtitle text-muted">Select Your Option</h6>
+
+                    <div class="col-md-12 mb-3">
+                        <select class="form-select" id="product_price" required>
+                            <option value="none">Select</option>
+                            {% for variable in variables %}
+                            {% if variable.title %}
+                            <option value="{{ variable.id }}">{{ variable.title }} </option>
+                            {% else %}
+                            <option value="{{ variable.id }}">{{ variable.measurement }} </option>
+                            {% endif %}
+                            
+                            {% comment %} <option value="{{ variable.id }}">{{ variable.measurement }} </option> {% endcomment %}
+                            {% endfor %}
+                        </select>
+                        <div class="p-1" id="price_content"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="link" class="form-label">Link</label>
+                        <input type="text" class="form-control" name="link" id="link" placeholder="Link" value=""
+                            required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="reference" class="form-label">Reference(Optional)</label>
+                        <input type="text" class="form-control" name="reference" id="reference"
+                            placeholder="Reference (Optional)" value="">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button data-product="{{ product.id }}" data-action="add"
+                        class="btn btn-outline-secondary update-cart" type="button"><i class="fas fa-money me-2"></i>Add
+                        To Cart</button>
+
+                    {% if checkout %}
+                    <a href="{% url 'checkout' order.id %}" class="btn btn-info" type="button">Checkout</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-sm-6">
+            <div class="card overflow-hidden mb-4">
+                <div class="card-header">
+                    <h5 class="card-title">Review</h5>
+                    <form action="{% url 'submitreview' product.id %}" method="POST">{% csrf_token %}
+                        <div class="input-group">
+                            <input class="form-control" name="review" type="text" placeholder="Review">
+                            <button class="btn btn-outline-secondary" type="submit">
+                                <i class="fa fa-paper-plane"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="list-group rounded-0">
+                    {% comment %} {% for review in reviews %} {% endcomment %}
+                    {% for item in review_items %}
+                    <div class="list-group-item border-start-0 border-end-0 py-5">
+                        <div class="d-flex">
+                            <div class="flex-grow-1 ps-3">
+                                {% if item.username %}
+                                <h5 class="fw-bold">{{ item.username }}</h5>
+                                {% else %}
+                                <h5 class="fw-bold">Anonymous</h5>
+                                {% endif %}
+                                <div class="text-muted text-sm"> {{ item.review.review }} </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -80,4 +136,28 @@
 
 {% block scripts %}
 <script src="/static/js/cart.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script>
+    var product_id = "{{ product.id }}"
+
+    $("#product_price").change(function () {
+        var url = '/ajax/load-price/';
+        var price_id = $(this).val();
+
+        console.log(price_id);
+        console.log(product_id);
+
+        $.ajax({
+            url: url,
+            data: {
+                'price_id': price_id,
+                'product_id': product_id
+            },
+            success: function (data) {
+                $("#price_content").html(data);
+            }
+        });
+    });
+</script>
 {% endblock %}

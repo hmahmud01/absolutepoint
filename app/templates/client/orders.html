@@ -10,82 +10,107 @@
             <h1 class="page-heading">Orders</h1>
             <p>Crypto Service Orders</p>
         </div>
-
         <div class="col-md-12">
             <div class="card card-table mb-4">
+                <div class="card-header">
+                    <h4 class="card-heading">Successful Orders</h4>
+                </div>
                 <div class="card-body">
                     <div class="preload-wrapper">
                         <div class="table-responsive">
                             <table class="table table-hover mb-0" id="ordersDatatable">
                                 <thead>
                                     <tr>
-                                        <th>2 Id</th>
-                                        <th>Name</th>
-                                        <th>Date</th>
-                                        <th>Total Price</th>
+                                        <th>Order Id</th>
+                                        <th>Date Ordered</th>
                                         <th>Status</th>
-                                        <th>Review</th>
+                                        <th>Payment Status</th>
+                                        <th>Customer Name</th>
+                                        <th>Method</th>
+                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for order in orders %}
                                     <tr class="align-middle">
-                                        <td> <span class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="check0">
-                                                <label class="form-check-label" for="check0">#2458</label></span></td>
-                                        <td> <strong>Nielsen Cobb</strong><br><span
-                                                class="text-muted text-sm">nielsencobb@memora.com</span>
+                                        <td><a href="{% url 'orderdetail' order.id %}">ORD - {{ order.id }}</a></td>
+                                        <td> {{ order.date_ordered }} </td>
+                                        {% if order.complete %}
+                                        <td>Successful</td>
+                                        {% else %}
+                                        <td>Not Completed</td>
+                                        {% endif %}
+                                        {% if order.order_payment %}
+                                        <td>Payment Success</td>
+                                        {% else %}
+                                        <td>Pending Confirmation</td>
+                                        {% endif %}
+                                        <td> {{ order.customer }} </td>
+                                        {% if order.payment.credit_type == "crypto" %}
+                                        <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span>
                                         </td>
-                                        <td>2021/01/25</td>
-                                        <td>$530.89</td>
-                                        <td><span class="badge badge-success-light">Open</span></td>
-                                        <td class="text-end" style="min-width: 125px;"><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-gray-500"></i></a></td>
+                                        {% else %}
+                                        <td><span
+                                                class="badge badge-success-light">{{ order.payment.credit_type }}</span>
+                                        </td>
+                                        {% endif %}
+                                        <td> {{ order.get_cart_total }} </td>
                                     </tr>
-                                    <tr class="align-middle">
-                                        <td> <span class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="check18">
-                                                <label class="form-check-label" for="check18">#2476</label></span></td>
-                                        <td> <strong>Merrill Garrett</strong><br><span
-                                                class="text-muted text-sm">merrillgarrett@affluex.com</span></td>
-                                        <td>2021/07/03</td>
-                                        <td>$320.84</td>
-                                        <td><span class="badge badge-warning-light">On Hold</span></td>
-                                        <td class="text-end" style="min-width: 125px;"><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-gray-500"></i></a></td>
-                                    </tr>
-                                    <tr class="align-middle">
-                                        <td> <span class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="check19">
-                                                <label class="form-check-label" for="check19">#2477</label></span></td>
-                                        <td> <strong>Sallie Booth</strong><br><span
-                                                class="text-muted text-sm">salliebooth@ziggles.com</span></td>
-                                        <td>2021/08/23</td>
-                                        <td>$381.00</td>
-                                        <td><span class="badge badge-info-light">In Progress</span></td>
-                                        <td class="text-end" style="min-width: 125px;"><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-warning"></i></a><a href="#!"><i
-                                                    class="fa fa-star text-gray-500"></i></a></td>
-                                    </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-                        <!-- <span class="me-2" id="categoryBulkAction">
-                            <select class="form-select form-select-sm d-inline w-auto" name="categoryBulkAction">
-                                <option>Bulk Actions</option>
-                                <option>Delete</option>
-                            </select>
-                            <button class="btn btn-sm btn-outline-primary align-top">Apply</button></span> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-table mb-4">
+                <div class="card-header">
+                    <h4 class="card-heading">Cancelled Orders</h4>
+                </div>
+                <div class="card-body">
+                    <div class="preload-wrapper">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="cancelled_table">
+                                <thead>
+                                    <tr>
+                                        <th>Order Id</th>
+                                        <th>Date Ordered</th>
+                                        <th>Status</th>
+                                        <th>Payment Status</th>
+                                        <th>Customer Name</th>
+                                        <th>Method</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in cancelled_orders %}
+                                    <tr class="align-middle">
+                                        <td><a href="{% url 'orderdetail' order.id %}">ORD - {{ order.id }}</a></td>
+                                        <td> {{ order.date_ordered }} </td>
+                                        
+                                        <td>Cancelled</td>
+                                        
+                                        {% if order.order_payment %}
+                                        <td>Payment Success</td>
+                                        {% else %}
+                                        <td>Pending Confirmation</td>
+                                        {% endif %}
+                                        <td> {{ order.customer }} </td>
+                                        {% if order.payment.credit_type == "crypto" %}
+                                        <td><span class="badge badge-info-light">{{ order.payment.credit_type }}</span>
+                                        </td>
+                                        {% else %}
+                                        <td><span
+                                                class="badge badge-success-light">{{ order.payment.credit_type }}</span>
+                                        </td>
+                                        {% endif %}
+                                        <td> {{ order.get_cart_total }} </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,4 +120,24 @@
 
 
 </section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Data Tables-->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script src="/static/js/e-commerce-orders.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const cancelledTable = new simpleDatatables.DataTable("#cancelled_table", {
+        columns: [],
+    });
+
+
+    cancelledTable.on("datatable.init", function () {});
+
+    cancelledTable.on("datatable.init", function (args) {
+        document.getElementById("cancelled_table").closest(".preload-wrapper").classList.add("opacity-10");
+    });
+});
+</script>
 {% endblock %}

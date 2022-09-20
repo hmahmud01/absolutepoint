@@ -15,7 +15,7 @@
                 <h4 class="card-heading">Product Create</h4>
             </div>
             <div class="card-body">
-                <form method="post" action="{% url 'saveproduct' %}" class="form-horizontal">{% csrf_token %}
+                <form method="post" action="{% url 'saveproduct' %}" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
 
                     <div class="row mb-3">
                         <label class="col-md-3 form-label">Product Name</label>
@@ -47,6 +47,13 @@
                         <label class="col-md-3 form-label">Product Description</label>
                         <div class="col-md-9">
                             <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-md-3 form-label">Thumb Image</label>
+                        <div class="col-md-9">
+                            <input class="form-control" name="thumb_image" type="file" placeholder="Image">
                         </div>
                     </div>
 

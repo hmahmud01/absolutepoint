@@ -31,9 +31,12 @@
                             <td>{{ product.category }}</td>
                             <td>Variable </td>
                             {% if product.status is True %}
-                            <td><a class="btn btn-sm btn-outline-danger" href="{% url 'productact' product.id inactive %}">Activated</a></span></td>
+                            <td><a class="btn btn-sm btn-outline-danger" href="{% url 'productact' product.id inactive %}">Activated</a></td>
                             {% else %}
-                            <td><a class="btn btn-sm btn-outline-success" href="{% url 'productact' product.id active %}">Inactive</a></span></td>
+                            <td>
+                              <a class="btn btn-sm btn-outline-success" href="{% url 'productact' product.id active %}">Inactive</a>
+                              <a class="btn btn-sm btn-outline-warning" href="{% url 'productact' product.id delete %}">Delete</a>
+                            </td>
                             {% endif %}
                           </tr>
                         {% endfor %}

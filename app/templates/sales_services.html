@@ -25,7 +25,7 @@
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                <!-- <tbody>
                     {% for service in services %}
                     {% if service.payment_status != "Received" and service.payment_status != "Fraud" and service.status != "Failed" and services.status != "Done"  %}
                     <tr class="align-middle">
@@ -53,6 +53,37 @@
                         <td>{{ service.payment_status }}</td>
                         <td><span class="badge badge-info-light">{{ service.status }}</span></td>
                     </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody> -->
+                <tbody>
+                    {% for item in items %}
+                    {% if item.service.payment_status != "Received" and item.service.payment_status != "Fraud" and item.service.status != "Failed" and item.services.status != "Done"  %}
+                    <tr class="align-middle">
+                        {% if request.user.is_superuser %}
+                        <td><a href="{% url 'servicedetail' item.service.id %}">#{{forloop.counter}}</a></td>
+                        {% else %}
+                            {% if item.service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' item.service.id %}">#{{forloop.counter}}</a></td>
+                            {% else %}
+                            <td>#{{forloop.counter}}</td>
+                            {% endif %}
+                        {% endif %}       
+                        <td> <strong>{{ item.service.user.name }}</strong></td>
+                        <td>{{ item.service.date }}</td>
+                        <td>{{ item.service.title }}</td>
+                        <td>{{ item.service.site_name }}</td>
+                        {% if item.service.accepted %}
+                        <td>Accepted</td>
+                        {% else %}
+                        <td>Not Accepted Yet.</td>
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                        <td> <strong> {{ item.service.price }} $ </strong></td>
+                        {% endif %}
+                        <td>{{ item.service.payment_status }} <span class="badge badge-primary-light">{{ item.status }}</span>  </td>
+                        <td><span class="badge badge-info-light">{{ item.service.status }}</span></td>
+                    </tr> 
                     {% endif %}
                     {% endfor %}
                 </tbody>
@@ -85,33 +116,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for service in services %}
-                    {% if service.status == "Failed" %}
+                    {% for item in items %}
+                    {% if item.service.status == "Failed" %}
                     <tr class="align-middle">
                         {% if request.user.is_superuser %}
-                        <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                        <td><a href="{% url 'servicedetail' item.service.id %}">#{{forloop.counter}}</a></td>
                         {% else %}
-                            {% if service.user.user.id == request.user.id %}
-                            <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                            {% if item.service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' item.service.id %}">#{{forloop.counter}}</a></td>
                             {% else %}
                             <td>#{{forloop.counter}}</td>
                             {% endif %}
-                        {% endif %}                        
-                        <td> <strong>{{ service.user.name }}</strong></td>
-                        <td>{{ service.date }}</td>
-                        <td>{{ service.title }}</td>
-                        <td>{{ service.site_name }}</td>
-                        {% if service.accepted %}
+                        {% endif %}       
+                        <td> <strong>{{ item.service.user.name }}</strong></td>
+                        <td>{{ item.service.date }}</td>
+                        <td>{{ item.service.title }}</td>
+                        <td>{{ item.service.site_name }}</td>
+                        {% if item.service.accepted %}
                         <td>Accepted</td>
                         {% else %}
                         <td>Not Accepted Yet.</td>
                         {% endif %}
                         {% if request.user.is_superuser %}
-                        <td> <strong> {{ service.price }} $ </strong></td>
+                        <td> <strong> {{ item.service.price }} $ </strong></td>
                         {% endif %}
-                        <td>{{ service.payment_status }}</td>
-                        <td><span class="badge badge-info-light">{{ service.status }}</span></td>
-                    </tr>
+                        <td>{{ item.service.payment_status }} <span class="badge badge-primary-light">{{ item.status }}</span>  </td>
+                        <td><span class="badge badge-info-light">{{ item.service.status }}</span></td>
+                    </tr> 
                     {% endif %}
                     {% endfor %}
                 </tbody>
@@ -144,33 +175,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for service in services %}
-                    {% if service.payment_status == "Fraud" %}
+                    {% for item in items %}
+                    {% if item.service.payment_status == "Fraud" %}
                     <tr class="align-middle">
                         {% if request.user.is_superuser %}
-                        <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                        <td><a href="{% url 'servicedetail' item.service.id %}">#{{forloop.counter}}</a></td>
                         {% else %}
-                            {% if service.user.user.id == request.user.id %}
-                            <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                            {% if item.service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' item.service.id %}">#{{forloop.counter}}</a></td>
                             {% else %}
                             <td>#{{forloop.counter}}</td>
                             {% endif %}
-                        {% endif %}                        
-                        <td> <strong>{{ service.user.name }}</strong></td>
-                        <td>{{ service.date }}</td>
-                        <td>{{ service.title }}</td>
-                        <td>{{ service.site_name }}</td>
-                        {% if service.accepted %}
+                        {% endif %}       
+                        <td> <strong>{{ item.service.user.name }}</strong></td>
+                        <td>{{ item.service.date }}</td>
+                        <td>{{ item.service.title }}</td>
+                        <td>{{ item.service.site_name }}</td>
+                        {% if item.service.accepted %}
                         <td>Accepted</td>
                         {% else %}
                         <td>Not Accepted Yet.</td>
                         {% endif %}
                         {% if request.user.is_superuser %}
-                        <td> <strong> {{ service.price }} $ </strong></td>
+                        <td> <strong> {{ item.service.price }} $ </strong></td>
                         {% endif %}
-                        <td>{{ service.payment_status }}</td>
-                        <td><span class="badge badge-info-light">{{ service.status }}</span></td>
-                    </tr>
+                        <td>{{ item.service.payment_status }} <span class="badge badge-primary-light">{{ item.status }}</span>  </td>
+                        <td><span class="badge badge-info-light">{{ item.service.status }}</span></td>
+                    </tr> 
                     {% endif %}
                     {% endfor %}
                 </tbody>
@@ -203,33 +234,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for service in services %}
-                    {% if service.payment_status == "Received" and service.status == "Done" %}
+                    {% for item in items %}
+                    {% if item.service.payment_status == "Received" and item.service.status == "Done" %}
                     <tr class="align-middle">
                         {% if request.user.is_superuser %}
-                        <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                        <td><a href="{% url 'servicedetail' item.service.id %}">#{{forloop.counter}}</a></td>
                         {% else %}
-                            {% if service.user.user.id == request.user.id %}
-                            <td><a href="{% url 'servicedetail' service.id %}">#{{forloop.counter}}</a></td>
+                            {% if item.service.user.user.id == request.user.id %}
+                            <td><a href="{% url 'servicedetail' item.service.id %}">#{{forloop.counter}}</a></td>
                             {% else %}
                             <td>#{{forloop.counter}}</td>
                             {% endif %}
-                        {% endif %}                        
-                        <td> <strong>{{ service.user.name }}</strong></td>
-                        <td>{{ service.date }}</td>
-                        <td>{{ service.title }}</td>
-                        <td>{{ service.site_name }}</td>
-                        {% if service.accepted %}
+                        {% endif %}       
+                        <td> <strong>{{ item.service.user.name }}</strong></td>
+                        <td>{{ item.service.date }}</td>
+                        <td>{{ item.service.title }}</td>
+                        <td>{{ item.service.site_name }}</td>
+                        {% if item.service.accepted %}
                         <td>Accepted</td>
                         {% else %}
                         <td>Not Accepted Yet.</td>
                         {% endif %}
                         {% if request.user.is_superuser %}
-                        <td> <strong> {{ service.price }} $ </strong></td>
+                        <td> <strong> {{ item.service.price }} $ </strong></td>
                         {% endif %}
-                        <td>{{ service.payment_status }}</td>
-                        <td><span class="badge badge-info-light">{{ service.status }}</span></td>
-                    </tr>
+                        <td>{{ item.service.payment_status }} <span class="badge badge-primary-light">{{ item.status }}</span>  </td>
+                        <td><span class="badge badge-info-light">{{ item.service.status }}</span></td>
+                    </tr> 
                     {% endif %}
                     {% endfor %}
                 </tbody>

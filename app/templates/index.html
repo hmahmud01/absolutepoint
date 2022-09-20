@@ -5,48 +5,56 @@
 <section class="mb-3 mb-lg-5">
     <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card-widget h-100">
-                <div class="card-widget-body">
-                    <div class="dot me-3 bg-indigo"></div>
-                    <div class="text">
-                        <h6 class="mb-0">Total Employees</h6><span class="text-gray-500">10 Person</span>
+            <a href="{% url 'noticecreate' %}">
+                <div class="card-widget h-100">
+                    <div class="card-widget-body">
+                        <div class="dot me-3 bg-indigo"></div>
+                        <div class="text">
+                            <h6 class="mb-0">Create Notice</h6><span class="text-gray-500"></span>
+                        </div>
                     </div>
+                    <div class="icon text-white bg-indigo"><i class="fas fa-server"></i></div>
                 </div>
-                <div class="icon text-white bg-indigo"><i class="fas fa-server"></i></div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card-widget h-100">
-                <div class="card-widget-body">
-                    <div class="dot me-3 bg-green"></div>
-                    <div class="text">
-                        <h6 class="mb-0">Completed Services</h6><span class="text-gray-500">90</span>
+            <a href="{% url 'salesservices' %}">
+                <div class="card-widget h-100">
+                    <div class="card-widget-body">
+                        <div class="dot me-3 bg-green"></div>
+                        <div class="text">
+                            <h6 class="mb-0">New Sale</h6><span class="text-gray-500">{{ scount }}</span>
+                        </div>
                     </div>
+                    <div class="icon text-white bg-green"><i class="far fa-clipboard"></i></div>
                 </div>
-                <div class="icon text-white bg-green"><i class="far fa-clipboard"></i></div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card-widget h-100">
-                <div class="card-widget-body">
-                    <div class="dot me-3 bg-blue"></div>
-                    <div class="text">
-                        <h6 class="mb-0">Notices</h6><span class="text-gray-500">500</span>
+            <a href="{% url 'ticketlist' %}">
+                <div class="card-widget h-100">
+                    <div class="card-widget-body">
+                        <div class="dot me-3 bg-blue"></div>
+                        <div class="text">
+                            <h6 class="mb-0">New Ticket</h6><span class="text-gray-500">{{ tcount }}</span>
+                        </div>
                     </div>
+                    <div class="icon text-white bg-blue"><i class="fa fa-dolly-flatbed"></i></div>
                 </div>
-                <div class="icon text-white bg-blue"><i class="fa fa-dolly-flatbed"></i></div>
-            </div>
+            </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card-widget h-100">
-                <div class="card-widget-body">
-                    <div class="dot me-3 bg-red"></div>
-                    <div class="text">
-                        <h6 class="mb-0">Running Services</h6><span class="text-gray-500">8</span>
+            <a href="{% url 'orderlist' %}">
+                <div class="card-widget h-100">
+                    <div class="card-widget-body">
+                        <div class="dot me-3 bg-red"></div>
+                        <div class="text">
+                            <h6 class="mb-0">New Orders</h6><span class="text-gray-500">{{ new_orders }}</span>
+                        </div>
                     </div>
+                    <div class="icon text-white bg-red"><i class="fas fa-receipt"></i></div>
                 </div>
-                <div class="icon text-white bg-red"><i class="fas fa-receipt"></i></div>
-            </div>
+            </a>
         </div>
     </div>
 </section>
@@ -60,6 +68,7 @@
             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"  data-bs-target="#udpateService">Update Service</button>  
             <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"  data-bs-target="#udpateServiceType">Update Service Type</button>  
             <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"  data-bs-target="#removeuser">Remove User</button>  
+            <a href="{% url 'removedata' %}" class="btn btn-sm btn-outline-warning">Remove Product data</a>
         </div>        
     </div>
 

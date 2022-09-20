@@ -3,9 +3,9 @@
   <ul class="list-unstyled">
     <li class="sidebar-list-item">
       {% if home %}
-      <a class="sidebar-link text-muted active" href="/">
+      <a class="sidebar-link text-muted active" href="{% url 'home' %}">
         {% else %}
-        <a class="sidebar-link text-muted" href="/">
+        <a class="sidebar-link text-muted" href="{% url 'home' %}">
           {% endif %}
           <svg class="svg-icon svg-icon-md me-3">
             <use xlink:href="/static/icons/orion-svg-sprite.svg#real-estate-1"> </use>
@@ -136,7 +136,12 @@
           <svg class="svg-icon svg-icon-md me-3">
             <use xlink:href="/static/icons/orion-svg-sprite.svg#strategy-1"></use>
           </svg>
+          {% if scount > 0 %}
+          <span class="sidebar-link-title">Sales ({{ scount }})</span>
+          {% else %}
           <span class="sidebar-link-title">Sales</span>
+          {% endif %}
+          
         </a>
     </li>
     {% if not request.user.is_superuser %}
@@ -179,11 +184,39 @@
       </a>
     </li>
     <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'categorylist' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#multiple-windows-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Category List</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'reviews' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#multiple-windows-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Product Review List</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
       <a class="sidebar-link text-muted" href="{% url 'clientlist' %}">
         <svg class="svg-icon svg-icon-md me-3">
           <use xlink:href="/static/icons/orion-svg-sprite.svg#man-1"></use>
         </svg>
         <span class="sidebar-link-title">Client List</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'ticketlist' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#man-1"></use>
+        </svg>
+        {% if tcount > 0 %}
+        <span class="sidebar-link-title">Ticket List ({{ tcount }})</span>
+        {% else %}
+        <span class="sidebar-link-title">Ticket List</span>
+        {% endif %}
       </a>
     </li>
     <li class="sidebar-list-item">
@@ -200,6 +233,22 @@
           <use xlink:href="/static/icons/orion-svg-sprite.svg#new-window-1"></use>
         </svg>
         <span class="sidebar-link-title">Create Portfolio</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'createnews' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#new-window-1"></use>
+        </svg>
+        <span class="sidebar-link-title">Create News</span>
+      </a>
+    </li>
+    <li class="sidebar-list-item">
+      <a class="sidebar-link text-muted" href="{% url 'listnews' %}">
+        <svg class="svg-icon svg-icon-md me-3">
+          <use xlink:href="/static/icons/orion-svg-sprite.svg#new-window-1"></use>
+        </svg>
+        <span class="sidebar-link-title">News List</span>
       </a>
     </li>
   </ul>

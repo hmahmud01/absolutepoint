@@ -21,6 +21,21 @@ class DashboardUser(models.Model):
     def __str__(self):
         return self.name
 
+class AppUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fname = models.CharField(max_length=128, null=True, blank=True)
+    lname = models.CharField(max_length=128, null=True, blank=True)
+    telid = models.CharField(max_length=128, null=True, blank=True)
+    email = models.CharField(max_length=64, null=True, blank=True)
+    address = models.CharField(max_length=256, null=True, blank=True)
+    country = models.CharField(max_length=32, null=True, blank=True)
+    state = models.CharField(max_length=32, null=True, blank=True)
+    zipcode = models.CharField(max_length=32, null=True, blank=True)
+    created_at = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.telid
+
 class UserRank(models.Model):
     user = models.ForeignKey(DashboardUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=128, null=True, blank=True)
@@ -120,21 +135,39 @@ class productCategory(models.Model):
     def __str__(self):
         return self.name
 
+class catstatus(models.Model):
+    cat = models.OneToOneField(productCategory, on_delete=models.CASCADE)
+    status = models.BooleanField(default=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.cat.name
+
 class serviceProduct(models.Model):
     name = models.CharField(max_length=128, null=True, blank=True)
     ptype = models.CharField(max_length=128, null=True, blank=True)
     category = models.ForeignKey(productCategory, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     status = models.BooleanField(default=True)
+    thumb = models.ImageField('product_thumbs',upload_to='product_thumbs', null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
+    base_price = models.FloatField(null=True, blank=True)
+    base_qty = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
 
+
 class variableProductPrice(models.Model):
     product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
     measurement = models.IntegerField(null=True, blank=True)
+    title = models.CharField(max_length=128, null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
+    def __str__(self):
+        return self.product.name
+
+class productTerms(models.Model):
+    product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
+    terms = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
         return self.product.name
@@ -164,6 +197,9 @@ class Order(models.Model):
     date_ordered = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     complete = models.BooleanField(default=False, null=True, blank=True)
     trx_id = models.CharField(max_length=128, null=True, blank=True)
+    order_payment = models.BooleanField(default=False, null=True, blank=True)
+    new_order = models.BooleanField(default=True)
+    cancelled = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return str(self.id)
@@ -187,12 +223,29 @@ class Order(models.Model):
         total = sum([item.quantity for item in orderitems])
         return total
 
+class cryptoNetwork(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    network = models.CharField(max_length=128, null=True, blank=True)
+    payment_hash = models.CharField(max_length=128, null=True, blank=True)
+
+    def __str__(self):
+        return self.network
+
+class cryptoProof(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    proof = models.ImageField('crypto_proof',upload_to='crypto_proof', null=True, blank=True)
+
+    def __str__(self):
+        return str(self.order.id)
+
 
 class OrderItems(models.Model):
     product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE, null=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     variance = models.ForeignKey(variableProductPrice, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
+    link = models.CharField(max_length=512, null=True, blank=True)
+    reference = models.CharField(max_length=512, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     @property
@@ -217,6 +270,7 @@ class Billing(models.Model):
 
 class Payment(models.Model):
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    trx_id = models.CharField(max_length=256, null=True, blank=True)
     credit_type = models.CharField(max_length=128, null=True, blank=True)
     currency_key = models.CharField(max_length=128, null=True, blank=True)
     currency_value =  models.FloatField(null=True, blank=True)
@@ -224,3 +278,37 @@ class Payment(models.Model):
     
     def __str__(self):
         return str(self.id)
+
+class Ticket(models.Model):
+    fname = models.CharField(max_length=128, null=True, blank=True)
+    lname = models.CharField(max_length=128, null=True, blank=True)
+    telid = models.CharField(max_length=128, null=True, blank=True)
+    subject = models.CharField(max_length=256, null=True, blank=True)
+    social = models.CharField(max_length=128, null=True, blank=True)
+    budget = models.IntegerField(null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    seen = models.BooleanField(default=False)
+    date_created = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.subject
+
+class Review(models.Model):
+    product = models.ForeignKey(serviceProduct, on_delete=models.CASCADE)
+    review = models.TextField(null=True, blank=True)
+    status = models.BooleanField(default=False)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    date_created = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.product.name
+
+class News(models.Model):
+    title = models.CharField(max_length=128, null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    msg_2 = models.TextField(null=True, blank=True)
+    thumb = models.ImageField('news_thumbs', upload_to='news_thumbs', null=True, blank=True)
+    date_created = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.title

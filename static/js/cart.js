@@ -7,18 +7,21 @@ for (var i = 0; i < updateBtns.length; i++) {
         var productId = this.dataset.product;
         var action = this.dataset.action;
         var price = document.getElementById("product_price").value;
+        var link = document.getElementById("link").value;
+        var reference = document.getElementById("reference").value;
 
+        console.log(link);
 
-        console.log("product:", productId, 'action:', action, "price:", price);
+        console.log("product:", productId, 'action:', action, "price:", price, "link:", link, "reference:", reference);
         console.log(typeof(productId));
         console.log(typeof(action));
         console.log(typeof(price));
 
-        updateUserOrder(productId, action, price);
+        updateUserOrder(productId, action, price, link, reference);
     })
 }
 
-function updateUserOrder(productId, action, price){
+function updateUserOrder(productId, action, price, link, reference){
     console.log("user authenticated");
 
     var url = '/update_item/';
@@ -30,7 +33,7 @@ function updateUserOrder(productId, action, price){
             'X-CSRFToken': csrftoken,
         },
         body: JSON.stringify({
-            'productId': productId, 'action': action, 'price': price
+            'productId': productId, 'action': action, 'price': price, 'link': link, 'reference': reference
         })
     })
     .then((response) => {

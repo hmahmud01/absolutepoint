@@ -14,12 +14,17 @@ import json
 import requests
 # from datetime import datetime, date
 import datetime
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Min
 from django.db.models.functions import TruncMonth, TruncWeek
 from pip import main
-
+import stripe
 from .models import *
 from .utils import cartData
+import random
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+stripe.api_key = "sk_test_51HhxVlEfJWhMuLjgUFtwqRpA9iGwTip8o2QuIq7BwYzbBysGhQCLXCt8TNZZMF4zcSUAhhfR0axTQKHEuMorCilV009353SShi"
 
 BASE_SALARY = 10000
 
@@ -61,6 +66,31 @@ DEC = 31
 
 HOURS_DELTA = 6
 
+# sount = 0
+# tcount = 0
+
+# cat_fb = 0
+# cat_it= 0
+# cat_yt = 0
+# cat_tt = 0
+# cat_tw = 0
+# cat_tg = 0
+
+
+scount = Services.objects.filter(accepted=False).count()
+tcount = Ticket.objects.filter(seen=False).count()
+
+cat_fb = productCategory.objects.get(name="Facebook Services").id
+cat_it = productCategory.objects.get(name="Instagram Services").id
+cat_yt = productCategory.objects.get(name="Youtube Services").id
+cat_tt = productCategory.objects.get(name="Tiktok Services").id
+cat_tw = productCategory.objects.get(name="Twitter Services").id
+cat_tg = productCategory.objects.get(name="Telegram Services").id
+
+cat_upvote = productCategory.objects.get(name="Upvote Services").id
+cat_watchlist = productCategory.objects.get(name="Watchlist Services").id
+cat_trending = productCategory.objects.get(name="Trending Services").id
+
 
 def login(request):
     data = ""
@@ -79,7 +109,7 @@ def verifyLogin(request):
             return redirect('login')
         else:
             auth_login(request, user)
-            return redirect('/')
+            return redirect('home')
 
     else:
         return redirect('login')
@@ -113,11 +143,11 @@ def registerUser(request):
             username = post_data['email'],
             email = post_data['email']
         )
-        subject = 'Welcome to Absolute Point'
-        message = f'Hi {dashboardUser.username}, Your Account has been Created please login to the system with your email and password.'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [dashboardUser.email, ]
-        send_mail( subject, message, email_from, recipient_list )
+        # subject = 'Welcome to Absolute Point'
+        # message = f'Hi {dashboardUser.username}, Your Account has been Created please login to the system with your email and password.'
+        # email_from = settings.EMAIL_HOST_USER
+        # recipient_list = [dashboardUser.email, ]
+        # send_mail( subject, message, email_from, recipient_list )
         dashboardUser.save()
 
         user_rank = UserRank(
@@ -128,7 +158,7 @@ def registerUser(request):
             current_earn=0.0
         )
         user_rank.save()
-        return redirect('/')
+        return redirect('home')
 
 def resetPassword(request):
     data = ""
@@ -168,7 +198,7 @@ def updateUser(request):
         print(user_rank)
     except:
         pass
-    return redirect('/')
+    return redirect('home')
 
 def reupdateUser(request):
     post_data = request.POST
@@ -190,7 +220,7 @@ def reupdateUser(request):
         print(user_rank)
     except:
         pass
-    return redirect('/')
+    return redirect('home')
 
 def detailUser(request, uid):
     info = DashboardUser.objects.get(user_id=uid)
@@ -217,64 +247,74 @@ def home(request):
     user = request.user
     home = True
     if user.is_superuser:
+        scount = Services.objects.filter(accepted=False).count()
+        tcount = Ticket.objects.filter(seen=False).count()
+        new_orders = Order.objects.filter(new_order=True).count()
+        print(tcount)
+        print(scount)
+        print(new_orders)
         data = ""        
         notices = Notices.objects.all()
         services = Services.objects.all().order_by('-date')
         servicelist = Service.objects.order_by('title')
         servicetypes = ServiceType.objects.all()
         users = User.objects.all().exclude(is_superuser=True)
-        users1 = DashboardUser.objects.all()
+        users1 = DashboardUser.objects.all()    
         return render(request, 'index.html', 
             {"data": data, "notices": notices, "services": services, "users": users1, 
-                "servicelist": servicelist, "servicetypes": servicetypes, "home": home})
+                "servicelist": servicelist, "servicetypes": servicetypes, "home": home, "tcount": tcount, "scount": scount, "new_orders": new_orders})
     else:
-        req_user = DashboardUser.objects.get(user=user.id)
-        current_day = datetime.date.today()
-        month = current_day.month
-        services_user = Services.objects.filter(user__id=req_user.id)
-        service_data = services_user.filter(Q(payment_status="Received") | Q(payment_status="NA"))
-        services = service_data.filter(date__month=month)
-        weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price')).order_by('week')
-        timeline = [1, 2, 3, 4]
-        sale = []
+        try:
+            req_user = AppUser.objects.get(user=user.id)
+            return redirect('/')   
+        except:
+            req_user = DashboardUser.objects.get(user=user.id)
+            current_day = datetime.date.today()
+            month = current_day.month
+            services_user = Services.objects.filter(user__id=req_user.id)
+            service_data = services_user.filter(Q(payment_status="Received") | Q(payment_status="NA"))
+            services = service_data.filter(date__month=month)
+            weekly_data = services.annotate(week = TruncWeek('date')).values('week').annotate(services=Count('id'), total=Sum('price')).order_by('week')
+            timeline = [1, 2, 3, 4]
+            sale = []
 
-        for data in weekly_data:
-            sale.append(data['total'])
+            for data in weekly_data:
+                sale.append(data['total'])
 
-        length = len(weekly_data)
+            length = len(weekly_data)
 
-        if length > 4 :
-            idx = 4
-            main_sale = sale[:idx]
-            remain_sale = sale[idx:]
+            if length > 4 :
+                idx = 4
+                main_sale = sale[:idx]
+                remain_sale = sale[idx:]
 
-            for data in remain_sale:
-                main_sale[idx-1] += data
+                for data in remain_sale:
+                    main_sale[idx-1] += data
+                
+                sale = main_sale
+            elif length < 4:
+                for x in range(0, 4-length):
+                    sale.append(0.0)
             
-            sale = main_sale
-        elif length < 4:
-            for x in range(0, 4-length):
-                sale.append(0.0)
-        
-        if req_user.user_type == 'sales':
-            try:
-                data = ""
-                notices = Notices.objects.all()
-                services = Services.objects.filter(user__id=req_user.id).order_by('-date')
-                servicelist = Service.objects.order_by('title')      
-                info = DashboardUser.objects.get(user_id=request.user.id)
-                rank = UserRank.objects.get(user_id=info.id)
-                print(rank.title)
-                return render(request, 'sales_dashboard.html',
-                    {"timeline": timeline, "sale": sale, "data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "rank": rank, "home": home})
-            except:
-                data = ""
-                notices = Notices.objects.all()
-                services = Services.objects.filter(user__id=req_user.id).order_by('-date')
-                servicelist = Service.objects.order_by('title')         
-                info = DashboardUser.objects.get(user_id=request.user.id)
-                return render(request, 'sales_dashboard.html', 
-                    {"timeline": timeline, "sale": sale, "data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "home": home})
+            if req_user.user_type == 'sales':
+                try:
+                    data = ""
+                    notices = Notices.objects.all()
+                    services = Services.objects.filter(user__id=req_user.id).order_by('-date')
+                    servicelist = Service.objects.order_by('title')      
+                    info = DashboardUser.objects.get(user_id=request.user.id)
+                    rank = UserRank.objects.get(user_id=info.id)
+                    print(rank.title)
+                    return render(request, 'sales_dashboard.html',
+                        {"timeline": timeline, "sale": sale, "data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "rank": rank, "home": home})
+                except:
+                    data = ""
+                    notices = Notices.objects.all()
+                    services = Services.objects.filter(user__id=req_user.id).order_by('-date')
+                    servicelist = Service.objects.order_by('title')         
+                    info = DashboardUser.objects.get(user_id=request.user.id)
+                    return render(request, 'sales_dashboard.html', 
+                        {"timeline": timeline, "sale": sale, "data": data, "notices": notices, "services": services, "info": info, "servicelist": servicelist, "home": home})
             
 
     # return render(request, 'index.html', {"data": data})
@@ -282,7 +322,7 @@ def home(request):
 def noticeCreate(request):
     data = ""
     note_create = True
-    return render(request, 'notice_create.html', {"data": data, "note_create": note_create})
+    return render(request, 'notice_create.html', {"data": data, "note_create": note_create, "tcount": tcount, "scount": scount})
 
 def saveNotice(request):
     post_data = request.POST
@@ -294,12 +334,12 @@ def saveNotice(request):
     )
 
     notice.save()
-    return redirect('/')
+    return redirect('home')
 
 def noticeDetail(request, nid):
     data = ""
     notice = Notices.objects.get(id=nid)
-    return render(request, 'notice_detail.html', {"data": data, "notice": notice})
+    return render(request, 'notice_detail.html', {"data": data, "notice": notice, "tcount": tcount, "scount": scount})
 
 def duplicateService(request):
     return render(request, 'service_create_duplicate.html')
@@ -318,7 +358,6 @@ def serviceCreate(request):
 
     today_updated = updated_time.date()
 
-    # print(today_now)
     today_date = today_updated.strftime("%m/%d/%Y")
 
     if request.user.is_superuser:
@@ -327,9 +366,9 @@ def serviceCreate(request):
     try:
         info = DashboardUser.objects.get(user_id=request.user.id)
         rank = UserRank.objects.get(user_id=info.id)
-        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create})
+        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "info": info, "rank": rank, "service_create": service_create, "tcount": tcount, "scount": scount})
     except:
-        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create})
+        return render(request, 'service_create.html', {"data": data, "date_stat": date_stat, "date": today_date, "users":users, "servicelist": servicelist, "servicetypes": servicetypes, "service_create": service_create, "tcount": tcount, "scount": scount})
 
 def saveService(request):
     check = True
@@ -366,7 +405,7 @@ def saveService(request):
             service.status = "Pending"
             service.payment_status = "Due"
             service.save()
-            return redirect('/')
+            return redirect('home')
         else:
             return redirect('duplicateservice')
         
@@ -403,7 +442,7 @@ def saveService(request):
             service.payment_status = "Due"
             service.save()
 
-            return redirect('/')
+            return redirect('home')
         else:
             return redirect('duplicateservice')
     # return redirect('servicecreate')
@@ -520,13 +559,13 @@ def addServiceList(request):
         price = post_data['price'],
     )
     service.save()
-    return redirect('/')
+    return redirect('home')
 
 def removeServiceList(request, sid):
     service = Service.objects.get(id=sid)
     service.delete()
 
-    return redirect('/')
+    return redirect('home')
 
 def updateServiceList(request):
     post_data = request.POST
@@ -534,14 +573,14 @@ def updateServiceList(request):
     service.quantity = post_data['quantity']
     service.price = post_data['price']
     service.save()
-    return redirect('/')
+    return redirect('home')
 
 def updateServiceType(request):
     post_data = request.POST
     serviceType = ServiceType.objects.get(id=post_data['type'])
     serviceType.title = post_data['title']
     serviceType.save()
-    return redirect('/')
+    return redirect('home')
 
 def removeUser(request):
     post_data = request.POST
@@ -549,7 +588,7 @@ def removeUser(request):
     user = User.objects.get(id=dash_user.user.id)
     user.delete()
     dash_user.delete()
-    return redirect('/')
+    return redirect('home')
 
 def addServiceType(request):
     data = ""
@@ -563,13 +602,13 @@ def addServiceTypeList(request):
         title = post_data['title'],
     )
     servicetype.save()
-    return redirect('/')
+    return redirect('home')
     
 def removeServiceTypeList(request, sid):
     service_type = ServiceType.objects.get(id=sid)
     service_type.delete()
 
-    return redirect('/')
+    return redirect('home')
 
 def serviceDetail(request, sid):
     data = ""    
@@ -812,15 +851,60 @@ def serviceTypeList(request):
     return render(request, "service_type_list.html", {"servicetypes": servicetypes, "service_types": service_types})
 
 def salesServices(request):
+    items = []
     if request.user.is_superuser:
+        status = ""
         services = Services.objects.all().order_by('-date')
+        for service in services:
+            payments = ServicePayments.objects.filter(service__id=service.id)
+            if payments:
+                for payment in payments:
+                    if payment.accepted == False:
+                        status = "New Payment"
+                    else:
+                        status = "No New Payment"
+                    
+                    obj = {
+                        'service': service,
+                        'status': status
+                    }
+            else:
+                status = "No Payment"
+                obj = {
+                    'service': service,
+                    'status': status
+                }
+
+            items.append(obj)      
     else:
         user = request.user
         dash_user = DashboardUser.objects.get(user=user.id)
         services = Services.objects.filter(user__id=dash_user.id).order_by('-date')
+        for service in services:
+            payments = ServicePayments.objects.filter(service__id=service.id)
+            if payments:
+                for payment in payments:
+                    if payment.accepted == False:
+                        status = "New Payment"
+                    else:
+                        status = "No New Payment"
+                    
+                    obj = {
+                        'service': service,
+                        'status': status
+                    }
+            else:
+                status = "No Payment"
+                obj = {
+                    'service': service,
+                    'status': status
+                }
+
+            items.append(obj)
     sales = True
     print(sales)
-    return render(request, "sales_services.html", {"services": services, "sales": sales})
+    print(items)
+    return render(request, "sales_services.html", {"services": services, "items": items, "sales": sales, "tcount": tcount, "scount": scount})
 
 def accountsIndex(request):
     accounts = True
@@ -832,7 +916,6 @@ def accountsIndex(request):
     sales = []
     services = Services.objects.all()
 
-
     monthly_data = Services.objects.annotate(month = TruncMonth('date')).values('month').annotate(services=Count('id'), total=Sum('price')).order_by('month')
 
     for month in monthly_data:
@@ -841,7 +924,6 @@ def accountsIndex(request):
         print(month['month'].strftime('%B'), month['total'])
 
     print(monthly_data)
-
 
     for service in services:
         print(service.date)
@@ -1255,37 +1337,621 @@ def salesExecutiveSalary(request):
 # CLIENT AREA
 def clientIndex(request):
     data = ""
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook Services").exclude(category__name="Instagram Services").exclude(category__name="Youtube Services").exclude(category__name="Tiktok Services").exclude(category__name="Twitter Services").exclude(category__name="Telegram Services").filter(status=True)[:8]
+    items = []
+    marketing = serviceProduct.objects.filter(category__name="Marketing Services")
+    facebook = serviceProduct.objects.filter(category__name="Facebook Services")
+    instagram = serviceProduct.objects.filter(category__name="Instagram Services")
+    youtube = serviceProduct.objects.filter(category__name="Youtube Services")
+    tiktok = serviceProduct.objects.filter(category__name="Tiktok Services")
+    twitter = serviceProduct.objects.filter(category__name="Twitter Services")
+    telegram = serviceProduct.objects.filter(category__name="Telegram Services")
+
+    for prod in products:
+        variable = variableProductPrice.objects.filter(product__id=prod.id).order_by('price')
+
+        try:
+            product = {
+                'product': prod,
+                'price': variable.first().price
+            }
+
+            items.append(product)
+        except:
+            product = {
+                'product': prod,
+                'price': 0
+            }
+
+            items.append(product)
+
+    cat_fb = productCategory.objects.get(name="Facebook Services").id
+    cat_it = productCategory.objects.get(name="Instagram Services").id
+    cat_yt = productCategory.objects.get(name="Youtube Services").id
+    cat_tt = productCategory.objects.get(name="Tiktok Services").id
+    cat_tw = productCategory.objects.get(name="Twitter Services").id
+    cat_tg = productCategory.objects.get(name="Telegram Services").id
+
+    data = cartData(request)
+    order = data['order']
+
+    reviews = Review.objects.filter(status=True)
+
+    review_items = []
+
+    for review in reviews:
+        user = review.user
+        if user is None:
+            username = "Anonymous"
+            data = {
+                "review" : review,
+                "username" : username
+            }
+        else:
+            try:
+                app_user = AppUser.objects.get(user_id=user.id)
+                username = app_user.fname + " " + app_user.lname
+            except:
+                username = user.username
+
+            data = {
+                "review" : review,
+                "username" : username
+            }
+
+        review_items.append(data)
+
+    context = {
+        "products": products,
+        "facebook": facebook,
+        "instagram": instagram,
+        "youtube": youtube,
+        "tiktok": tiktok,
+        "twitter": twitter,
+        "telegram": telegram,
+        "cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
+        "order": order,
+        "items": items,
+        "reviews": reviews,
+        "review_items": review_items,
+    }
+
+    ctx2 ={"data": data, "products": products, "facebook": facebook, "instagram": instagram, "youtube": youtube, "tiktok": tiktok, "twitter": twitter}
+    return render(request, "client/index.html",context)
+
+def reviews(request):
+    reviews = Review.objects.filter(status=True)
+
+    data = cartData(request)
+    order = data['order']
+
+    review_items = []
+
+    for review in reviews:
+        user = review.user
+        if user is None:
+            username = "Anonymous"
+            data = {
+                "review" : review,
+                "username" : username
+            }
+        else:
+            try:
+                app_user = AppUser.objects.get(user_id=user.id)
+                username = app_user.fname + " " + app_user.lname
+            except:
+                username = user.username
+
+            data = {
+                "review" : review,
+                "username" : username
+            }
+
+        review_items.append(data)
+    return render(request, "client/reviews.html", {"review_items": review_items, "cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
+        "order": order,})
+
+def terms(request):
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/terms.html", {"cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
+        "order": order,})
+
+def policy(request):
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/policy.html", {"cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
+        "order": order,})
+
+def privacy(request):
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/privacy.html", {"cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
+        "order": order,})
+
+def allService(request):
+    products = serviceProduct.objects.all().exclude(category__name="Marketing").exclude(category__name="Facebook Services").exclude(category__name="Instagram Services").exclude(category__name="Youtube Services").exclude(category__name="Tiktok Services").exclude(category__name="Twitter Services").exclude(category__name="Telegram Services")
+    all_products = []
+    all_prods = []
+    active_products = products.filter(status=True)
+    inactive_products = products.filter(status=False)
+    data = cartData(request)
+    order = data['order']
+    for active in active_products:
+        all_products.append(active)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
+            product = {
+                'product': active,
+                'price': price_filter[1]
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': active,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    for inactive in inactive_products:
+        all_products.append(inactive)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
+            product = {
+                'product': inactive,
+                'price': price_filter[1]
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': inactive,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    return render(request, "client/allservices.html", {
+                                        "all_products": all_prods,
+                                        "products": all_products, "order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,
+                                        "cat_tg": cat_tg,})
+
+def categoryservices(request, cid):
+    cat = productCategory.objects.get(id=cid)
+    products = serviceProduct.objects.filter(category__id=cid)
+    all_products = []
+    all_prods = []
+    active_products = products.filter(status=True)
+    inactive_products = products.filter(status=False)
+    data = cartData(request)
+    order = data['order']
+    for active in active_products:
+        all_products.append(active)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
+            product = {
+                'product': active,
+                'price': price_filter[1]
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': active,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    for inactive in inactive_products:
+        all_products.append(inactive)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
+            product = {
+                'product': inactive,
+                'price': price_filter[1]
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': inactive,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    return render(request, "client/categoryservices.html", {
+                                        "cat": cat,
+                                        "all_products": all_prods,
+                                        "products": all_products, "order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,
+                                        "cat_tg": cat_tg,})
+
+def allSocial(request):
+    marketing = serviceProduct.objects.filter(category__name="Marketing")
+    facebook = serviceProduct.objects.filter(category__name="Facebook Services")
+    instagram = serviceProduct.objects.filter(category__name="Instagram Services")
+    youtube = serviceProduct.objects.filter(category__name="Youtube Services")
+    tiktok = serviceProduct.objects.filter(category__name="Tiktok Services")
+    twitter = serviceProduct.objects.filter(category__name="Twitter Services")
+    telegram = serviceProduct.objects.filter(category__name="Telegram Services")
+
+    cat_fb = productCategory.objects.get(name="Facebook Services").id
+    cat_it = productCategory.objects.get(name="Instagram Services").id
+    cat_yt = productCategory.objects.get(name="Youtube Services").id
+    cat_tt = productCategory.objects.get(name="Tiktok Services").id
+    cat_tw = productCategory.objects.get(name="Twitter Services").id
+    cat_tg = productCategory.objects.get(name="Telegram Services").id
+
+    data = cartData(request)
+    order = data['order']
+
+    context = {
+        "facebook": facebook,
+        "instagram": instagram,
+        "youtube": youtube,
+        "tiktok": tiktok,
+        "twitter": twitter,
+        "telegram": telegram,
+        "cat_fb": cat_fb,
+        "cat_it": cat_it,
+        "cat_yt": cat_yt,
+        "cat_tt": cat_tt,
+        "cat_tw": cat_tw,
+        "cat_tg": cat_tg,
+        "cat_upvote": cat_upvote,
+        "cat_watchlist": cat_watchlist,
+        "cat_trending": cat_trending,
+        "order": order
+    }
+
+    return render(request, "client/allsocial.html", context)
+
+def completeService(request):
     products = serviceProduct.objects.all()
-    return render(request, "client/index.html", {"data": data, "products": products})
+    all_products = []
+    all_prods = []
+    active_products = products.filter(status=True)
+    inactive_products = products.filter(status=False)
+    data = cartData(request)
+    order = data['order']
+    for active in active_products:
+        all_products.append(active)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            product = {
+                'product': active,
+                'price': variable.first().price
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': active,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    for inactive in inactive_products:
+        all_products.append(inactive)
+        variable = variableProductPrice.objects.filter(product__id=active.id)
+        try:
+            product = {
+                'product': inactive,
+                'price': variable.first().price
+            }
+            all_prods.append(product)
+        except:
+            product = {
+                'product': inactive,
+                'price': 00
+            }
+            all_prods.append(product)
+
+    return render(request, "client/completeservices.html", {
+                                        "all_products": all_prods,
+                                        "products": all_products, "order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+def contactUs(request):
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/contact-us.html", {"order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+def saveRequest(request):
+    post_data = request.POST
+
+    ticket = Ticket(
+        fname=post_data['fname'],
+        lname=post_data['lname'],
+        telid=post_data['telid'],
+        subject=post_data['subject'],
+        social=post_data['social'],
+        budget=post_data['budget'],
+        message=post_data['message']
+    )
+
+    ticket.save()
+    return redirect('requestconfirm')
+
+def requestConfirm(request):
+    return render(request, "client/contact-done.html")
+
+def listTickets(request):
+    tickets = Ticket.objects.all()
+    tcount = tickets.filter(seen=False).count()
+    return render(request, "clientdash/ticketlist.html", {"tickets": tickets, "tcount": tcount, "scount": scount})
+
+def ticketDetail(request, tid):
+    ticket = Ticket.objects.get(id=tid)
+    tcount = Ticket.objects.filter(seen=False).count()
+    return render(request, "clientdash/ticketdetail.html", {"ticket": ticket, "tcount": tcount, "scount": scount})
+
+def ticketSeen(request, tid):
+    ticket = Ticket.objects.get(id=tid)
+    ticket.seen = True
+    ticket.save()
+    return redirect('ticketdetail', tid)
+
+def socialServices(request, cid):
+    cat = productCategory.objects.get(id=cid)
+    products = serviceProduct.objects.filter(category__id=cid)
+    items = []
+    for prod in products:
+        variable = variableProductPrice.objects.filter(product__id=prod.id)
+        try:
+            price_filter = variable.values_list('price').annotate(Min('price')).order_by('price').first()
+            product = {
+                'product': prod,
+                'price': price_filter[1]
+            }
+            items.append(product)
+        except:   
+            product = {
+                'product': prod,
+                'price': 00
+            }
+            items.append(product)
+
+    return render(request, "client/index-category.html", {
+                                        "items": items, "products": products, "cat": cat,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,
+                                         })
 
 def clientServiceDetail(request, pid):
     data = ""
+    review_items = []
+    checkout = False
     product = serviceProduct.objects.get(id=pid)
-    variables = variableProductPrice.objects.filter(product_id=pid)
-    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables})
+    variables = variableProductPrice.objects.filter(product_id=pid).order_by('measurement')
+    terms = productTerms.objects.filter(product_id=pid)
+    reviews = Review.objects.filter(product_id=pid).filter(status=True)
+    data = cartData(request)
+    order = data['order']
+    items = data['items']
+
+    for review in reviews:
+        user = review.user
+        if user is None:
+            username = "Anonymous"
+            data = {
+                "review" : review,
+                "username" : username
+            }
+        else:
+            try:
+                app_user = AppUser.objects.get(user_id=user.id)
+                username = app_user.fname + " " + app_user.lname
+            except:
+                username = user.username
+
+            data = {
+                "review" : review,
+                "username" : username
+            }
+
+        review_items.append(data)
+
+
+    for item in items:
+        if item.product.id == pid:
+            checkout = True
+
+    print(review_items)
+
+    return render(request, "client/detail.html", {"data": data, "product": product, "variables": variables, "order": order, "terms": terms, "reviews": reviews, "review_items": review_items,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,
+                                        "checkout": checkout})
+
+def loadPrice(request):
+    price_id = request.GET.get('price_id')
+    product_id = request.GET.get('product_id')
+
+
+    product = serviceProduct.objects.get(id=product_id)
+    pricing = variableProductPrice.objects.get(id=price_id)
+
+    base_price = product.base_price
+    base_qty = product.base_qty
+
+    if base_price == None or base_qty == None:
+        base_price = 0
+        base_qty = 0
+
+    variable_price = pricing.price
+    variable_qty = pricing.measurement
+
+    if base_qty == 0:
+        multiplier = 1
+    else:
+        multiplier = variable_qty / base_qty
+
+    primary_price = base_price * multiplier
+
+    if primary_price <= variable_price:
+        data = {
+            "base": None,
+            "main": variable_price
+        }
+    else:
+        data = {
+            "base": primary_price,
+            "main": variable_price
+        }
+
+
+    print(data)
+
+    return render(request, 'client/loadprice.html', {"data": data})
+
 
 def clientOrders(request):
     data = ""
-    return render(request, "client/orders.html", {"data": data})
+    orders = Order.objects.filter(customer=request.user.username).filter(cancelled=False)
+    cancelled_orders = Order.objects.filter(customer=request.user.username).filter(cancelled=True)
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/orders.html", {"data": data, "orders": orders, "order": order,"cancelled_orders": cancelled_orders,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def allOrders(request):
     data = ""
     return render(request, "orders.html", {"data": data})
 
-def orderDetail(request):
+def orderDetail(request, oid):
     data = ""
-    return render(request, "client/order_detail.html", {"data": data})
+    order = Order.objects.get(id=oid)
+    orderItems = OrderItems.objects.filter(order_id=oid)
+    # order.get_cart_items = 0
+    if order.payment.credit_type == "crypto":
+        proofs = cryptoProof.objects.filter(order_id=oid)
+        context = {'items': orderItems, 'order':order, 'proofs': proofs, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,}
+    else:
+        context = {'items': orderItems, 'order':order , "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,}
+    
+    return render(request, "client/order_detail.html", context)
 
 # CLIENT DASHBOARD
 
 def createProduct(request):
     data = ""
-    categories = productCategory.objects.all()
+    categories = productCategory.objects.filter(catstatus__status=True)
     return render(request, "clientdash/create_product.html", {"data": data, "categories": categories})
 
 def saveProduct(request):
     data = ""
     post_data = request.POST
+    file_data = request.FILES
     cat_id = post_data['category']
     category = productCategory.objects.get(id=cat_id)
 
@@ -1294,6 +1960,7 @@ def saveProduct(request):
         ptype = post_data['type'],
         category = category,
         description = post_data['description'],
+        thumb = file_data['thumb_image']
     )
 
     product.save()
@@ -1308,14 +1975,52 @@ def saveCategory(request):
 
     category.save()
 
+    stat = catstatus(
+        cat = category,
+        status = True
+    )
+    stat.save()
+
     return redirect('createproduct')
+
+def categoryList(request):
+    categorys = productCategory.objects.all()
+
+    return render(request, "clientdash/category_list.html", {"categorys": categorys})
+
+def activateCategory(request, cid):
+    cat = productCategory.objects.get(id=cid)
+
+    try:
+        cat.catstatus.status = True
+        cat.catstatus.save()
+    except:
+        stat = catstatus(
+            cat = cat,
+            status = True
+        )
+        stat.save()
+
+    return redirect('categorylist')
+
+def deactivateCategory(request, cid):
+    cat = productCategory.objects.get(id=cid)
+    cat.catstatus.status = False
+    cat.catstatus.save()
+    return redirect('categorylist')
+
+def deleteCategory(request, cid):
+    cat = productCategory.objects.get(id=cid)
+    cat.delete()
+    return redirect('categorylist')
 
 def productList(request):
     data = ""
     products = serviceProduct.objects.all()
     inactive = "inactive"
     active = "active"
-    return render(request, "clientdash/product_list.html", {"data": data, "products": products, "inactive": inactive, "active": active})
+    delete = "delete"
+    return render(request, "clientdash/product_list.html", {"data": data, "products": products, "inactive": inactive, "active": active, "delete": delete})
 
 def productDetail(request, pid):
     data = ""
@@ -1323,7 +2028,19 @@ def productDetail(request, pid):
     inactive = "inactive"
     active = "active"
     variables = variableProductPrice.objects.filter(product_id=pid)
-    return render(request, "clientdash/product_detail.html", {"product": product, "inactive": inactive, "active": active, "variables": variables})
+    terms = productTerms.objects.filter(product_id=pid)
+    reviews = Review.objects.filter(product_id=pid)
+    print(reviews)
+    return render(request, "clientdash/product_detail.html", {"product": product, "inactive": inactive, "active": active, "variables": variables, "terms": terms, "reviews": reviews})
+
+def updateDetail(request):
+    post_data = request.POST
+    product = serviceProduct.objects.get(id=post_data['pid'])
+
+    product.description = post_data['description']
+    product.save()
+
+    return redirect('productdetail', post_data['pid'])
 
 def saveVariablePrice(request):
     data = ""
@@ -1332,10 +2049,73 @@ def saveVariablePrice(request):
     variable = variableProductPrice(
         product=product,
         measurement=post_data['measurement'],
+        title=post_data['title'],
         price=post_data['price']
     )
     variable.save()
     return redirect('productdetail', post_data['pid'])
+
+def saveTerms(request):
+    post_data = request.POST
+    product = serviceProduct.objects.get(id=post_data['pid'])
+    terms = productTerms(
+        product = product,
+        terms = post_data['terms']
+    )
+
+    terms.save()
+    return redirect('productdetail', post_data['pid'])
+
+def deleteterms(request, tid, pid):
+    terms = productTerms.objects.get(id=tid)
+    terms.delete()
+
+    return redirect('productdetail', pid)
+
+def saveBasePrice(request):
+    data = ""
+    post_data = request.POST
+
+    product = serviceProduct.objects.get(id=post_data['pid'])
+    product.base_price = post_data['base_price']
+    product.base_qty = post_data['base_qty']
+
+    product.save()
+
+    return redirect('productdetail', post_data['pid'])
+
+def updateVariablePrice(request, vid):
+    variable = variableProductPrice.objects.get(id=vid)
+    return render(request, "clientdash/update_variable_price.html", {"variable": variable})
+
+def saveUpdatedVariablePrice(request):
+    post_data = request.POST
+    variable = variableProductPrice.objects.get(id=post_data['vid'])
+    variable.price = post_data['price']
+    variable.measurement = post_data['measurement']
+
+    variable.save()
+
+    return redirect('productdetail', variable.product.id)
+
+def reviewList(request):
+    reviews = Review.objects.all()
+    return render(request, "clientdash/review_list.html", {"reviews": reviews})
+
+def reviewAccept(request, rid):
+    review = Review.objects.get(id=rid)
+    pid = review.product.id
+    review.status = True
+    review.save()
+
+    return redirect('productdetail', pid)
+
+def reviewDecline(request, rid):
+    review = Review.objects.get(id=rid)
+    pid = review.product.id
+    review.delete()
+
+    return redirect('productdetail', pid)
 
 def productAct(request, pid, act):
     product = serviceProduct.objects.get(id=pid)
@@ -1345,46 +2125,107 @@ def productAct(request, pid, act):
     elif act == "inactive":
         product.status = False
         product.save()
+    elif act == "delete":
+        product.delete()
 
     return redirect('productlist')
 
 def clientList(request):
     data = ""
-    return render(request, "clientdash/client_list.html", {"data": data})
+    users = AppUser.objects.all()
+    return render(request, "clientdash/client_list.html", {"data": data, "users": users})
+
+def clientDetail(request, cid):
+    client = AppUser.objects.get(id=cid)
+    return render(request, "clientdash/client_detail.html", {"client": client})
+
 
 def orderList(request):
     data = ""
     orders = Order.objects.all()
-    return render(request, "clientdash/order_list.html", {"data": data, "orders": orders})
+    crypto_orders = orders.filter(payment__credit_type="crypto")
+    stripe_orders = orders.filter(payment__credit_type="stripe")
+    print(crypto_orders)
+    print(stripe_orders)
+    return render(request, "clientdash/order_list.html", 
+                {"data": data, "orders": orders, "stripe_orders": stripe_orders, "crypto_orders": crypto_orders})
 
 def orderDetailDash(request, oid):
     data = ""
     order = Order.objects.get(id=oid)
+    order.new_order = False
+    order.save()
     orderItems = OrderItems.objects.filter(order_id=oid)
-    context = {'items': orderItems, 'order':order}
+    if order.payment.credit_type == "crypto":
+        
+        proofs = cryptoProof.objects.filter(order_id=oid)
+        print(proofs)
+        context = {'items': orderItems, 'order':order, 'proofs': proofs}
+    else:
+        context = {'items': orderItems, 'order':order}
+    
     return render(request, "clientdash/order_detail.html", context)
 
 
+def submitReview(request, pid):
+    product = serviceProduct.objects.get(id=pid)
+
+    post_data = request.POST
+    if request.user.is_authenticated:
+
+        review = Review(
+            product=product,
+            review=post_data['review'],
+            user=request.user,
+        )
+
+        review.save()
+    else:
+        review = Review(
+            product=product,
+            review=post_data['review']
+        )
+        review.save()
+
+    return redirect('clientservicedetail', pid)
+
+
 def updateItem(request):
+    print("inside Update Item")
     data = json.loads(request.body)
     print(data)
     # {'productId': '1', 'action': 'add', 'price': '2'}
     productId = data['productId']
     action = data['action']
     price = data['price']
+    link = data['link']
+    reference = data['reference']
+    print(link)
+    print(productId)
 
-    customer = request.user.username
+    if request.user.is_authenticated:
+        customer = request.user.username
+    else:
+        n = random.random()
+        # customer = "Anonymous" + str(n)
+        if not request.session.session_key:
+            request.session.save()
+
+        session = request.session.session_key
+        print(session)
+        customer = session
     product = serviceProduct.objects.get(id=productId)
     variance  = variableProductPrice.objects.get(id=price)
 
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
-    orderItem, created = OrderItems.objects.get_or_create(order=order, product=product, variance=variance)
+    orderItem, created = OrderItems.objects.get_or_create(order=order, product=product, variance=variance, link=link, reference=reference)
 
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
     elif action == 'remove':
-        orderItem.quantity = (orderItem.quantity - 1)
+        # orderItem.quantity = (orderItem.quantity - 1)
+        orderItem.delete()
 
     orderItem.save()
 
@@ -1397,13 +2238,25 @@ def updateItem(request):
 
 def cart(request):
     data = cartData(request)
-    print(data)
-    # {'cartItems': 1, 'order': <Order: 1>, 'items': <QuerySet [<OrderItems: OrderItems object (1)>]>}
     cartItems = data['cartItems']
     order = data['order']
     items = data['items']
-    context = {'items': items, 'order':order, 'cartItems': cartItems}
+    context = {'items': items, 'order':order, 'cartItems': cartItems, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,}
     return render(request, "client/cart.html", context)
+
+def removeCartItem(request, iid):
+    orderitem = OrderItems.objects.get(id=iid)
+    orderitem.delete()
+
+    return redirect('cart')
 
 def checkout(request, oid):
     data = ""
@@ -1413,57 +2266,418 @@ def checkout(request, oid):
     response = requests.get('http://api.coinlayer.com/live', params=params)
     
     crypto_data = response.json()
-    rates = crypto_data['rates']
+    # rates = crypto_data['rates']
+
+    try:
+        billing = Billing.objects.get(order_id=oid)
+    except:
+        billing = False
     
     order = Order.objects.get(id=oid)
     order_items = OrderItems.objects.filter(order_id=oid)
 
+    auth_status = False
+
+    if request.user.is_authenticated:
+        auth_status = True
         
-    return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items})
+    return render(request, "client/checkout.html", {"data": data, 'order': order, 'order_items': order_items, "auth_status": auth_status, "billing": billing,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 
 # <QueryDict: {'csrfmiddlewaretoken': ['Ka4Nh9QauQ361lj7sH5F09KVFkGptdqV8IUl8IgoDvbUOBvM5Yi25xqXx7tM0xwz'], 
 # 'order': ['2'], 'firstname': ['Hasan'], 'lastname': ['Mahmud'], 'username': ['hmahmud01'], 'email': ['hmahmud01@example.com'], 
 # 'address': ['Shantinagar'], 'address2': [''], 'country': ['Bangladesh'], 'state': ['Dhaka'], 'zipcode': ['1217'], 
 # 'credit_type': ['on'], 'currency': ['{"AMB" : "0.009838"}']}>
+
 def processOrder(request):
-    data = ""
-    post_data = request.POST
-    order = Order.objects.get(id=post_data['order'])
-    currency = json.loads(post_data['currency'])
+    if request.user.is_authenticated:
+        data = ""
+        post_data = request.POST
+        order = Order.objects.get(id=post_data['order'])
+        
+        try:
+            billing = Billing.objects.get(order_id=order.id)
+        except:
+            billing = Billing(
+                order = order,
+                firstname = post_data['firstname'],
+                lastname = post_data['lastname'],
+                username = post_data['username'],
+                email = post_data['email'],
+                address = post_data['address'],
+                address2 = post_data['address2'],
+                country = post_data['country'],
+                state = post_data['state'],
+                zipcode = post_data['zipcode']
+            )
 
-    currency_key = list(currency.keys())[0]
-    currency_value = float(list(currency.values())[0])
+            billing.save()
 
-    order.complete = True
+        try:
+            payment = Payment.objects.get(order_id=order.id)
+        except:
+            payment = Payment(
+                order = order,
+                credit_type = post_data['credit_type'],
+                total = order.get_cart_total
+            )
+
+            payment.save()
+
+        if post_data['credit_type'] == "crypto":
+            order.complete = False
+            order.trx_id = "ORDER - " + str(order.id)
+            timedate = datetime.datetime.now()
+            updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+            updated_time = timedate + updated_timedate
+
+            today_updated = updated_time.date()
+
+            today_date = today_updated.strftime("%m/%d/%Y")
+            order.date_ordered = today_updated
+            order.save()
+            return redirect('cryptocheckout', order.id)
+        else:
+            return redirect('stripecheckout', order.id)
+    
+    else:
+        post_data = request.POST
+
+        if post_data['pass'] == post_data['conf_pass']:
+
+            try:
+                user = User.objects.create_user(post_data['email'], post_data['email'], post_data['pass'])
+            except:
+                data = ""
+                params = {
+                    "access_key": "e9bca0873fefe06bb0145b67feb8ec24"
+                    }
+                response = requests.get('http://api.coinlayer.com/live', params=params)
+                
+                crypto_data = response.json()
+                rates = crypto_data['rates']
+                
+                order = Order.objects.get(id=post_data['order'])
+                order_items = OrderItems.objects.filter(order_id=post_data['order'])
+
+                auth_status = False
+
+                if request.user.is_authenticated:
+                    auth_status = True
+                
+                msg = f"User Already exists with this email {post_data['email']}"
+
+                return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "msg": msg, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+            appuser = AppUser(
+                user = user,
+                fname = post_data['firstname'],
+                lname = post_data['lastname'],
+                telid = post_data['username'],
+                email = post_data['email'],
+                address = post_data['address'],
+                country = post_data['country'],
+                state = post_data['state'],
+                zipcode = post_data['zipcode']
+            )
+
+            appuser.save()
+
+            order = Order.objects.get(id=post_data['order'])
+
+            order.customer = user.username
+            order.save()
+
+            billing = Billing(
+                order = order,
+                firstname = post_data['firstname'],
+                lastname = post_data['lastname'],
+                username = post_data['username'],
+                email = post_data['email'],
+                address = post_data['address'],
+                address2 = post_data['address2'],
+                country = post_data['country'],
+                state = post_data['state'],
+                zipcode = post_data['zipcode']
+            )
+
+            billing.save()
+
+            payment = Payment(
+                order = order,
+                credit_type = post_data['credit_type'],
+                total = order.get_cart_total
+            )
+
+            payment.save()
+
+            auth_login(request, user)
+
+            if post_data['credit_type'] == "crypto":
+                order.complete = True
+                order.trx_id = "ORDER - " + str(order.id)
+                timedate = datetime.datetime.now()
+                updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+                updated_time = timedate + updated_timedate
+
+                today_updated = updated_time.date()
+
+                today_date = today_updated.strftime("%m/%d/%Y")
+                order.date_ordered = today_updated
+                order.save()
+                return redirect('cryptocheckout', order.id)
+            else:
+                return redirect('stripecheckout', order.id)
+
+        else:
+            data = ""
+            params = {
+                "access_key": "e9bca0873fefe06bb0145b67feb8ec24"
+                }
+            response = requests.get('http://api.coinlayer.com/live', params=params)
+            
+            crypto_data = response.json()
+            rates = crypto_data['rates']
+            
+            order = Order.objects.get(id=post_data['order'])
+            order_items = OrderItems.objects.filter(order_id=post_data['order'])
+
+            auth_status = False
+
+            if request.user.is_authenticated:
+                auth_status = True
+            
+            msg = "Password Didn't Match"
+
+            return render(request, "client/checkout.html", {"data": data, "rates": rates, 'order': order, 'order_items': order_items, "auth_status": auth_status, "msg": msg, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+      
+
+def confirmCryptoOrder(request, oid):
+    order = Order.objects.get(id=oid)
+    billing = Billing.objects.get(order__id=oid)
+
+    order.order_payment = True
+    timedate = datetime.datetime.now()
+    updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+    updated_time = timedate + updated_timedate
+
+    today_updated = updated_time.date()
+
+    today_date = today_updated.strftime("%m/%d/%Y")
+    order.date_ordered = today_updated
     order.save()
 
-    billing = Billing(
-        order = order,
-        firstname = post_data['firstname'],
-        lastname = post_data['lastname'],
-        username = post_data['username'],
-        email = post_data['email'],
-        address = post_data['address'],
-        address2 = post_data['address2'],
-        country = post_data['country'],
-        state = post_data['state'],
-        zipcode = post_data['zipcode']
+    return redirect('orderlistdetail', oid)
+
+def cancelOrder(request, oid):
+    order = Order.objects.get(id=oid)
+    order.cancelled = True
+    # order.delete()
+    order.save()
+    return redirect('orderlist')
+
+def stripeCheckout(request, oid):
+    return render(request, "client/checkout-stripe.html", {"oid": oid, "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+def cryptoCheckout(request, oid):
+    order = Order.objects.get(id=oid)
+    return render(request, "client/checkout-crypto.html", {
+                                        "order": order,
+                                        "oid": oid,
+                                        "cat_fb": cat_fb,   
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+def saveCryptoProof(request, oid):
+    
+    post_data = request.POST
+    file_data = request.FILES
+    print(post_data)
+    print(file_data)
+
+    if post_data['hash'] != '' or file_data.getlist('proof_img') != [] :
+        order = Order.objects.get(id=oid)
+
+        networks = cryptoNetwork(
+            order=order,
+            network=post_data['network'],
+            payment_hash=post_data['hash']
+        )
+        networks.save()
+
+        order.complete = True
+        order.order_payment = False
+        order.save()
+
+        if file_data:
+            images = file_data.getlist('proof_img')
+
+            for image in images:
+                proofs = cryptoProof(
+                    order=order,
+                    proof=image
+                )
+                proofs.save()
+
+        return redirect('cryptosuccess', oid)
+    else:
+        msg = "You didn't enter any payment proof or proof hash for the successful payment."
+        return render(request, "client/checkout-crypto.html", {
+                                        "oid": oid,
+                                        "msg": msg,
+                                        "cat_fb": cat_fb,   
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+    
+
+def cryptoSuccess(request, oid):
+    order = Order.objects.get(id=oid)
+    orderItems = OrderItems.objects.filter(order_id=order.id)
+    return render(request, "client/checkout-crypto-proof.html", {
+                                        "order": order,
+                                        "items": orderItems,
+                                        "cat_fb": cat_fb,   
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+def create_checkout_session(request, oid):
+    order = Order.objects.get(id=oid)
+    order_name = "ORD - " + str(order.id)
+    amount = order.get_cart_total * 100
+    # YOUR_DOMAIN = "http://127.0.0.1:8000"
+    # YOUR_DOMAIN = "http://174.138.27.160:8000"
+    YOUR_DOMAIN = "http://cryptomarketers.net/"
+    product = stripe.Product.create(name=order_name)
+
+    price = stripe.Price.create(
+        unit_amount=int(amount),
+        currency="usd",
+        product=product.id,
+    )
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types = ['card'],    
+        line_items=[
+            {
+                'price': price.id,
+                'quantity': 1,
+            }
+        ],
+        mode="payment",
+        success_url=YOUR_DOMAIN + '/checkout-success/',
+        cancel_url=YOUR_DOMAIN + '/checkout-cancel/'
     )
 
-    billing.save()
+    request.session['oid'] = oid
+    request.session['cid'] = checkout_session.payment_intent
 
-    payment = Payment(
-        order = order,
-        credit_type = post_data['credit_type'],
-        currency_key = currency_key,
-        currency_value = currency_value,
-        total = order.get_cart_total
-    )
+    return redirect(checkout_session.url, code=303)
 
-    payment.save()
+def success(request):
+    order = Order.objects.get(id=request.session['oid'])
+    orderItems = OrderItems.objects.filter(order_id=order.id)
+    checkout_id = request.session['cid']
+    billing = Billing.objects.get(order__id=order.id)
+    order.complete = True
+    order.trx_id = checkout_id
+    order.order_payment = True
+    timedate = datetime.datetime.now()
+    updated_timedate = datetime.timedelta(hours=HOURS_DELTA)
+    updated_time = timedate + updated_timedate
 
-    return redirect('clientorders')
+    today_updated = updated_time.date()
+
+    today_date = today_updated.strftime("%m/%d/%Y")
+    order.date_ordered = today_updated
+    order.save()
+
+    try:
+        del request.session['oid']
+        del request.session['cid']
+    except:
+        pass
+
+    # subject = 'Order Completion'
+    # message = f'Hi {order.customer},\nYour Order has been placed in our system. Your order number is {order.id}.\nPlease Visit your orders page to see the detail of your order.\nThanks\n-Absolute Point.'
+    # email_from = settings.EMAIL_HOST_USER
+    # recipient_list = [billing.email, ]
+    # send_mail( subject, message, email_from, recipient_list )
+
+    return render(request, 'client/success.html', {
+                                        "items": orderItems,
+                                        "order": order,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+def cancel(request):
+    return  render(request, 'client/cancel.html', {
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def createPortfolio(request):
     users = DashboardUser.objects.all()
@@ -1513,15 +2727,35 @@ def savePortfolio(request):
 
 def portfolio(request):
     portfolios = Portfolio.objects.all()
-
-    return render(request, "client/portfolio.html", {"portfolios": portfolios})
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/portfolio.html", {"portfolios": portfolios, "order": order,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def portfolioDetail(request, pid):
     portfolio = Portfolio.objects.get(id=pid)
     contributors = PortfolioContributors.objects.filter(portfolio_id=pid)
     proofs = PortfolioProves.objects.filter(portfolio_id=pid)
-
-    return render(request, "client/portfolio_detail.html", {"portfolio": portfolio, "contributors": contributors, 'proofs': proofs})
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/portfolio_detail.html", {"portfolio": portfolio, "contributors": contributors, 'proofs': proofs, "order": order,
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
 
 def people(request):
     people = DashboardUser.objects.all()
@@ -1533,3 +2767,87 @@ def peopleDetail(request, pid):
     portfolios = PortfolioContributors.objects.filter(contributor_id=pid)
 
     return render(request, "client/people_detail.html", {"dashuser": dashuser, "portfolios": portfolios})
+
+def createNews(request):
+    return render(request, "clientdash/create_news.html")
+
+def saveNews(request):
+    post_data = request.POST
+    file_data = request.FILES
+    news = News(
+        title = post_data['title'],
+        message = post_data['message'],
+        msg_2 = post_data['msg_2'],
+        thumb = file_data['thumb']
+    )
+
+    news.save()
+    return redirect('listnews')
+
+def listNews(request):
+    news = News.objects.all().order_by('-id')
+    return render(request, "clientdash/news_list.html", {"news": news})
+
+def newsDelete(request, nid):
+    news = News.objects.get(id=nid)
+    news.delete()
+    return redirect('listnews')
+
+def detailNews(request, nid):
+    news = News.objects.get(id=nid)
+    return render(request, "clientdash/news_detail.html", {"news": news})
+
+
+def newsList(request):
+    news = News.objects.all().order_by('-id')
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(news, 10)
+
+    try:
+        newss = paginator.page(page)
+    except PageNotAnInteger:
+        newss = paginator.page(1)
+    except EmptyPage:
+        newss = paginator.page(paginator.num_pages)
+
+    return render(request, "client/newslist.html", {"news": newss, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+def newsDetail(request, nid):
+    news = News.objects.get(id=nid)
+    return render(request, "client/newsdetail.html", {"news": news, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,           
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+
+def removeData(request):
+    productCategory.objects.all().delete()
+    catstatus.objects.all().delete()
+    serviceProduct.objects.all().delete()
+    variableProductPrice.objects.all().delete()
+    productTerms.objects.all().delete()
+    Order.objects.all().delete()
+    cryptoNetwork.objects.all().delete()
+    cryptoProof.objects.all().delete()
+    OrderItems.objects.all().delete()
+    Billing.objects.all().delete()
+    Payment.objects.all().delete()
+    Review.objects.all().delete()
+
+    return redirect('home')

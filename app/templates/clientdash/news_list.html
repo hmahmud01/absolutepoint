@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<section>
+    <div class="row">
+        <div class="page-header">
+            <h1 class="page-heading">News</h1>
+            <p>List of All newses in System</p>
+        </div>
+        <div class="col-md-12">
+            <div class="card card-table mb-4">
+                <div class="card-body">
+                    <div class="preload-wrapper">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="ordersDatatable">
+                                <thead>
+                                    <tr>
+                                        <th>News Id</th>
+                                        <th>Date</th>
+                                        <th>title</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for new in news %}
+                                    <tr>
+                                        <td><a href="{% url 'detailnews' new.id %}">{{ new.id }}</a></td>
+                                        <td>{{ new.date_created }}</td>
+                                        <td>{{ new.title }}</td>
+                                        <td><a class="btn btn-sm btn-outline-danger float-end" href="{% url 'newsdelete' new.id %}">Delete</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- Data Tables-->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+<script src="/static/js/e-commerce-orders.js"></script>
+{% endblock %}

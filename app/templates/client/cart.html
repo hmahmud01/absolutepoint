@@ -7,7 +7,7 @@
 <section>
     <div class="row">
         <div class="page-header">
-            <h1 class="page-heading">Cart</h1>
+            <h1 class="page-heading"><i class="fas fa-shopping-cart"></i> Cart</h1>
             <p>Your Ordered Services</p>
         </div>
         <div class="col-md-8 col-lg-8 col-sm-6">
@@ -20,6 +20,7 @@
                                     <th style="min-width: 300px;">Product</th>
                                     <th>Items</th>
                                     <th>Price</th>
+                                    <th>Link</link>
                                     <th>Ordered QTY</th>
                                     <th class="text-end">Total</th>
                                 </tr>
@@ -30,23 +31,29 @@
                                 <tr class="align-middle">
                                     <td>
                                         <img class="card-table-img img-fluid me-3"
-                                            src="https://media.istockphoto.com/photos/defocused-particles-background-picture-id1151621425?b=1&k=20&m=1151621425&s=170667a&w=0&h=cB0k4z9NvMjor1ERZE69zK6G6X6ZMlZ2TlY0poHx7SE="
+                                            src="/media/{{ item.product.thumb }}"
                                             alt="" width="80">
                                         <span class="card-table-text">
-                                            <a class="text-reset text-decoration-none" href="">
+                                            <a class="text-reset text-decoration-none" href="{% url 'clientservicedetail' item.product.id %}">
                                                 <strong>{{ item.product.name }}</strong><br>
-                                                <span class="text-muted">{{ item.product.ptype }} -
-                                                    {{ item.product.category.name }}</span><br>
-                                                <div class="btn-group" role="group" aria-label="Button Outlined">
-                                                    <button type="button" data-product="{{ item.product.id }}" data-action="add" class="btn btn-sm btn-outline-primary">Add</button>
-                                                    <button type="button" data-product="{{ item.product.id }}" data-action="remove"  class="btn btn-sm btn-outline-danger">Delete</button>
+                                                <span class="text-muted">{{ item.product.category.name }}</span><br>
+                                                <div aria-label="Button Outlined">
+                                                    {% comment %} <button type="button" data-product="{{ item.product.id }}" data-action="add" class="btn btn-sm btn-outline-primary update-cart">Add</button> {% endcomment %}
+                                                    <a href="{% url 'removecartitem' item.id %}" class="btn btn-sm btn-outline-danger update-cart">Delete</a>
+                                                    <!-- <button type="button" data-product="{{ item.product.id }}" data-action="remove" class="btn btn-sm btn-outline-danger update-cart">Delete</button> -->
                                                 </div>
 
                                             </a>
                                         </span>
                                     </td>
+                                    {% if item.variance.title %}
+                                    <td>{{ item.variance.title }} </td>
+                                    {% else %}
                                     <td>{{ item.variance.measurement }} </td>
+                                    {% endif %}
+                                    {% comment %} <td>{{ item.variance.measurement }} </td> {% endcomment %}
                                     <td>${{ item.variance.price }}</td>
+                                    <td><a target="_blank" href="{{ item.link }}">Link</a></td>
                                     <td>{{ item.quantity }}</td>
                                     <td class="text-end">${{ item.get_total }}</td>
                                 </tr>
@@ -57,17 +64,6 @@
                 </div>
             </div>
 
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-heading"> Shipping address</h5>
-                </div>
-                <div class="card-body">
-                    <p class="card-text text-muted">John Brown<br>13/25 New Avenue<br>New Heaven<br>45Y
-                        73J<br>England<br><strong>Great Britain</strong><span
-                            class="ms-2 align-middle mt-n1 avatar avatar-xxs bg-cover"
-                            style="background-image: url(img/flag/gb.svg)"></span></p>
-                </div>
-            </div>
 
         </div>
         <div class="col-md-4 col-lg-4 col-sm-6">
@@ -81,10 +77,6 @@
                             <tr class="text-muted">
                                 <th class="fw-normal">Total</th>
                                 <td class="text-end">${{ order.get_cart_total|floatformat:2 }}</td>
-                            </tr>
-                            <tr class="text-muted">
-                                <th class="fw-normal">Shipping Fee</th>
-                                <td class="text-end">$0.00</td>
                             </tr>
                             <tr class="text-muted">
                                 <th class="fw-normal">Sales Tax</th>
@@ -108,9 +100,8 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Have a Question</h5>
-                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @ishty or @pranto by <a
-                            href="">Clicking here</a></h6>
+                    <h5 class="card-title">Have any Question?</h5>
+                    <h6 class="card-subtitle text-muted">Contact our specialist on Telegram @CryptoMsupport by <a href="https://t.me/CryptoMsupport" target="_blank">Clicking here</a></h6>
                 </div>
             </div>
         </div>
@@ -119,4 +110,7 @@
 
 
 </section>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/cart.js"></script>
 {% endblock %}
