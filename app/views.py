@@ -22,6 +22,8 @@ from .models import *
 from .utils import cartData
 import random
 
+from itertools import chain
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 stripe.api_key = "sk_test_51HhxVlEfJWhMuLjgUFtwqRpA9iGwTip8o2QuIq7BwYzbBysGhQCLXCt8TNZZMF4zcSUAhhfR0axTQKHEuMorCilV009353SShi"
@@ -1750,7 +1752,11 @@ def requestConfirm(request):
 def listTickets(request):
     tickets = Ticket.objects.all()
     tcount = tickets.filter(seen=False).count()
-    return render(request, "clientdash/ticketlist.html", {"tickets": tickets, "tcount": tcount, "scount": scount})
+    seen_tickets = tickets.filter(seen=True).order_by('-date_created')
+    unseen_tickets = tickets.filter(seen=False).order_by('-date_created')
+
+    ticketList = list(chain(unseen_tickets, seen_tickets))
+    return render(request, "clientdash/ticketlist.html", {"tickets": ticketList, "tcount": tcount, "scount": scount})
 
 def ticketDetail(request, tid):
     ticket = Ticket.objects.get(id=tid)

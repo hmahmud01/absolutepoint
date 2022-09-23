@@ -19,6 +19,7 @@
                     <thead>
                       <tr>                        
                         <th>Ticket Id</th>
+                        <th>Status</th>
                         <th>Date</th>
                         <th>telid</th>
                         <th>Subject</th>                     
@@ -28,6 +29,11 @@
                         {% for ticket in tickets %}
                         <tr>
                           <td><a href="{% url 'ticketdetail' ticket.id %}">{{ ticket.id }}</a></td>
+                          {% if ticket.seen is True %}
+                          <td><span class="badge badge-primary-light">Taken Care Of</span></td>
+                          {% else %}
+                          <td><span class="badge badge-danger-light">Open</span></td>
+                          {% endif %}
                           <td>{{ ticket.date_created }}</td>
                           <td>{{ ticket.telid }}</td>
                           <td>{{ ticket.subject }}</td>
