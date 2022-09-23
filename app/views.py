@@ -1747,7 +1747,19 @@ def saveRequest(request):
     return redirect('requestconfirm')
 
 def requestConfirm(request):
-    return render(request, "client/contact-done.html")
+    data = cartData(request)
+    order = data['order']
+    return render(request, "client/contact-done.html", {"order": order, 
+                                        "cat_fb": cat_fb,
+                                        "cat_it": cat_it,
+                                        "cat_yt": cat_yt,
+                                        "cat_tt": cat_tt,
+                                        "cat_tw": cat_tw,
+                                        "cat_tg": cat_tg,
+                                        "cat_upvote": cat_upvote,
+                                        "cat_watchlist": cat_watchlist,
+                                        "cat_trending": cat_trending,})
+    # return render(request, "client/contact-done.html")
 
 def listTickets(request):
     tickets = Ticket.objects.all()
